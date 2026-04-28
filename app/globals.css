@@ -1,0 +1,285 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 215 16% 47%;
+    --border: 214 32% 91%;
+    --hero-background: linear-gradient(135deg, #f0f4ff 0%, #ffffff 50%, #ede9fe 100%);
+    --card-blue: 214 100% 97%;
+    --card-green: 142 76% 96%;
+    --card-purple: 250 100% 98%;
+    --card-orange: 33 100% 96%;
+    --card-white: 0 0% 100%;
+    --card-white-transparent: 0 0% 100% / 0.85;
+    --card-white-80: 0 0% 100% / 0.8;
+    --bento-gradient: linear-gradient(
+      to bottom right,
+      rgba(255, 255, 255, 0.95),
+      rgba(239, 246, 255, 0.4),
+      rgba(255, 255, 255, 0.9)
+    );
+    --heading-text: 222 47% 11%;
+    --badge-text: 222 47% 11%;
+    --subheading-text: 222 47% 11%;
+    --body-text: 75 85% 6%;
+    --label-text: 222 47% 11%;
+    --muted-text: 220 9% 46%;
+
+    --badge-blue-text: 214 100% 25%;
+    --badge-green-text: 142 76% 20%;
+    --badge-purple-text: 250 100% 28%;
+    --badge-orange-text: 33 100% 30%;
+  }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 217 19% 63%;
+    --border: 215 27% 16%;
+    --hero-background: linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e1b4b 100%);
+    --card-blue: 215 25% 20%;
+    --card-green: 215 25% 20%;
+    --card-purple: 215 25% 20%;
+    --card-orange: 215 25% 20%;
+    --card-white: 215 25% 20%;
+    --card-white-transparent: 215 25% 20% / 0.85;
+    --card-white-80: 215 25% 20% / 0.8;
+    --bento-gradient: linear-gradient(
+      to bottom right,
+      rgba(15, 23, 43, 0.85),
+      rgba(15, 23, 43, 0.75),
+      rgba(2, 6, 24, 0.7)
+    );
+    --heading-text: 210 40% 98%;
+    --badge-text: 210 40% 98%;
+    --subheading-text: 210 40% 98%;
+    --body-text: 218 11% 65%;
+    --label-text: 215 20% 65%;
+    --muted-text: 218 11% 65%;
+
+    --badge-blue-text: 214 100% 75%;
+    --badge-green-text: 142 76% 70%;
+    --badge-purple-text: 250 100% 75%;
+    --badge-orange-text: 33 100% 70%;
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family:
+      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+}
+
+.hero-section {
+  background-image: var(--hero-background);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: background-image 0.4s ease;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-heading {
+    color: hsl(var(--heading-text));
+  }
+
+  .text-badge {
+    color: hsl(var(--badge-text));
+  }
+
+  .text-subheading {
+    color: hsl(var(--subheading-text));
+  }
+
+  .text-body {
+    color: hsl(var(--body-text));
+  }
+
+  .text-label {
+    color: hsl(var(--label-text));
+  }
+
+  .text-muted {
+    color: hsl(var(--muted-text));
+  }
+
+  .text-badge-blue {
+    color: hsl(var(--badge-blue-text));
+  }
+
+  .text-badge-green {
+    color: hsl(var(--badge-green-text));
+  }
+
+  .text-badge-purple {
+    color: hsl(var(--badge-purple-text));
+  }
+
+  .text-badge-orange {
+    color: hsl(var(--badge-orange-text));
+  }
+
+  .card-bg-blue {
+    background-color: hsl(var(--card-blue));
+  }
+
+  .card-bg-green {
+    background-color: hsl(var(--card-green));
+  }
+
+  .card-bg-purple {
+    background-color: hsl(var(--card-purple));
+  }
+
+  .card-bg-orange {
+    background-color: hsl(var(--card-orange));
+  }
+
+  .card-bg-white {
+    background-color: hsl(var(--card-white));
+  }
+
+  .card-bg-white-transparent {
+    background-color: hsl(var(--card-white-transparent));
+  }
+
+  .card-bg-white-80 {
+    background-color: hsl(var(--card-white-80));
+  }
+
+  .bento-card-bg {
+    background-image: var(--bento-gradient);
+  }
+}
+
+.section-surface {
+  background-color: hsl(var(--muted));
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.section-surface-contrast {
+  background-color: hsl(var(--background));
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.6s ease-out;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.5s ease-out;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-blue {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.dark .glass {
+  background: rgba(17, 24, 39, 0.75);
+  border: 1px solid rgba(75, 85, 99, 0.35);
+}
