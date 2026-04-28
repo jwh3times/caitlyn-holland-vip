@@ -10,7 +10,7 @@ const useIsMounted = () =>
   React.useSyncExternalStore(
     () => () => {},
     () => true,
-    () => false,
+    () => false
   );
 
 export function ModeToggle() {
