@@ -6,13 +6,16 @@ import { Sun, Moon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
+const useIsMounted = () =>
+  React.useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+
 export function ModeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsMounted();
 
   if (!mounted) {
     return (
