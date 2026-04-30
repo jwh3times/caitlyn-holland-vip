@@ -1,45 +1,45 @@
 const experience = [
   {
-    title: 'Software Engineering Manager',
-    period: 'Nov 2024 – Present',
+    title: "Software Engineering Manager",
+    period: "Nov 2024 – Present",
     description:
-      'Led the Platform Products Enablement team, focused on solving pain points and improving the software delivery lifecycle for developers through tooling, automation, and process enhancements.',
+      "Led the Platform Products Enablement team, focused on solving pain points and improving the software delivery lifecycle for developers through tooling, automation, and process enhancements.",
   },
   {
-    title: 'Manager, Software Development Engineer in Test',
-    period: 'Apr 2021 – Nov 2024',
+    title: "Manager, Software Development Engineer in Test",
+    period: "Apr 2021 – Nov 2024",
     description:
-      'Managed the deployment and GUI automation teams within the Platform Products area.',
+      "Managed the deployment and GUI automation teams within the Platform Products area.",
   },
   {
-    title: 'Software Development Engineer in Test',
-    period: 'Jan 2019 – Apr 2021',
+    title: "Software Development Engineer in Test",
+    period: "Jan 2019 – Apr 2021",
     description:
-      'Automated product tests to allow functional testers more time to focus on detailed testing.',
+      "Automated product tests to allow functional testers more time to focus on detailed testing.",
   },
   {
-    title: 'Test Engineer',
-    period: 'May 2014 – Jan 2019',
+    title: "Test Engineer",
+    period: "May 2014 – Jan 2019",
     description:
-      'Worked with development and product management to ensure the functionality and usability of the product.',
+      "Worked with development and product management to ensure the functionality and usability of the product.",
   },
 ];
 
 const skills = [
-  'Test Automation',
-  'Python',
-  'Java',
-  'SAS Programming',
-  'CI/CD Pipelines',
-  'Data Analysis',
-  'Information Security',
-  'Analytics',
-  'Regression Testing',
-  'System Testing',
-  'Mathematics',
-  'Computer Science',
-  'Systems Thinking',
-  'Public Speaking',
+  "Test Automation",
+  "Python",
+  "Java",
+  "SAS Programming",
+  "CI/CD Pipelines",
+  "Data Analysis",
+  "Information Security",
+  "Analytics",
+  "Regression Testing",
+  "System Testing",
+  "Mathematics",
+  "Computer Science",
+  "Systems Thinking",
+  "Public Speaking",
 ];
 
 export function AboutSection() {
@@ -61,7 +61,8 @@ export function AboutSection() {
           {/* Experience */}
           <div>
             <h3 className="text-xl font-bold text-heading mb-6">
-              Experience &mdash; SAS <span className="text-muted font-normal text-base">(13 years)</span>
+              Experience &mdash; SAS{" "}
+              <span className="text-muted font-normal text-base">(13 years)</span>
             </h3>
             <div className="space-y-6">
               {experience.map((role) => (
