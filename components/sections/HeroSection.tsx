@@ -9,10 +9,13 @@ export function HeroSection() {
             Hi, I&apos;m <span className="gradient-text">Caitlyn Holland</span>
           </h1>
           <p className="text-2xl md:text-3xl text-subheading mb-6 animate-fadeInUp font-semibold">
-            {/* TODO: Add your tagline here */}
+            Software Engineering Manager at SAS
           </p>
           <p className="text-lg md:text-xl text-muted max-w-3xl mx-auto mb-10 animate-fadeInUp leading-relaxed">
-            {/* TODO: Add your bio / intro here */}
+            I work with the Platform Products DevOps and Integrated Quality team at SAS, providing
+            customer-like deployments for testing and maintaining the division&apos;s automated GUI
+            smoke tests in our CI/CD pipeline. I enjoy helping others work on challenges and
+            discover their passion.
           </p>
 
           <div className="flex flex-wrap gap-4 justify-center animate-fadeInUp">
