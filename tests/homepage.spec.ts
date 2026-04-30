@@ -42,7 +42,7 @@ test.describe("Homepage", () => {
   });
 
   test("should have a working email link in contact section", async ({ page }) => {
-    const emailLink = page.locator('a[href="mailto:caitlyn@holland.vip"]');
+    const emailLink = page.locator('a[href="mailto:caitlyn.holland121@gmail.com"]');
     await expect(emailLink).toBeVisible();
   });
 });
