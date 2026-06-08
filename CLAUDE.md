@@ -30,7 +30,7 @@ npx playwright test --project=chromium
 
 ## Architecture
 
-This is a **Next.js 16 static export** personal website (output: `"export"` in [next.config.ts](next.config.ts)). It builds to `./out/` and deploys to GitHub Pages. There is no backend, API routes, or server components — everything is client-side or statically rendered.
+This is a **Next.js 16 static export** personal website (output: `"export"` in [next.config.ts](next.config.ts)). It builds to `./out/` and deploys to Cloudflare Pages. There is no backend, API routes, or server components — everything is client-side or statically rendered.
 
 **Single-page layout:** `app/page.tsx` composes the full page from three sections (`HeroSection` → `AboutSection` → `ContactSection`) wrapped by `Navigation` and `Footer`. All sections are in [components/sections/](components/sections/) and exported via [components/sections/index.ts](components/sections/index.ts).
 
@@ -44,6 +44,6 @@ This is a **Next.js 16 static export** personal website (output: `"export"` in [
 
 **Content placeholders:** `HeroSection` has `TODO` comments for tagline and bio — these are intentionally empty and need content filled in.
 
-**CI/CD:** GitHub Actions runs lint + format check + build on every PR/push to main ([.github/workflows/ci.yml](.github/workflows/ci.yml)). Deploy to GitHub Pages triggers automatically after CI passes ([.github/workflows/deploy.yml](.github/workflows/deploy.yml)).
+**CI/CD:** GitHub Actions runs lint + format check + build + Playwright tests on every PR/push to main ([.github/workflows/ci.yml](.github/workflows/ci.yml)). Deployment is handled by **Cloudflare Pages**, which builds from the repo on push to main (build command `npm run build`, output dir `out`, Node version from [.nvmrc](.nvmrc)) and serves the site at caitlyn.holland.vip with security headers from [public/\_headers](public/_headers).
 
 **Tests:** Playwright e2e tests in [tests/](tests/) cover homepage rendering, navigation, theme toggling, mobile menu, and SEO metadata. The `playwright.config.ts` auto-starts the dev server; tests run against `http://localhost:3000`. CI only runs Chromium; locally all five browser/device projects run.
