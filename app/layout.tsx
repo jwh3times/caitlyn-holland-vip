@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
-const siteUrl = "https://caitlyn-holland-vip.github.io";
+const siteUrl = "https://caitlyn.holland.vip";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
