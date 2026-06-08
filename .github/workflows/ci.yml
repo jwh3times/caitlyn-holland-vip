@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main]
 
+# Least-privilege default token: jobs only read the repo, build, and upload
+# artifacts (artifact upload uses the Actions API, not the contents scope).
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build & Lint
