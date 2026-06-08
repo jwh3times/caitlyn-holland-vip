@@ -17,11 +17,13 @@ npm run test:debug   # Debug Playwright tests
 ```
 
 Run a single test file:
+
 ```bash
 npx playwright test tests/homepage.spec.ts
 ```
 
 Run tests for a specific browser project:
+
 ```bash
 npx playwright test --project=chromium
 ```
@@ -35,6 +37,7 @@ This is a **Next.js 16 static export** personal website (output: `"export"` in [
 **Theme system:** `next-themes` drives dark/light mode. `ThemeProvider` wraps the app in [app/layout.tsx](app/layout.tsx). The toggle lives in `components/mode-toggle.tsx`. CSS variables in [app/globals.css](app/globals.css) define all color tokens for both themes — use these utility classes (`text-heading`, `text-muted`, `text-label`, `card-bg-blue`, etc.) rather than raw Tailwind color classes so dark mode works automatically.
 
 **Styling conventions:**
+
 - Tailwind v4 (`@import "tailwindcss"` syntax, not the v3 `@tailwind` directives)
 - Custom CSS utilities defined in `globals.css` for themed colors, gradients (`.gradient-text`, `.gradient-text-blue`), glassmorphism (`.glass`), section backgrounds (`.section-surface`, `.section-surface-contrast`), and entrance animations (`.animate-fadeInUp`, `.animate-slideInLeft`, etc.)
 - Icons: `lucide-react` for UI icons, `@tabler/icons-react` for social/brand icons
