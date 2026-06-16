@@ -10,6 +10,6 @@ describe("sitemap", () => {
       changeFrequency: "monthly",
       priority: 1,
     });
-    expect(entries[0].lastModified).toBeInstanceOf(Date);
+    expect(entries[0]?.lastModified).toBeInstanceOf(Date);
   });
 });
