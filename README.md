@@ -28,7 +28,7 @@ npm run dev      # start the dev server at http://localhost:3000
 
 | Command                | Description                                       |
 | ---------------------- | ------------------------------------------------- |
-| `npm run dev`          | Start the dev server at http://localhost:3000     |
+| `npm run dev`          | Start the dev server at <http://localhost:3000>   |
 | `npm run build`        | Production build → static export in `./out`       |
 | `npm run lint`         | ESLint                                            |
 | `npm run format`       | Prettier write                                    |
@@ -47,7 +47,7 @@ npx playwright test --project=chromium
 
 ## Project structure
 
-```
+```text
 app/          App Router: layout, page, globals.css, error / loading / not-found
 components/   Navigation, Footer, mode-toggle, theme-provider
   sections/   HeroSection, AboutSection, ContactSection
