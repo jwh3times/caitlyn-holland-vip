@@ -7,7 +7,7 @@ describe("ContactSection", () => {
     render(<ContactSection />);
     expect(screen.getByRole("link", { name: "Send Me an Email" })).toHaveAttribute(
       "href",
-      "mailto:caitlyn.holland121@gmail.com"
+      "mailto:caitlyn@holland.vip"
     );
     const linkedin = screen.getByRole("link", { name: "LinkedIn" });
     expect(linkedin.getAttribute("href")).toContain("linkedin.com");

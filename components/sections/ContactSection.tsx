@@ -8,7 +8,7 @@ export function ContactSection() {
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
           <a
-            href="mailto:caitlyn.holland121@gmail.com"
+            href="mailto:caitlyn@holland.vip"
             className="inline-block bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 text-white px-8 py-3 rounded-lg font-medium transition-colors"
           >
             Send Me an Email
