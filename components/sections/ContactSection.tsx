@@ -1,3 +1,6 @@
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
 export function ContactSection() {
   return (
     <section id="contact" className="section-surface-contrast py-20">
@@ -9,7 +12,7 @@ export function ContactSection() {
         <div className="flex flex-wrap gap-4 justify-center">
           <a
             href="mailto:caitlyn@holland.vip"
-            className="inline-block bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+            className={cn(buttonVariants({ variant: "gradient", size: "cta" }))}
           >
             Send Me an Email
           </a>
@@ -17,7 +20,7 @@ export function ContactSection() {
             href="https://www.linkedin.com/in/caitlyn-holland-debona-93140678/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-500 dark:hover:text-white px-8 py-3 rounded-lg font-medium transition-colors"
+            className={cn(buttonVariants({ variant: "gradientOutline", size: "cta" }))}
           >
             LinkedIn
           </a>

@@ -1,3 +1,6 @@
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
 export function HeroSection() {
   return (
     <section className="relative overflow-hidden hero-section transition-colors duration-300">
@@ -19,15 +22,12 @@ export function HeroSection() {
           </p>
 
           <div className="flex flex-wrap gap-4 justify-center animate-fadeInUp">
-            <a
-              href="#about"
-              className="group relative bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white px-10 py-4 rounded-xl font-semibold transition-all hover:scale-105 shadow-lg hover:shadow-2xl"
-            >
+            <a href="#about" className={cn(buttonVariants({ variant: "gradient", size: "ctaLg" }))}>
               About Me
             </a>
             <a
               href="#contact"
-              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white dark:border-blue-500 dark:text-blue-400 dark:hover:bg-blue-500 dark:hover:text-white px-10 py-4 rounded-xl font-semibold transition-all hover:scale-105 shadow-lg"
+              className={cn(buttonVariants({ variant: "gradientOutline", size: "ctaLg" }))}
             >
               Get in Touch
             </a>

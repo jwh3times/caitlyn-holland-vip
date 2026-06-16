@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function Error({
   error,
@@ -38,15 +40,12 @@ export default function Error({
           An unexpected error occurred. Please try again or return to the home page.
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
-          <button
-            onClick={reset}
-            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-all hover:scale-105 shadow-lg"
-          >
+          <Button variant="gradient" size="cta" onClick={reset}>
             Try Again
-          </button>
+          </Button>
           <Link
             href="/"
-            className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white dark:border-blue-500 dark:text-blue-400 dark:hover:bg-blue-500 dark:hover:text-white px-8 py-3 rounded-xl font-semibold transition-all hover:scale-105"
+            className={cn(buttonVariants({ variant: "gradientOutline", size: "cta" }))}
           >
             Go Home
           </Link>
