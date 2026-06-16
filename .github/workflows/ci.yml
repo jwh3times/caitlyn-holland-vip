@@ -108,8 +108,24 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Cache the downloaded browser binaries (~100 MB) keyed on the lockfile so
+      # they're re-fetched only when the Playwright version changes.
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+
       - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+
+      # On a cache hit the binaries are restored but OS-level deps are not cached,
+      # so install just those.
+      - name: Install Playwright system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
 
       - name: Run Playwright tests
         run: npm run test:e2e -- --project=chromium

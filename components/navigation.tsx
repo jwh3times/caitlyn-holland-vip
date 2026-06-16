@@ -11,9 +11,45 @@ const navLinks = [
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const menuButtonRef = React.useRef<HTMLButtonElement>(null);
+  const menuRef = React.useRef<HTMLDivElement>(null);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleMenu = () => setIsMenuOpen((open) => !open);
   const closeMenu = () => setIsMenuOpen(false);
+
+  // Mobile-menu disclosure semantics: while open, move focus into the menu,
+  // close on Escape (restoring focus to the toggle), and trap Tab inside it.
+  React.useEffect(() => {
+    if (!isMenuOpen) return;
+
+    const focusables = menuRef.current
+      ? Array.from(menuRef.current.querySelectorAll<HTMLElement>("a[href], button:not([disabled])"))
+      : [];
+    focusables[0]?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+        menuButtonRef.current?.focus();
+        return;
+      }
+      if (event.key === "Tab") {
+        const first = focusables.at(0);
+        const last = focusables.at(-1);
+        if (!first || !last) return;
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isMenuOpen]);
 
   return (
     <nav className="sticky top-0 z-50 glass border-b border-gray-200/50 dark:border-gray-800/50">
@@ -41,9 +77,11 @@ export function Navigation() {
           <div className="flex md:hidden items-center gap-2">
             <ModeToggle />
             <button
+              ref={menuButtonRef}
               onClick={toggleMenu}
               className="inline-flex items-center justify-center p-2 rounded-md text-label hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-expanded={isMenuOpen}
+              aria-controls="mobile-menu"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -53,7 +91,11 @@ export function Navigation() {
 
         {/* Mobile Navigation Menu */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-200/50 dark:border-gray-800/50">
+          <div
+            id="mobile-menu"
+            ref={menuRef}
+            className="md:hidden border-t border-gray-200/50 dark:border-gray-800/50"
+          >
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navLinks.map((link) => (
                 <a
