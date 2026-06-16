@@ -13,7 +13,7 @@ If you believe you've found a security issue, please report it privately —
 
 - **Preferred:** use GitHub's [private vulnerability reporting](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability)
   (the **Security → Report a vulnerability** tab on this repository).
-- **Email:** caitlyn@holland.vip
+- **Email:** <caitlyn@holland.vip>
 
 Please include enough detail to reproduce the issue (affected URL/endpoint,
 steps, and impact). You can expect an acknowledgement within a few days. Since
