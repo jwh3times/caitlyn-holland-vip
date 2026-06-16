@@ -1,19 +1,31 @@
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
+import eslintReact from "@eslint-react/eslint-plugin";
 import pluginReactHooks from "eslint-plugin-react-hooks";
 import pluginNext from "@next/eslint-plugin-next";
 import eslintConfigPrettier from "eslint-config-prettier";
 import globals from "globals";
+import { defineConfig, globalIgnores } from "eslint/config";
 
-export default [
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-  eslintConfigPrettier,
+export default defineConfig([
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "node_modules/**",
+    "playwright-report/**",
+    "test-results/**",
+    "coverage/**",
+  ]),
   {
     files: ["**/*.{ts,tsx,js,jsx}"],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      // ESLint React replaces eslint-plugin-react (flat-config native, TS-first).
+      // "recommended-typescript" needs no type-checking/projectService.
+      eslintReact.configs["recommended-typescript"],
+    ],
     plugins: {
-      react: pluginReact,
       "react-hooks": pluginReactHooks,
       "@next/next": pluginNext,
     },
@@ -29,35 +41,16 @@ export default [
       },
     },
     settings: {
-      react: {
+      "react-x": {
         version: "detect",
       },
     },
     rules: {
-      ...pluginReact.configs.recommended.rules,
       ...pluginReactHooks.configs.recommended.rules,
       ...pluginNext.configs.recommended.rules,
       ...pluginNext.configs["core-web-vitals"].rules,
-      "react/react-in-jsx-scope": "off",
-      "react/prop-types": "off",
     },
   },
-  {
-    // Vitest unit tests render lightweight mocks (e.g. a plain <a> for next/link);
-    // the Next app-page link rule does not apply to test doubles.
-    files: ["test/**/*.{ts,tsx}"],
-    rules: {
-      "@next/next/no-html-link-for-pages": "off",
-    },
-  },
-  {
-    ignores: [
-      ".next/**",
-      "out/**",
-      "node_modules/**",
-      "playwright-report/**",
-      "test-results/**",
-      "coverage/**",
-    ],
-  },
-];
+  // Must come last so formatting rules are disabled (Prettier owns formatting).
+  eslintConfigPrettier,
+]);
