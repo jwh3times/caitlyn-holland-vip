@@ -26,6 +26,26 @@ describe("Button", () => {
     expect(screen.getByRole("button", { name: "Hi" })).toHaveClass("custom-x");
   });
 
+  it("applies the gradient CTA variant and cta size", () => {
+    render(
+      <Button variant="gradient" size="cta">
+        Go
+      </Button>
+    );
+    const btn = screen.getByRole("button", { name: "Go" });
+    expect(btn).toHaveClass("bg-gradient-to-r");
+    expect(btn).toHaveClass("px-8");
+    // Gradient variant overrides the base radius/weight via tailwind-merge.
+    expect(btn).toHaveClass("rounded-xl");
+    expect(btn).not.toHaveClass("rounded-md");
+  });
+
+  it("exposes the gradientOutline variant for anchor/Link CTAs", () => {
+    const classes = buttonVariants({ variant: "gradientOutline", size: "ctaLg" });
+    expect(classes).toContain("border-blue-600");
+    expect(classes).toContain("px-10");
+  });
+
   it("exposes buttonVariants for class composition", () => {
     expect(buttonVariants({ variant: "ghost" })).toContain("hover:bg-gray-100");
   });
