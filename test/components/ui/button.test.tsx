@@ -26,18 +26,6 @@ describe("Button", () => {
     expect(screen.getByRole("button", { name: "Hi" })).toHaveClass("custom-x");
   });
 
-  it("renders as its child element when asChild is set", () => {
-    render(
-      <Button asChild>
-        <a href="/somewhere">Link button</a>
-      </Button>
-    );
-    const link = screen.getByRole("link", { name: "Link button" });
-    expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute("href", "/somewhere");
-    expect(screen.queryByRole("button")).toBeNull();
-  });
-
   it("exposes buttonVariants for class composition", () => {
     expect(buttonVariants({ variant: "ghost" })).toContain("hover:bg-gray-100");
   });

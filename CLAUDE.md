@@ -39,8 +39,8 @@ This is a **Next.js 16 static export** personal website (output: `"export"` in [
 **Styling conventions:**
 
 - Tailwind v4 (`@import "tailwindcss"` syntax, not the v3 `@tailwind` directives)
-- Custom CSS utilities defined in `globals.css` for themed colors, gradients (`.gradient-text`, `.gradient-text-blue`), glassmorphism (`.glass`), section backgrounds (`.section-surface`, `.section-surface-contrast`), and entrance animations (`.animate-fadeInUp`, `.animate-slideInLeft`, etc.)
-- Icons: `lucide-react` for UI icons, `@tabler/icons-react` for social/brand icons
+- Custom CSS utilities defined in `globals.css` for themed colors, gradients (`.gradient-text`, `.gradient-text-blue`), glassmorphism (`.glass`), section backgrounds (`.section-surface`, `.section-surface-contrast`), and an entrance animation (`.animate-fadeInUp`). A `@media (prefers-reduced-motion: reduce)` block neutralizes animations/transitions.
+- Icons: `lucide-react` for UI icons
 
 **Content placeholders:** `HeroSection` has `TODO` comments for tagline and bio — these are intentionally empty and need content filled in.
 
