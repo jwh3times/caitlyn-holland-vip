@@ -43,6 +43,21 @@ export default [
     },
   },
   {
-    ignores: [".next/**", "out/**", "node_modules/**", "playwright-report/**", "test-results/**"],
+    // Vitest unit tests render lightweight mocks (e.g. a plain <a> for next/link);
+    // the Next app-page link rule does not apply to test doubles.
+    files: ["test/**/*.{ts,tsx}"],
+    rules: {
+      "@next/next/no-html-link-for-pages": "off",
+    },
+  },
+  {
+    ignores: [
+      ".next/**",
+      "out/**",
+      "node_modules/**",
+      "playwright-report/**",
+      "test-results/**",
+      "coverage/**",
+    ],
   },
 ];
