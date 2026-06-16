@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     description: "Personal website for Caitlyn Holland.",
     images: [
       {
-        url: "/og-image.svg",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Caitlyn Holland",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Caitlyn Holland",
     description: "Personal website for Caitlyn Holland.",
-    images: ["/og-image.svg"],
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
-    apple: "/apple-touch-icon.svg",
+    apple: "/apple-touch-icon.png",
   },
 };
 

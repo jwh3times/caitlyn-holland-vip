@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "export": "next build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "playwright test",
@@ -28,8 +27,6 @@
   "author": "Caitlyn Holland",
   "license": "MIT",
   "dependencies": {
-    "@radix-ui/react-slot": "^1.3.0",
-    "@tabler/icons-react": "^3.44.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.18.0",
