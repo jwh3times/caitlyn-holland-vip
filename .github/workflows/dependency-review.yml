@@ -1,0 +1,25 @@
+name: Dependency Review
+
+on:
+  pull_request:
+    branches: [main]
+
+# Read-only token: the action only needs to read the dependency graph / diff.
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Review dependencies
+        uses: actions/dependency-review-action@v4
+        with:
+          # Block PRs that introduce dependencies with known high/critical
+          # vulnerabilities or incompatible licenses.
+          fail-on-severity: high
