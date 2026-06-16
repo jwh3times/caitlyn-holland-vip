@@ -1,0 +1,27 @@
+# Dependabot version updates
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+#
+# Note: Dependabot's "daily" interval runs on weekdays (Mon-Fri).
+# Times are in the given IANA timezone; America/New_York tracks ET (EST/EDT).
+version: 2
+updates:
+  # npm dependencies (package.json / package-lock.json)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "07:00"
+      timezone: "America/New_York"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  # GitHub Actions used in .github/workflows
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "07:00"
+      timezone: "America/New_York"
+    commit-message:
+      prefix: "chore"
