@@ -15,6 +15,13 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    open-pull-requests-limit: 10
+    groups:
+      # Bundle low-risk minor + patch bumps into one PR; majors stay separate.
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
 
   # GitHub Actions used in .github/workflows
   - package-ecosystem: "github-actions"
@@ -26,3 +33,9 @@ updates:
       timezone: "America/New_York"
     commit-message:
       prefix: "chore"
+    open-pull-requests-limit: 10
+    groups:
+      actions-minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
