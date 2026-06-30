@@ -3,6 +3,11 @@
 #
 # Note: Dependabot's "daily" interval runs on weekdays (Mon-Fri).
 # Times are in the given IANA timezone; America/New_York tracks ET (EST/EDT).
+#
+# Minor/patch updates are grouped into a single PR per ecosystem to reduce noise;
+# MAJOR bumps arrive individually — EXCEPT for peer-locked families where a lone
+# bump would leave an unsatisfiable peer range. Those families travel together as
+# one major PR.
 version: 2
 updates:
   # npm dependencies (package.json / package-lock.json)
@@ -16,9 +21,69 @@ updates:
       prefix: "chore"
       include: "scope"
     open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
     groups:
+      # --- Peer-locked families — majors only. All minor/patch bumps land in the
+      #     catch-all group at the bottom. ---
+
+      # next and @next/eslint-plugin-next ship in lockstep — the plugin's major
+      # tracks the Next.js major it supports.
+      next-ecosystem:
+        patterns:
+          - "next"
+          - "@next/*"
+        update-types:
+          - "major"
+
+      # react + react-dom ship at identical versions and must match at runtime;
+      # the @types/* packages track the same major.
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+        update-types:
+          - "major"
+
+      # @testing-library/react and user-event both peer-require @testing-library/dom.
+      testing-library:
+        patterns:
+          - "@testing-library/*"
+        update-types:
+          - "major"
+
+      # @vitejs/plugin-react requires a matching Vite major; vitest and @vitest/*
+      # track the Vite majors they support. (Used for unit tests alongside Playwright.)
+      vite-ecosystem:
+        patterns:
+          - "vite"
+          - "vitest"
+          - "@vitejs/plugin-react"
+          - "@vitest/*"
+        update-types:
+          - "major"
+
+      # @eslint/js is lockstep-versioned with eslint; plugins peer-cap on the eslint
+      # major; typescript-eslint peer-bounds both eslint and typescript.
+      lint-and-typescript:
+        patterns:
+          - "eslint"
+          - "@eslint/*"
+          - "@eslint-react/*"
+          - "eslint-plugin-*"
+          - "eslint-config-*"
+          - "typescript-eslint"
+          - "globals"
+          - "typescript"
+        update-types:
+          - "major"
+
       # Bundle low-risk minor + patch bumps into one PR; majors stay separate.
-      minor-and-patch:
+      npm-minor-and-patch:
+        patterns:
+          - "*"
         update-types:
           - "minor"
           - "patch"
@@ -34,8 +99,12 @@ updates:
     commit-message:
       prefix: "chore"
     open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
     groups:
       actions-minor-and-patch:
+        patterns:
+          - "*"
         update-types:
           - "minor"
           - "patch"
