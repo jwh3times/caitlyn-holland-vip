@@ -29,8 +29,8 @@
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.22.0",
-    "next": "^16.2.9",
+    "lucide-react": "^1.23.0",
+    "next": "^16.2.10",
     "next-themes": "^0.4.6",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
@@ -39,7 +39,7 @@
   "devDependencies": {
     "@eslint-react/eslint-plugin": "^5.10.0",
     "@eslint/js": "^10.0.1",
-    "@next/eslint-plugin-next": "^16.2.9",
+    "@next/eslint-plugin-next": "^16.2.10",
     "@playwright/test": "^1.61.1",
     "@tailwindcss/postcss": "^4.3.2",
     "@testing-library/dom": "^10.4.1",
