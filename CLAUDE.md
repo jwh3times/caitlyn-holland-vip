@@ -57,6 +57,7 @@ E2E specs in [tests/](tests/) cover homepage rendering, navigation, theme toggli
 
 - **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with **four** jobs: `Format Check` (`npm run format:check`), `Coverage` (`npm run coverage` — **fails below the 80% thresholds** and uploads a `coverage-report` artifact), `Build & Lint` (`npm run lint` + `npm run build`, uploads the `static-site` artifact), and `Playwright Tests` (needs Build & Lint; installs Chromium and runs `npm run test:e2e -- --project=chromium`). **A PR fails CI if formatting drifts — run `npm run format` before committing.**
 - **Dependency review — [.github/workflows/dependency-review.yml](.github/workflows/dependency-review.yml)** — on PRs, fails on vulnerable dependency changes.
+- **Versioning — [.github/workflows/version.yml](.github/workflows/version.yml)** — on every merge (push) to `main`, tags the merge commit with an auto-incrementing build number on the package.json version (`v<x.y.z>.<n>`, e.g. `v1.0.0.3`). Build numbers restart at 1 when the base version is bumped.
 - **Deployment — Cloudflare Pages** — builds directly from the repo on push to `main` (build command `npm run build`, output dir `out`, Node version from [.nvmrc](.nvmrc)). There is no deploy workflow in the repo — CI is a parallel quality gate, not a deploy gate.
 
 ## Architecture
