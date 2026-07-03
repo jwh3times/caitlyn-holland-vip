@@ -81,3 +81,11 @@ E2E specs in [tests/](tests/) cover homepage rendering, navigation, theme toggli
 - Use the semantic CSS-variable classes — never hardcode colors.
 - Unit-test coverage is gated at 80% in CI, so new components generally need a matching test under `test/` (mirroring the source path).
 - Site metadata lives in the [app/layout.tsx](app/layout.tsx) `Metadata` export; the SEO Playwright spec asserts it.
+
+## Agents & docs automation
+
+The `docs-updater` subagent (`.claude/agents/docs-updater.md`) keeps CLAUDE.md and README.md in
+sync with the code. Docs freshness is auto-checked at the end of every response turn by a read-only
+Stop hook in `.claude/settings.json` (single pre-approved git command + Read/Grep/Glob — it never
+edits files). When it detects drift it blocks the stop with specifics and the main session invokes
+`docs-updater` to fix exactly that drift.
