@@ -69,6 +69,13 @@ Two disjoint suites:
 
 Cloudflare Pages builds from the repo on every push to `main` (build command `npm run build`, output dir `out`, Node version from `.nvmrc`). Security headers are served from [`public/_headers`](public/_headers). CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validates format, coverage, build/lint, and e2e on every PR.
 
+## Contributing
+
+Bug reports, accessibility fixes, and small improvements are welcome — see
+[CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and local checks. By participating you agree to
+the [Code of Conduct](CODE_OF_CONDUCT.md). Report vulnerabilities privately per
+[SECURITY.md](SECURITY.md). Developer conventions live in [CLAUDE.md](CLAUDE.md).
+
 ## License
 
 [MIT](LICENSE) © Caitlyn Holland
