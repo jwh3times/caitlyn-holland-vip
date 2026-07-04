@@ -20,33 +20,33 @@ the codebase.
 
 Observations that function as latent work items (with citations):
 
-| # | Observation | Evidence |
-| - | ----------- | -------- |
-| O1 | No automated accessibility audit exists. E2E specs cover homepage, mobile nav, SEO, theme ([tests/homepage.spec.ts](../tests/homepage.spec.ts), [tests/mobile-navigation.spec.ts](../tests/mobile-navigation.spec.ts), [tests/seo.spec.ts](../tests/seo.spec.ts), [tests/theme.spec.ts](../tests/theme.spec.ts)) but there is no `a11y`/axe spec. The sibling `holland-vip` repo's test suite includes accessibility specs. The code has real a11y investment worth locking in — skip link ([app/layout.tsx](../app/layout.tsx) L75–80), mobile-menu focus trap + Escape handling ([components/navigation.tsx](../components/navigation.tsx) L22–52), `prefers-reduced-motion` block ([app/globals.css](../app/globals.css) L133–142). |
-| O2 | No post-deploy check. `.github/workflows/` contains only `ci.yml`, `dependency-review.yml`, `version.yml`. The sibling `holland-vip` repo additionally runs a daily **smoke** workflow curling the live site (HTTP 200 + content + security headers). Nothing in this repo ever exercises the deployed `caitlyn.holland.vip`. |
-| O3 | Site metadata is thin: `description: "Personal website for Caitlyn Holland."` and `keywords: ["Caitlyn Holland"]` ([app/layout.tsx](../app/layout.tsx) L13–14), and there is no JSON-LD structured data anywhere (no `application/ld+json` in the repo). |
-| O4 | The About section carries four distinct content blocks — an `experience` array (4 roles), a 14-item `skills` array, Education, and Certifications — inside one component ([components/sections/AboutSection.tsx](../components/sections/AboutSection.tsx) L1–43, L60–115), while navigation exposes only two anchors (`#about`, `#contact` — [components/navigation.tsx](../components/navigation.tsx) L7–10). The content for dedicated Experience/Skills sections already exists in code; only the sectioning does not. |
-| O5 | Raw Tailwind palette classes contradict the repo's own convention ("Use the semantic CSS-variable classes — never hardcode colors", [CLAUDE.md](../CLAUDE.md)): `border-blue-500 dark:border-blue-400` and `text-blue-700 dark:text-blue-300` in [components/sections/AboutSection.tsx](../components/sections/AboutSection.tsx) (L71, L85, L96, L108); `hover:text-blue-600 dark:hover:text-blue-400`, `border-gray-200/50 dark:border-gray-800/50`, `hover:bg-gray-100 dark:hover:bg-gray-800` in [components/navigation.tsx](../components/navigation.tsx) (L55, L68, L82, L97, L105); `focus:bg-blue-600` on the skip link in [app/layout.tsx](../app/layout.tsx) (L77); `border-gray-200 dark:border-gray-800` in [components/footer.tsx](../components/footer.tsx). The token set in [app/globals.css](../app/globals.css) currently defines only four text tokens + `--card-blue` — there are no accent/link/border tokens to migrate to. |
-| O6 | CI runs the desktop `chromium` project only ([.github/workflows/ci.yml](../.github/workflows/ci.yml) L136). The sibling `holland-vip` CI runs `chromium` **and** `Mobile Chrome`. Mobile behavior is partially covered because [tests/mobile-navigation.spec.ts](../tests/mobile-navigation.spec.ts) forces a 375×812 viewport (L4), but no spec runs under real mobile-device emulation (touch, mobile UA) in CI. |
-| O7 | `package.json` has `"start": "next start"`, which does **not** serve a static export (`output: "export"`), and there is no preview script for the built `out/` directory. The sibling `holland-vip` repo documents `npm run preview` (`npx serve out`) for exactly this reason. README's command table ([README.md](../README.md) L29–39) omits `start`, implicitly acknowledging it is misleading. |
-| O8 | No CodeQL scanning is documented or configured. The sibling `holland-vip` repo documents CodeQL **default setup** (settings-side, deliberately no workflow file). This repo's CLAUDE.md/README mention no code scanning at all; whether default setup is enabled cannot be verified from the repo contents. |
-| O9 | The CSP in [public/\_headers](../public/_headers) (L10) keeps `'unsafe-inline'` in `script-src` without a rationale comment. The sibling repo documents why (`next-themes` + Next inline scripts; no nonces on a static export). Same technical constraint applies here, but the reasoning is undocumented, inviting a well-meaning "tightening" that would break theming. |
+| #   | Observation                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Evidence |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
+| O1  | No automated accessibility audit exists. E2E specs cover homepage, mobile nav, SEO, theme ([tests/homepage.spec.ts](../tests/homepage.spec.ts), [tests/mobile-navigation.spec.ts](../tests/mobile-navigation.spec.ts), [tests/seo.spec.ts](../tests/seo.spec.ts), [tests/theme.spec.ts](../tests/theme.spec.ts)) but there is no `a11y`/axe spec. The sibling `holland-vip` repo's test suite includes accessibility specs. The code has real a11y investment worth locking in — skip link ([app/layout.tsx](../app/layout.tsx) L75–80), mobile-menu focus trap + Escape handling ([components/navigation.tsx](../components/navigation.tsx) L22–52), `prefers-reduced-motion` block ([app/globals.css](../app/globals.css) L133–142).                                                                                                                                                                                                           |
+| O2  | No post-deploy check. `.github/workflows/` contains only `ci.yml`, `dependency-review.yml`, `version.yml`. The sibling `holland-vip` repo additionally runs a daily **smoke** workflow curling the live site (HTTP 200 + content + security headers). Nothing in this repo ever exercises the deployed `caitlyn.holland.vip`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| O3  | Site metadata is thin: `description: "Personal website for Caitlyn Holland."` and `keywords: ["Caitlyn Holland"]` ([app/layout.tsx](../app/layout.tsx) L13–14), and there is no JSON-LD structured data anywhere (no `application/ld+json` in the repo).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| O4  | The About section carries four distinct content blocks — an `experience` array (4 roles), a 14-item `skills` array, Education, and Certifications — inside one component ([components/sections/AboutSection.tsx](../components/sections/AboutSection.tsx) L1–43, L60–115), while navigation exposes only two anchors (`#about`, `#contact` — [components/navigation.tsx](../components/navigation.tsx) L7–10). The content for dedicated Experience/Skills sections already exists in code; only the sectioning does not.                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| O5  | Raw Tailwind palette classes contradict the repo's own convention ("Use the semantic CSS-variable classes — never hardcode colors", [CLAUDE.md](../CLAUDE.md)): `border-blue-500 dark:border-blue-400` and `text-blue-700 dark:text-blue-300` in [components/sections/AboutSection.tsx](../components/sections/AboutSection.tsx) (L71, L85, L96, L108); `hover:text-blue-600 dark:hover:text-blue-400`, `border-gray-200/50 dark:border-gray-800/50`, `hover:bg-gray-100 dark:hover:bg-gray-800` in [components/navigation.tsx](../components/navigation.tsx) (L55, L68, L82, L97, L105); `focus:bg-blue-600` on the skip link in [app/layout.tsx](../app/layout.tsx) (L77); `border-gray-200 dark:border-gray-800` in [components/footer.tsx](../components/footer.tsx). The token set in [app/globals.css](../app/globals.css) currently defines only four text tokens + `--card-blue` — there are no accent/link/border tokens to migrate to. |
+| O6  | CI runs the desktop `chromium` project only ([.github/workflows/ci.yml](../.github/workflows/ci.yml) L136). The sibling `holland-vip` CI runs `chromium` **and** `Mobile Chrome`. Mobile behavior is partially covered because [tests/mobile-navigation.spec.ts](../tests/mobile-navigation.spec.ts) forces a 375×812 viewport (L4), but no spec runs under real mobile-device emulation (touch, mobile UA) in CI.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| O7  | `package.json` has `"start": "next start"`, which does **not** serve a static export (`output: "export"`), and there is no preview script for the built `out/` directory. The sibling `holland-vip` repo documents `npm run preview` (`npx serve out`) for exactly this reason. README's command table ([README.md](../README.md) L29–39) omits `start`, implicitly acknowledging it is misleading.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| O8  | No CodeQL scanning is documented or configured. The sibling `holland-vip` repo documents CodeQL **default setup** (settings-side, deliberately no workflow file). This repo's CLAUDE.md/README mention no code scanning at all; whether default setup is enabled cannot be verified from the repo contents.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| O9  | The CSP in [public/\_headers](../public/_headers) (L10) keeps `'unsafe-inline'` in `script-src` without a rationale comment. The sibling repo documents why (`next-themes` + Next inline scripts; no nonces on a static export). Same technical constraint applies here, but the reasoning is undocumented, inviting a well-meaning "tightening" that would break theming.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 ---
 
 ## 2. Prioritized derived backlog
 
-| Priority | Item | Traces to | Size |
-| -------- | ---- | --------- | ---- |
-| P1 | Add an automated accessibility audit (axe-core Playwright spec) | O1 | M |
-| P2 | Add a post-deploy smoke workflow for the live site | O2 | S |
-| P3 | Deepen SEO: richer description/keywords + JSON-LD `Person` structured data | O3 | S |
-| P4 | Split Experience and Skills out of About into dedicated sections with nav anchors | O4 | M |
-| P5 | Introduce accent/border color tokens and migrate raw palette classes | O5 | M |
-| P6 | Run the `Mobile Chrome` Playwright project in CI (parity with sibling repo) | O6 | S |
-| P7 | Add a static-export preview script and remove/neutralize the misleading `start` | O7 | S |
-| P8 | Enable + document CodeQL default setup | O8 | S |
-| P9 | Document the CSP `'unsafe-inline'` rationale in `_headers` | O9 | S |
+| Priority | Item                                                                              | Traces to | Size |
+| -------- | --------------------------------------------------------------------------------- | --------- | ---- |
+| P1       | Add an automated accessibility audit (axe-core Playwright spec)                   | O1        | M    |
+| P2       | Add a post-deploy smoke workflow for the live site                                | O2        | S    |
+| P3       | Deepen SEO: richer description/keywords + JSON-LD `Person` structured data        | O3        | S    |
+| P4       | Split Experience and Skills out of About into dedicated sections with nav anchors | O4        | M    |
+| P5       | Introduce accent/border color tokens and migrate raw palette classes              | O5        | M    |
+| P6       | Run the `Mobile Chrome` Playwright project in CI (parity with sibling repo)       | O6        | S    |
+| P7       | Add a static-export preview script and remove/neutralize the misleading `start`   | O7        | S    |
+| P8       | Enable + document CodeQL default setup                                            | O8        | S    |
+| P9       | Document the CSP `'unsafe-inline'` rationale in `_headers`                        | O9        | S    |
 
 Items P1–P7 get full plans below; P8–P9 get short outlines.
 
@@ -83,6 +83,7 @@ Playwright specs live in `tests/` (not `test/` — that is the Vitest tree), so 
 coverage gate is unaffected.
 
 **Step-by-step tasks.**
+
 1. `npm i -D @axe-core/playwright` (updates [package.json](../package.json) +
    [package-lock.json](../package-lock.json); `dependency-review.yml` will vet it on the PR).
 2. Create `tests/a11y.spec.ts` with the three scans above; follow the locator style of the
@@ -113,7 +114,7 @@ dependency and upgrade deliberately.
 
 ### P2 — Post-deploy smoke workflow
 
-**Objective & rationale.** Nothing currently verifies the *deployed* site — CI validates the build,
+**Objective & rationale.** Nothing currently verifies the _deployed_ site — CI validates the build,
 Cloudflare deploys independently, and a bad deploy (missing `_headers`, DNS/cert issue, blank page)
 would go unnoticed. Evidence: O2 — workflow inventory is `ci.yml`, `dependency-review.yml`,
 `version.yml` only; the sibling repo runs a daily `smoke.yml` against its live domain, and this
@@ -141,6 +142,7 @@ schedule` (daily cron, e.g. `17 8 * * *` — offset minutes to avoid top-of-hour
 Keep it `curl | grep -i` based — no npm install, so the workflow is fast and dependency-free.
 
 **Step-by-step tasks.**
+
 1. Create `.github/workflows/smoke.yml` with the cron + dispatch triggers and the four assertion
    steps (fail the job on any miss with a clear message).
 2. Trigger once manually via `workflow_dispatch` to validate against the real site.
@@ -162,8 +164,8 @@ note in the workflow comment. A Cloudflare transient could fail a daily run; add
 
 ### P3 — SEO depth: real description, keywords, and JSON-LD `Person`
 
-**Objective & rationale.** The page has strong metadata *plumbing* (OpenGraph, Twitter card,
-robots, sitemap, manifest, canonical-capable `metadataBase`) but placeholder-grade *content*:
+**Objective & rationale.** The page has strong metadata _plumbing_ (OpenGraph, Twitter card,
+robots, sitemap, manifest, canonical-capable `metadataBase`) but placeholder-grade _content_:
 `description: "Personal website for Caitlyn Holland."` and a single keyword. There is no structured
 data at all. For a personal/professional site, a `Person` JSON-LD block and a descriptive snippet
 are the highest-leverage SEO items available. Evidence: O3; the page itself already contains the
@@ -194,6 +196,7 @@ Playwright spec asserts it") and must be updated in lockstep.
   it becomes unit-testable and keeps layout.tsx thin; prefer that.
 
 **Step-by-step tasks.**
+
 1. Create `lib/structured-data.ts` exporting the typed `Person` object and a
    `personJsonLd()` serializer.
 2. Edit [app/layout.tsx](../app/layout.tsx): extract `siteDescription`, apply to the three
@@ -260,6 +263,7 @@ these are static), semantic classes only, `cn()` for any conditional classes, ba
   to `navLinks` — both desktop and mobile menus render from that array, so one edit covers both.
 
 **Step-by-step tasks.**
+
 1. Create `components/sections/ExperienceSection.tsx` and `components/sections/SkillsSection.tsx`
    (content lifted verbatim from AboutSection; each gets an `h2` and section `id`).
 2. Slim [components/sections/AboutSection.tsx](../components/sections/AboutSection.tsx) to bio +
@@ -329,6 +333,7 @@ Then migrate the call sites, dropping the `dark:` duplicates. Keep `cn()` compos
 No behavior change intended — this is a refactor with pixel-identical output in both themes.
 
 **Step-by-step tasks.**
+
 1. Add the variables + utilities to [app/globals.css](../app/globals.css) (both `:root` and
    `.dark` blocks).
 2. Migrate [components/sections/AboutSection.tsx](../components/sections/AboutSection.tsx)
@@ -381,6 +386,7 @@ Mobile Chrome but its hamburger assertions must also pass on desktop-width chrom
 run there today via `test.use`).
 
 **Step-by-step tasks.**
+
 1. Edit [.github/workflows/ci.yml](../.github/workflows/ci.yml) L136 (quote `"Mobile Chrome"`).
 2. Locally run `npx playwright test --project=chromium --project="Mobile Chrome"` and fix any
    spec that assumed a desktop viewport (likely candidates:
@@ -389,7 +395,7 @@ run there today via `test.use`).
    layouts per [components/navigation.tsx](../components/navigation.tsx) L73/L78, so probably fine).
 3. `npm run format`.
 
-**Testing plan.** The change *is* a testing change; validation is a green two-project local run +
+**Testing plan.** The change _is_ a testing change; validation is a green two-project local run +
 green CI on the PR. No Vitest impact.
 
 **Docs updates.** CLAUDE.md: two spots say "CI runs Chromium only" (Testing section and CI/CD
@@ -420,6 +426,7 @@ the repo, CI, or Cloudflare invokes it; Cloudflare Pages runs `npm run build` on
 beats keeping a broken script.
 
 **Step-by-step tasks.**
+
 1. Edit [package.json](../package.json): delete `"start"`, add `"preview"`.
 2. `npm run build && npm run preview` once locally to confirm `out/` serves (including `_headers`
    being inert locally — note `serve` does not apply Cloudflare `_headers`; preview is for content,
@@ -443,8 +450,8 @@ otherwise.
 
 ### P8 — Enable + document CodeQL default setup
 
-The sibling repo scans JS/TS + Actions via CodeQL **default setup** (repo *Settings → Code
-security*), deliberately with no `codeql.yml` (advanced-config uploads conflict with default
+The sibling repo scans JS/TS + Actions via CodeQL **default setup** (repo _Settings → Code
+security_), deliberately with no `codeql.yml` (advanced-config uploads conflict with default
 setup). This repo documents no code scanning (O8). Action: verify in GitHub settings whether
 default setup is already enabled (not visible from the repo contents); enable it if not; then add
 a CLAUDE.md CI/CD bullet copying the sibling's wording, including the "no workflow file on
@@ -469,7 +476,7 @@ asserted. **Size: S.**
 ## 5. Suggested sequencing
 
 1. **P2, P7, P9** — independent, small, zero app-code risk; can land as one or three tiny PRs.
-2. **P1** — establish the axe gate *before* visual refactors.
+2. **P1** — establish the axe gate _before_ visual refactors.
 3. **P3** — metadata + structured data (touches `tests/seo.spec.ts` only among specs).
 4. **P5** — token migration under the protection of P1's contrast audit.
 5. **P4** — section split (largest visual change; benefits from P5's tokens and P1's gate).
