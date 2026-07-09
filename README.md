@@ -69,6 +69,11 @@ Two disjoint suites:
 
 Cloudflare Pages builds from the repo on every push to `main` (build command `npm run build`, output dir `out`, Node version from `.nvmrc`). Security headers are served from [`public/_headers`](public/_headers). CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validates format, coverage, build/lint, and e2e on every PR.
 
+Every merge to `main` is also tagged and published as a GitHub Release by
+[`version.yml`](.github/workflows/version.yml) using `v<major>.<minor>.<build>`
+SemVer tags. Build values auto-increment per major/minor line, and a new line
+may start at build `0`.
+
 ## Contributing
 
 Bug reports, accessibility fixes, and small improvements are welcome — see
