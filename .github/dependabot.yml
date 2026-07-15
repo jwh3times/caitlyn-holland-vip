@@ -23,6 +23,7 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
+      - "npm"
     groups:
       # --- Peer-locked families — majors only. All minor/patch bumps land in the
       #     catch-all group at the bottom. ---
@@ -100,6 +101,7 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
+      - "github-actions"
     groups:
       actions-minor-and-patch:
         patterns:
