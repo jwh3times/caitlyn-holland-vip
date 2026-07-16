@@ -31,7 +31,7 @@ No unreleased changes.
 
 ### Changed
 
-- Added `npm` and `github-actions` labels to the respective Dependabot update groups in `.github/dependabot.yml` (dependabot, PR #68).
+- Added `npm` and `github-actions` labels to the respective Dependabot update groups in `.github/dependabot.yml` (PR #68).
 
 ## [1.1.4] - 2026-07-15
 
@@ -62,4 +62,7 @@ No unreleased changes.
 ### Added
 
 - `AGENTS.md`, a coding-agent guidance file mirroring `CLAUDE.md`, covering project overview, commands, CI/CD, architecture, theming, styling, and development patterns.
+
+### Changed
+
 - `.github/workflows/version.yml` now tags merges to `main` with standard three-part SemVer `v<major>.<minor>.<build>` release tags and creates a GitHub Release for each tag, replacing the previous 4-part build-tag scheme (PR #63).
