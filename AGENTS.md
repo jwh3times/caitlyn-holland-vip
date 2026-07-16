@@ -69,8 +69,9 @@ CI runs Chromium only.
 
 ## CI/CD
 
-- `.github/workflows/ci.yml` runs on push and PR to `main` with four jobs:
-  `Format Check`, `Coverage`, `Build & Lint`, and `Playwright Tests`.
+- `.github/workflows/ci.yml` runs on push and PR to `main` with five jobs:
+  `Format Check`, `Coverage`, `Build & Lint`, `Playwright Tests`, and
+  `Changelog Version`.
 - `Format Check` runs `npm run format:check`; formatting drift fails CI.
 - `Coverage` runs `npm run coverage`, enforces the 80% thresholds, and uploads a
   `coverage-report` artifact.
@@ -78,14 +79,21 @@ CI runs Chromium only.
   `static-site` artifact.
 - `Playwright Tests` depends on `Build & Lint`, installs Chromium, and runs
   `npm run test:e2e -- --project=chromium`.
+- `Changelog Version` runs on pull requests only. It computes the version the
+  merge will mint via `scripts/next-version.sh` and fails if `CHANGELOG.md` has
+  no `## [x.y.z]` section for it. Dependabot PRs are exempt; the `ship` skill
+  backfills their entries on the next human ship.
 - `.github/workflows/dependency-review.yml` runs on PRs and fails on vulnerable
   dependency changes.
 - `.github/workflows/version.yml` tags every merge to `main` and creates a
   GitHub Release using standard SemVer `v<major>.<minor>.<build>`, such as
-  `v1.2.7`. The `package.json` `version` is the major/minor/build floor. For an
-  existing major/minor line, the workflow increments from the highest matching
-  tag. For a new major/minor line, `x.y.0` is valid and is tagged as `v<x.y>.0`
-  when that tag does not already exist.
+  `v1.2.7`. It computes the build number with `scripts/next-version.sh` — the
+  same script the `Changelog Version` guard and the `ship` skill use, so the tag
+  minted always matches the version the changelog was written for. The
+  `package.json` `version` is the major/minor/build floor. For an existing
+  major/minor line, the workflow increments from the highest matching tag. For a
+  new major/minor line, `x.y.0` is valid and is tagged as `v<x.y>.0` when that
+  tag does not already exist.
 - Cloudflare Pages deploys directly from the repo on push to `main` with build
   command `npm run build`, output directory `out`, and Node version from
   `.nvmrc`. There is no deploy workflow in this repo.
@@ -155,9 +163,10 @@ classes so dark mode works automatically.
 
 The Claude docs-updater subagent is configured at
 `.claude/agents/docs-updater.md` to keep `CLAUDE.md` and `README.md` in sync
-with code changes. A read-only Stop hook in `.claude/settings.json` checks docs
-freshness at the end of Claude response turns. It never edits files directly; it
-reports drift so the main session can invoke the docs updater.
+with code changes. It is invoked by the `ship` skill
+(`.claude/skills/ship/SKILL.md`) when a branch is shipped, scoped to that
+branch's diff — docs are refreshed at ship time rather than after every response
+turn. Say "ship it" when a branch is ready for review.
 
 When changing behavior, commands, architecture, CI, or docs automation, update
 `CLAUDE.md`, `AGENTS.md`, and `README.md` as appropriate so agent instructions
