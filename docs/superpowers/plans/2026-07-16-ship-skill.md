@@ -22,6 +22,7 @@
 
 ## File Structure
 
+- Create: `.gitattributes` — pin `*.sh` to LF (autocrlf=true would otherwise break git-bash).
 - Create: `scripts/next-version.sh` — computes next SemVer build (source of truth).
 - Modify: `.github/workflows/version.yml` — call the script instead of inline compute.
 - Create: `CHANGELOG.md` — Keep a Changelog file, seeded with `v1.1.x` history + `[1.1.6]` entry.
@@ -36,9 +37,22 @@
 
 **Files:**
 - Create: `scripts/next-version.sh`
+- Create: `.gitattributes`
 
 **Interfaces:**
 - Produces: an executable-via-`bash` script that prints `<major>.<minor>.<build>\n` to stdout. Consumed by Task 2 (version.yml), Task 4 (guard), and Task 6 (skill).
+
+**Line endings:** this repo has `core.autocrlf=true`, so without a rule, `.sh` files check out as CRLF on Windows and break when run via git-bash (the ship skill runs `bash scripts/next-version.sh` locally). A `.gitattributes` pinning `*.sh` to LF is required (Step 0).
+
+- [ ] **Step 0: Create `.gitattributes` (pin shell scripts to LF)**
+
+Create `.gitattributes` at the repo root with exactly:
+
+```gitattributes
+# Shell scripts must stay LF so they run under git-bash on Windows
+# (this repo has core.autocrlf=true).
+*.sh text eol=lf
+```
 
 - [ ] **Step 1: Write the failing test (run the not-yet-existing script)**
 
@@ -112,7 +126,7 @@ Expected: `5` (only the 3-part `v1.1.x` builds; `v1.0.0.x` never matches `v1.1.*
 - [ ] **Step 5: Commit**
 
 ```bash
-git add scripts/next-version.sh
+git add scripts/next-version.sh .gitattributes
 git commit -m "feat: add next-version.sh, single source of truth for the build number"
 ```
 
@@ -222,6 +236,7 @@ No unreleased changes.
 - `scripts/next-version.sh` — single source of truth for the next SemVer build, shared by the version workflow, the changelog CI guard, and the ship skill.
 - `Changelog Version` CI job that fails a PR whose `CHANGELOG.md` does not name the version the merge will mint (dependabot PRs exempt).
 - This `CHANGELOG.md`, seeded with the `v1.1.x` release history.
+- `.gitattributes` pinning shell scripts to LF so `scripts/next-version.sh` runs under git-bash on Windows.
 
 ### Changed
 
