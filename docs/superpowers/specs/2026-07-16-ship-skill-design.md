@@ -94,7 +94,7 @@ used by both the release workflow and the guard.
 - **Dependabot-exempt:** skip (pass) when the PR actor is `dependabot[bot]` — bots do
   not write changelog entries; the ship skill backfills those later.
 - Job name is `Changelog Version` so it can be added to the ruleset as a required check.
-- **Ruleset note (out of band):** for the guard to *block* merges it must be added to
+- **Ruleset note (out of band):** for the guard to _block_ merges it must be added to
   the "No Push to Main" ruleset's required checks (currently 5). The workflow is added
   here; making it required is a separate ruleset edit — offered as a final step (via
   `gh api` or the GitHub UI), not assumed.
@@ -136,7 +136,7 @@ Ported from guardiantracker, adapted. Announce at start:
    `CHANGELOG.md` + docs, so no separate markdown run is needed.) Fix formatting with
    `npm run format`. Build/coverage/Playwright stay in CI.
 7. **Commit** docs + changelog: `git add -A && git commit -m "docs: update docs and
-   changelog for v<version>"`.
+changelog for v<version>"`.
 8. **Push and open/update PR:** `git push -u origin <branch>`; if a PR exists for the
    branch, `gh pr edit` the body; else `gh pr create --base main` with a title/body
    derived from the changelog entry.
@@ -160,6 +160,7 @@ Windows note: the skill invokes `next-version.sh` and git/gh via the **Bash** to
 ### 7. Docs (CLAUDE.md / README.md)
 
 Updated on this branch via `docs-updater`:
+
 - "Agents & docs automation" section: Stop hook → the ship skill (docs are refreshed at
   ship time, not after every turn).
 - "CI/CD" section: add the `Changelog Version` job and note `CHANGELOG.md`.

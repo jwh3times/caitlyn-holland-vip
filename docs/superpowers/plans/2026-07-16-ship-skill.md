@@ -36,10 +36,12 @@
 ### Task 1: `scripts/next-version.sh` (single source of truth)
 
 **Files:**
+
 - Create: `scripts/next-version.sh`
 - Create: `.gitattributes`
 
 **Interfaces:**
+
 - Produces: an executable-via-`bash` script that prints `<major>.<minor>.<build>\n` to stdout. Consumed by Task 2 (version.yml), Task 4 (guard), and Task 6 (skill).
 
 **Line endings:** this repo has `core.autocrlf=true`, so without a rule, `.sh` files check out as CRLF on Windows and break when run via git-bash (the ship skill runs `bash scripts/next-version.sh` locally). A `.gitattributes` pinning `*.sh` to LF is required (Step 0).
@@ -135,9 +137,11 @@ git commit -m "feat: add next-version.sh, single source of truth for the build n
 ### Task 2: Refactor `version.yml` to call the script
 
 **Files:**
+
 - Modify: `.github/workflows/version.yml` (the "Compute next SemVer build tag" step, currently lines ~42–81)
 
 **Interfaces:**
+
 - Consumes: `bash scripts/next-version.sh` from Task 1.
 - Produces: unchanged step outputs `version`, `tag`, `build`, `requested_version`.
 
@@ -146,27 +150,27 @@ git commit -m "feat: add next-version.sh, single source of truth for the build n
 In `.github/workflows/version.yml`, replace the entire `- name: Compute next SemVer build tag` step (the `id: version` step and its inline `run:` block) with:
 
 ```yaml
-      - name: Compute next SemVer build tag
-        id: version
-        run: |
-          version=$(bash scripts/next-version.sh)
-          tag="v${version}"
+- name: Compute next SemVer build tag
+  id: version
+  run: |
+    version=$(bash scripts/next-version.sh)
+    tag="v${version}"
 
-          if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
-            echo "::error::Computed tag '${tag}' already exists."
-            exit 1
-          fi
+    if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
+      echo "::error::Computed tag '${tag}' already exists."
+      exit 1
+    fi
 
-          IFS=. read -r major minor build <<< "$version"
-          requested_version=$(grep -m1 '"version"' package.json \
-            | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
+    IFS=. read -r major minor build <<< "$version"
+    requested_version=$(grep -m1 '"version"' package.json \
+      | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
 
-          {
-            echo "version=${version}"
-            echo "tag=${tag}"
-            echo "build=${build}"
-            echo "requested_version=${requested_version}"
-          } >> "$GITHUB_OUTPUT"
+    {
+      echo "version=${version}"
+      echo "tag=${tag}"
+      echo "build=${build}"
+      echo "requested_version=${requested_version}"
+    } >> "$GITHUB_OUTPUT"
 ```
 
 Leave the `name: Version`, triggers, permissions, concurrency, checkout (with `fetch-depth: 0`), and the "Push tag and create release" step **unchanged**.
@@ -179,9 +183,11 @@ Expected: `ok`
 - [ ] **Step 3: Simulate the compute step locally (behavior unchanged)**
 
 Run:
+
 ```bash
 version=$(bash scripts/next-version.sh); echo "tag=v${version}"; git rev-parse -q --verify "refs/tags/v${version}" >/dev/null && echo "EXISTS" || echo "free"
 ```
+
 Expected: `tag=v1.1.6` then `free` (the tag does not yet exist, so the workflow would proceed to mint it).
 
 - [ ] **Step 4: Commit**
@@ -196,20 +202,24 @@ git commit -m "refactor: compute release build via next-version.sh"
 ### Task 3: Create and seed `CHANGELOG.md`
 
 **Files:**
+
 - Create: `CHANGELOG.md`
 
 **Interfaces:**
+
 - Produces: a `CHANGELOG.md` containing `## [Unreleased]` and `## [1.1.6]` (Task 4's guard greps for the `[1.1.6]` section).
 
 - [ ] **Step 1: Gather backfill data for the `v1.1.x` line**
 
 Run:
+
 ```bash
 for t in v1.1.0 v1.1.1 v1.1.2 v1.1.3 v1.1.4 v1.1.5; do
   echo "=== $t ($(git log -1 --format=%ad --date=short "$t")) ==="
   git show --stat --format='%s' "$t" | head -20
 done
 ```
+
 Use the output to write factual one-line summaries per release in Step 2 (name packages/versions for dependabot bumps; describe the change otherwise).
 
 - [ ] **Step 2: Write `CHANGELOG.md`**
@@ -246,7 +256,7 @@ No unreleased changes.
 
 - The docs-freshness `Stop` hook in `.claude/settings.json`; docs are now refreshed at ship time by the ship skill instead of after every response turn.
 
-## [1.1.5] - <date> 
+## [1.1.5] - <date>
 
 ### Changed
 
@@ -312,9 +322,11 @@ git commit -m "docs: add CHANGELOG.md seeded with v1.1.x history"
 ### Task 4: Add the `Changelog Version` guard job to `ci.yml`
 
 **Files:**
+
 - Modify: `.github/workflows/ci.yml` (append a new job under `jobs:`)
 
 **Interfaces:**
+
 - Consumes: `bash scripts/next-version.sh` (Task 1) and `CHANGELOG.md` (Task 3).
 
 - [ ] **Step 1: Add the job**
@@ -322,38 +334,38 @@ git commit -m "docs: add CHANGELOG.md seeded with v1.1.x history"
 Append this job to the `jobs:` map in `.github/workflows/ci.yml` (same indentation level as `format:`, `coverage:`, `build:`, `test:`):
 
 ```yaml
-  changelog:
-    name: Changelog Version
-    runs-on: ubuntu-latest
-    # PRs only: on push to main the "next" version has no entry yet, which would
-    # false-fail. Branch protection gates the PR, so a PR-only check is sufficient.
-    if: github.event_name == 'pull_request'
+changelog:
+  name: Changelog Version
+  runs-on: ubuntu-latest
+  # PRs only: on push to main the "next" version has no entry yet, which would
+  # false-fail. Branch protection gates the PR, so a PR-only check is sufficient.
+  if: github.event_name == 'pull_request'
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0 # full history + tags, needed by next-version.sh
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v7
+      with:
+        fetch-depth: 0 # full history + tags, needed by next-version.sh
 
-      - name: Verify CHANGELOG names the target version
-        env:
-          PR_ACTOR: ${{ github.actor }}
-        run: |
-          # Dependabot does not write changelog entries; the ship skill backfills
-          # them on the next human ship. Exempt bot PRs so they are not blocked.
-          if [ "$PR_ACTOR" = "dependabot[bot]" ]; then
-            echo "Dependabot PR — changelog guard exempt."
-            exit 0
-          fi
+    - name: Verify CHANGELOG names the target version
+      env:
+        PR_ACTOR: ${{ github.actor }}
+      run: |
+        # Dependabot does not write changelog entries; the ship skill backfills
+        # them on the next human ship. Exempt bot PRs so they are not blocked.
+        if [ "$PR_ACTOR" = "dependabot[bot]" ]; then
+          echo "Dependabot PR — changelog guard exempt."
+          exit 0
+        fi
 
-          version=$(bash scripts/next-version.sh)
-          version_re=$(printf '%s' "$version" | sed 's/\./\\./g')
+        version=$(bash scripts/next-version.sh)
+        version_re=$(printf '%s' "$version" | sed 's/\./\\./g')
 
-          if ! grep -Eq "^## \[${version_re}\]" CHANGELOG.md; then
-            echo "::error::CHANGELOG.md has no '## [${version}]' section for the version this merge will mint. Run /ship to write it."
-            exit 1
-          fi
-          echo "CHANGELOG.md has an entry for ${version}."
+        if ! grep -Eq "^## \[${version_re}\]" CHANGELOG.md; then
+          echo "::error::CHANGELOG.md has no '## [${version}]' section for the version this merge will mint. Run /ship to write it."
+          exit 1
+        fi
+        echo "CHANGELOG.md has an entry for ${version}."
 ```
 
 - [ ] **Step 2: Validate the YAML and the job name**
@@ -364,9 +376,11 @@ Expected: `ok`
 - [ ] **Step 3: Reproduce the guard locally — passing path**
 
 Run:
+
 ```bash
 version=$(bash scripts/next-version.sh); version_re=$(printf '%s' "$version" | sed 's/\./\\./g'); grep -Eq "^## \[${version_re}\]" CHANGELOG.md && echo "GUARD PASS" || echo "GUARD FAIL"
 ```
+
 Expected: `GUARD PASS` (the `[1.1.6]` section from Task 3 exists).
 
 - [ ] **Step 4: Reproduce the guard locally — failing path (sanity)**
@@ -386,6 +400,7 @@ git commit -m "ci: add Changelog Version guard (PR-only, dependabot-exempt)"
 ### Task 5: Remove the `Stop` hook from `.claude/settings.json`
 
 **Files:**
+
 - Modify: `.claude/settings.json`
 
 - [ ] **Step 1: Replace the file contents**
@@ -428,6 +443,7 @@ git commit -m "chore: remove docs-freshness Stop hook (superseded by ship skill)
 ### Task 6: Create the `ship` skill
 
 **Files:**
+
 - Create: `.claude/skills/ship/SKILL.md`
 
 - [ ] **Step 1: Write the skill**
@@ -600,9 +616,11 @@ the fast checks.
 - [ ] **Step 2: Verify the skill has the load-bearing pieces**
 
 Run:
+
 ```bash
 for s in "name: ship" "I'm using the ship skill" "bash scripts/next-version.sh" "npm run format:check" "npx tsc --noEmit" "leave" "Do not"; do grep -qF "$s" .claude/skills/ship/SKILL.md && echo "ok: $s" || echo "MISSING: $s"; done
 ```
+
 Expected: every line prefixed `ok:` (no `MISSING:`).
 
 - [ ] **Step 3: Verify prettier accepts the skill file**
@@ -622,6 +640,7 @@ git commit -m "feat: add ship skill for opening PRs with docs + changelog"
 ### Task 7: Update `CLAUDE.md`
 
 **Files:**
+
 - Modify: `CLAUDE.md` ("CI/CD" section and "Agents & docs automation" section)
 
 - [ ] **Step 1: Update the `ci.yml` bullet in the CI/CD section**
@@ -658,9 +677,11 @@ changelog names the version the merge will actually mint.
 - [ ] **Step 4: Verify the edits landed and old text is gone**
 
 Run:
+
 ```bash
 grep -qF "**five** jobs" CLAUDE.md && grep -qF "Changelog Version" CLAUDE.md && grep -qF "ship it" CLAUDE.md && ! grep -qF "Stop hook in \`.claude/settings.json\`" CLAUDE.md && echo "docs ok" || echo "DOC EDIT INCOMPLETE"
 ```
+
 Expected: `docs ok`
 
 - [ ] **Step 5: Verify prettier accepts the docs**
@@ -689,9 +710,11 @@ Expected: all three pass. Fix formatting with `npm run format` and re-run if `fo
 - [ ] **Step 2: Confirm the guard would be green for this branch**
 
 Run:
+
 ```bash
 version=$(bash scripts/next-version.sh); version_re=$(printf '%s' "$version" | sed 's/\./\\./g'); grep -Eq "^## \[${version_re}\]" CHANGELOG.md && echo "guard green for $version" || echo "GUARD RED"
 ```
+
 Expected: `guard green for 1.1.6`.
 
 - [ ] **Step 3: Open the PR by invoking the new `ship` skill**
@@ -699,6 +722,7 @@ Expected: `guard green for 1.1.6`.
 Invoke `/ship` (or the ship skill) to dogfood it end-to-end. Because the docs and changelog are already written and committed, ship's backfill/changelog/commit steps should be near no-ops (its commit step is guarded on `git status --porcelain`); it will run the fast checks, push `agent/ship-skill`, and open the PR to `main`.
 
 If ship surfaces a problem, fall back to manual:
+
 ```bash
 git push -u origin agent/ship-skill
 gh pr create --base main --title "Add ship skill + enforced changelog" --body "See CHANGELOG.md [1.1.6]. Replaces the docs-freshness Stop hook with the ship skill; adds scripts/next-version.sh, the Changelog Version guard, and CHANGELOG.md."
@@ -713,6 +737,7 @@ Report the PR URL and the version the merge will mint (`v1.1.6`). Then tell the 
 ## Self-Review
 
 **1. Spec coverage:**
+
 - next-version.sh (script, no jq, legacy filter, acceptance 1.1.6) → Task 1 ✓
 - version.yml refactor to shared script → Task 2 ✓
 - Changelog Version guard job in ci.yml, PR-only, dependabot-exempt → Task 4 ✓
