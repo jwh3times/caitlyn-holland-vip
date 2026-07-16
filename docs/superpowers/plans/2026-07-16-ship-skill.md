@@ -418,13 +418,22 @@ Overwrite `.claude/settings.json` with (the `hooks` block is removed; three allo
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
-      "Bash(git fetch:*)",
+      "Bash(git fetch --tags -q origin)",
       "Bash(gh auth status)",
       "Bash(bash scripts/next-version.sh)"
     ]
   }
 }
 ```
+
+The fetch entry is an **exact match**, not `Bash(git fetch:*)`. A `git fetch:*` glob would
+also match `git fetch --upload-pack='<any shell command>' .`, which git executes through a
+shell on the local transport — i.e. unprompted arbitrary code execution from a rule that
+reads as a harmless network fetch. (Verified against git 2.55.0: the payload runs and the
+fetch still succeeds.) The same glob would also permit `git fetch . +refs/heads/x:refs/heads/y`
+to clobber local refs and `git fetch <arbitrary-url>` to reach any host. The skill only ever
+runs one fetch — `git fetch --tags -q origin` — so exact-match costs nothing and closes the
+whole class.
 
 - [ ] **Step 2: Verify valid JSON and the hook is gone**
 

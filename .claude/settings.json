@@ -8,7 +8,7 @@
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
-      "Bash(git fetch:*)",
+      "Bash(git fetch --tags -q origin)",
       "Bash(gh auth status)",
       "Bash(bash scripts/next-version.sh)"
     ]
