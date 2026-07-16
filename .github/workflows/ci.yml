@@ -142,3 +142,36 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+  changelog:
+    name: Changelog Version
+    runs-on: ubuntu-latest
+    # PRs only: on push to main the "next" version has no entry yet, which would
+    # false-fail. Branch protection gates the PR, so a PR-only check is sufficient.
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # full history + tags, needed by next-version.sh
+
+      - name: Verify CHANGELOG names the target version
+        env:
+          PR_ACTOR: ${{ github.actor }}
+        run: |
+          # Dependabot does not write changelog entries; the ship skill backfills
+          # them on the next human ship. Exempt bot PRs so they are not blocked.
+          if [ "$PR_ACTOR" = "dependabot[bot]" ]; then
+            echo "Dependabot PR — changelog guard exempt."
+            exit 0
+          fi
+
+          version=$(bash scripts/next-version.sh)
+          version_re=$(printf '%s' "$version" | sed 's/\./\\./g')
+
+          if ! grep -Eq "^## \[${version_re}\]" CHANGELOG.md; then
+            echo "::error::CHANGELOG.md has no '## [${version}]' section for the version this merge will mint. Run /ship to write it."
+            exit 1
+          fi
+          echo "CHANGELOG.md has an entry for ${version}."

@@ -25,7 +25,14 @@ Follow the [Getting started](./README.md#getting-started) section of the README
    ```
 
 4. Open a Pull Request and fill in the template. CI (format, coverage, build &
-   lint, Playwright) and the dependency-review check must pass.
+   lint, Playwright, changelog) and the dependency-review check must pass.
+
+   The `Changelog Version` check requires [`CHANGELOG.md`](CHANGELOG.md) to have
+   a `## [x.y.z]` section for the version your merge will mint — every merge to
+   `main` is auto-tagged, so an `[Unreleased]` heading alone will not pass. Run
+   `bash scripts/next-version.sh` to see that version, or say "ship it" to
+   Claude Code and the `ship` skill writes the entry for you. Dependabot PRs are
+   exempt.
 
 ## Standards
 

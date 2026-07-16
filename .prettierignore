@@ -13,6 +13,9 @@ dist/
 .DS_Store
 *.pem
 
+# Agent scratch (gitignored, never reaches CI)
+.superpowers/
+
 # Logs
 *.log
 

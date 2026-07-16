@@ -1,0 +1,7 @@
+# Normalize all text to LF in the index and check it out as LF, matching the
+# `endOfLine: "lf"` policy in .prettierrc. Without this, core.autocrlf=true
+# checks files out as CRLF, which prettier --check then rejects.
+* text=auto eol=lf
+
+# Shell scripts must stay LF so they run under git-bash on Windows.
+*.sh text eol=lf

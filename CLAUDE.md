@@ -55,9 +55,9 @@ E2E specs in [tests/](tests/) cover homepage rendering, navigation, theme toggli
 
 ## CI/CD
 
-- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with **four** jobs: `Format Check` (`npm run format:check`), `Coverage` (`npm run coverage` — **fails below the 80% thresholds** and uploads a `coverage-report` artifact), `Build & Lint` (`npm run lint` + `npm run build`, uploads the `static-site` artifact), and `Playwright Tests` (needs Build & Lint; installs Chromium and runs `npm run test:e2e -- --project=chromium`). **A PR fails CI if formatting drifts — run `npm run format` before committing.**
+- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with **five** jobs: `Format Check` (`npm run format:check`), `Coverage` (`npm run coverage` — **fails below the 80% thresholds** and uploads a `coverage-report` artifact), `Build & Lint` (`npm run lint` + `npm run build`, uploads the `static-site` artifact), `Playwright Tests` (needs Build & Lint; installs Chromium and runs `npm run test:e2e -- --project=chromium`), and `Changelog Version` (PRs only; computes the next version via [scripts/next-version.sh](scripts/next-version.sh) and fails if [CHANGELOG.md](CHANGELOG.md) has no `## [x.y.z]` section for it — dependabot PRs are exempt). **A PR fails CI if formatting drifts — run `npm run format` before committing.**
 - **Dependency review — [.github/workflows/dependency-review.yml](.github/workflows/dependency-review.yml)** — on PRs, fails on vulnerable dependency changes.
-- **Versioning — [.github/workflows/version.yml](.github/workflows/version.yml)** — on every merge (push) to `main`, tags the merge commit and creates a GitHub Release using standard SemVer `v<major>.<minor>.<build>` (e.g. `v1.2.7`). The `package.json` `version` is the major/minor/build floor. For an existing major/minor line, the workflow increments from the highest matching tag. For a new major/minor line, `x.y.0` is valid and is tagged as `v<x.y>.0` when that tag does not already exist.
+- **Versioning — [.github/workflows/version.yml](.github/workflows/version.yml)** — on every merge (push) to `main`, tags the merge commit and creates a GitHub Release using standard SemVer `v<major>.<minor>.<build>` (e.g. `v1.2.7`). It computes the build number with [scripts/next-version.sh](scripts/next-version.sh) — the same script the `Changelog Version` guard and the `ship` skill use, so the tag minted always matches the version the changelog was written for. The `package.json` `version` is the major/minor/build floor; for an existing major/minor line the build increments from the highest matching tag, and a new `x.y.0` line is tagged `v<x.y>.0` when that tag does not already exist.
 - **Deployment — Cloudflare Pages** — builds directly from the repo on push to `main` (build command `npm run build`, output dir `out`, Node version from [.nvmrc](.nvmrc)). There is no deploy workflow in the repo — CI is a parallel quality gate, not a deploy gate.
 
 ## Architecture
@@ -86,7 +86,10 @@ E2E specs in [tests/](tests/) cover homepage rendering, navigation, theme toggli
 ## Agents & docs automation
 
 The `docs-updater` subagent (`.claude/agents/docs-updater.md`) keeps CLAUDE.md and README.md in
-sync with the code. Docs freshness is auto-checked at the end of every response turn by a read-only
-Stop hook in `.claude/settings.json` (single pre-approved git command + Read/Grep/Glob — it never
-edits files). When it detects drift it blocks the stop with specifics and the main session invokes
-`docs-updater` to fix exactly that drift.
+sync with the code. Docs are refreshed when you **ship a branch**: the `ship` skill
+(`.claude/skills/ship/SKILL.md`) invokes `docs-updater` (scoped to the branch diff) as part of
+opening a PR — alongside computing the version the merge will mint via
+[scripts/next-version.sh](scripts/next-version.sh), writing the [CHANGELOG.md](CHANGELOG.md) entry
+for it, running the fast checks (`format:check`, `lint`, `tsc --noEmit`), and pushing. Say
+"ship it" when a branch is ready for review. The `Changelog Version` CI job then verifies the
+changelog names the version the merge will actually mint.
