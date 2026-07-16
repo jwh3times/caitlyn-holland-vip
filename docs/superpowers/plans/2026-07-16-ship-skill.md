@@ -415,16 +415,28 @@ Overwrite `.claude/settings.json` with (the `hooks` block is removed; three allo
       "Bash(npm test:*)",
       "Bash(npm install:*)",
       "Bash(npx playwright test:*)",
+      "Bash(npx tsc --noEmit)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
+      "Bash(git tag -l:*)",
+      "Bash(git merge-base:*)",
+      "Bash(git branch --show-current)",
       "Bash(git fetch --tags -q origin)",
       "Bash(gh auth status)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
       "Bash(bash scripts/next-version.sh)"
     ]
   }
 }
 ```
+
+Each rule is the narrowest form that still covers what ship runs, because a glob one level
+too wide silently grants the thing the skill forbids: `Bash(gh pr:*)` would allow
+`gh pr merge`, `Bash(git tag:*)` would allow `git tag -d`/`-f`, and
+`Bash(git branch:*)` would allow `git branch -D`. Hence `gh pr list`/`gh pr view`,
+`git tag -l`, and an exact `git branch --show-current`.
 
 The fetch entry is an **exact match**, not `Bash(git fetch:*)`. A `git fetch:*` glob would
 also match `git fetch --upload-pack='<any shell command>' .`, which git executes through a

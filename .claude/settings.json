@@ -5,11 +5,17 @@
       "Bash(npm test:*)",
       "Bash(npm install:*)",
       "Bash(npx playwright test:*)",
+      "Bash(npx tsc --noEmit)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
+      "Bash(git tag -l:*)",
+      "Bash(git merge-base:*)",
+      "Bash(git branch --show-current)",
       "Bash(git fetch --tags -q origin)",
       "Bash(gh auth status)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
       "Bash(bash scripts/next-version.sh)"
     ]
   }
