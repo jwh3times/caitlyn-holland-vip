@@ -17,11 +17,13 @@ No unreleased changes.
 - `scripts/next-version.sh` — single source of truth for the next SemVer build, shared by the version workflow, the changelog CI guard, and the ship skill.
 - `Changelog Version` CI job that fails a PR whose `CHANGELOG.md` does not name the version the merge will mint (dependabot PRs exempt).
 - This `CHANGELOG.md`, seeded with the `v1.1.x` release history.
-- `.gitattributes` pinning shell scripts to LF so `scripts/next-version.sh` runs under git-bash on Windows.
+- `.gitattributes` normalizing text files to LF, matching the `endOfLine: "lf"` policy in `.prettierrc`. Previously `core.autocrlf=true` checked files out as CRLF, so `prettier --check .` failed on a fresh clone and `git status` reported unmodified files as changed on Windows.
 
 ### Changed
 
 - `.github/workflows/version.yml` now computes the build number via `scripts/next-version.sh` instead of an inline script.
+- `AGENTS.md` and `CLAUDE.md` now document the ship skill and the `Changelog Version` job in place of the removed Stop hook.
+- `.prettierignore` now excludes the gitignored `.superpowers/` agent scratch directory, which `prettier --check .` was failing on.
 
 ### Removed
 
