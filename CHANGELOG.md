@@ -15,7 +15,7 @@ No unreleased changes.
 
 - `ship` skill (`.claude/skills/ship/SKILL.md`) that refreshes docs, computes the version the merge will mint, writes the CHANGELOG entry, runs fast checks, and opens or updates the PR.
 - `scripts/next-version.sh` — single source of truth for the next SemVer build, shared by the version workflow, the changelog CI guard, and the ship skill.
-- `Changelog Version` CI job that fails a PR whose `CHANGELOG.md` does not name the version the merge will mint (dependabot PRs exempt).
+- `Changelog Version` CI job that fails a PR whose `CHANGELOG.md` does not name the version the merge will mint (dependabot PRs exempt). It is a required check on the "No Push to Main" ruleset, so it blocks the merge.
 - This `CHANGELOG.md`, seeded with the `v1.1.x` release history.
 - `.gitattributes` normalizing text files to LF, matching the `endOfLine: "lf"` policy in `.prettierrc`. Previously `core.autocrlf=true` checked files out as CRLF, so `prettier --check .` failed on a fresh clone and `git status` reported unmodified files as changed on Windows.
 
@@ -24,6 +24,7 @@ No unreleased changes.
 - `.github/workflows/version.yml` now computes the build number via `scripts/next-version.sh` instead of an inline script.
 - `AGENTS.md` and `CLAUDE.md` now document the ship skill and the `Changelog Version` job in place of the removed Stop hook.
 - `.prettierignore` now excludes the gitignored `.superpowers/` agent scratch directory, which `prettier --check .` was failing on.
+- `.claude/settings.json` now allowlists the read-only commands the ship skill runs (`npx tsc --noEmit`, `git tag -l`, `git merge-base`, `git branch --show-current`, `gh pr list`/`view`), so shipping prompts only for the operations that change something.
 
 ### Removed
 
