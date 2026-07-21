@@ -158,11 +158,14 @@ jobs:
 
       - name: Verify CHANGELOG names the target version
         env:
-          PR_ACTOR: ${{ github.actor }}
+          # The PR *author*, deliberately not github.actor. github.actor is whoever
+          # triggered the run, so clicking "Update branch" or re-running a dependabot
+          # PR made it a human and silently revoked the exemption below.
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
         run: |
           # Dependabot does not write changelog entries; the ship skill backfills
           # them on the next human ship. Exempt bot PRs so they are not blocked.
-          if [ "$PR_ACTOR" = "dependabot[bot]" ]; then
+          if [ "$PR_AUTHOR" = "dependabot[bot]" ]; then
             echo "Dependabot PR — changelog guard exempt."
             exit 0
           fi

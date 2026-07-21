@@ -55,11 +55,30 @@ drops the legacy 4-part `v1.0.0.x` tags (they predate the changelog and are neve
 backfilled).
 
 Anything listed is a released version with no entry — in practice a merged dependabot PR,
-which the CI guard exempts. Backfill it now: read what that tag changed
-(`git show --stat v<version>`, and the `package.json` diff for dependency bumps) and add a
-dated section in the right position, newest first. Keep it factual — name the packages and
-versions. Attribute to dependabot **only** if `git log -1 --format=%an v<version>` really
-is `dependabot[bot]`; a human commit that merely edits dependabot config is not a bot PR.
+which the CI guard exempts. Backfill it now: read what that tag changed and add a dated
+section in the right position, newest first. Use the merge's **second parent** (`^2`) — the
+branch that was merged — because the tag itself is the merge commit:
+
+```bash
+git log -1 --format='%cs' "v<version>"                 # date for the section heading
+git log --format='%s%n%b' "v<version>^1..v<version>^2"  # what actually landed
+git diff "v<version>^1" "v<version>" -- package.json    # dependency bumps
+```
+
+Keep it factual — name the packages and versions. A lockfile-only bump (empty
+`package.json` diff) is a transitive dependency; say so rather than implying a direct one.
+
+Attribute to dependabot **only** if the merged branch's commits are the bot's:
+
+```bash
+git log -1 --format=%an "v<version>^2"    # → dependabot[bot] for a bot PR
+```
+
+Check `^2`, **not** `git log -1 --format=%an v<version>` — that reads the merge commit,
+whose author is always the human who clicked Merge, so it never reports `dependabot[bot]`
+and would misclassify every bot PR as human. If the tag is not a merge commit (`^2` fails),
+fall back to the tag's own author. A human commit that merely edits dependabot config is
+not a bot PR.
 
 This is what makes the bot exemption safe. Skipping it lets the changelog silently lose
 versions.
