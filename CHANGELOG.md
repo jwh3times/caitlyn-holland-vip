@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.1.9] - 2026-07-21
+
+### Changed
+
+- Bumped the transitive dependency `brace-expansion` from 5.0.6 to 5.0.7 in `package-lock.json` (dependabot, PR #73).
+
+## [1.1.8] - 2026-07-21
+
+### Changed
+
+- Bumped `@testing-library/jest-dom` from 6.9.1 to 7.0.0 (dependabot, PR #71).
+
+## [1.1.7] - 2026-07-17
+
+### Changed
+
+- Bumped `lucide-react` from 1.24.0 to 1.25.0, `@tailwindcss/postcss` from 4.3.2 to 4.3.3, and `autoprefixer` from 10.5.3 to 10.5.4 in the npm-minor-and-patch group; `tailwindcss` also moved to 4.3.3 within the existing `^4.3.1` range, so only the lockfile changed for it (dependabot, PR #70).
+
 ## [1.1.6] - 2026-07-16
 
 ### Added
