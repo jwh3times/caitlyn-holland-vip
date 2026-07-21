@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.1.10] - 2026-07-21
+
+### Fixed
+
+- The `Changelog Version` CI job now decides the dependabot exemption from the PR author (`github.event.pull_request.user.login`) instead of `github.actor`. `github.actor` is whoever triggered the run, so clicking "Update branch" on a dependabot PR — or re-running its checks — made the actor a human and revoked the exemption, failing a required check on a PR that by policy carries no changelog entry. The exemption now holds for the life of the PR regardless of who triggers the run.
+- `.prettierignore` now excludes `.claude/settings.local.json`. The file is gitignored so CI never saw it, but `prettier --check .` did, so every local `npm run format:check` — including the one the `ship` skill runs as a gate before pushing — failed on a file that is not part of the repository.
+- The `ship` skill's backfill step (step 2) now identifies a dependabot release from the merge's second parent (`git log -1 --format=%an "v<version>^2"`) rather than the merge commit itself. A merge commit is always authored by the human who clicked Merge, so the old check never matched `dependabot[bot]` and would have attributed every bot release to a human. Step 2 also now spells out the commands for reading what a tag changed, and notes that an empty `package.json` diff means a lockfile-only transitive bump.
+
 ## [1.1.9] - 2026-07-21
 
 ### Changed
