@@ -15,6 +15,7 @@ dist/
 
 # Agent scratch (gitignored, never reaches CI)
 .superpowers/
+.claude/settings.local.json
 
 # Logs
 *.log
