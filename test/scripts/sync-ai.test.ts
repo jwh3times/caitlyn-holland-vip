@@ -67,6 +67,13 @@ describe("parseFrontmatter", () => {
     expect(data.description).toBe("A sample agent — does things.");
     expect(data.model).toBe("sonnet");
   });
+
+  it("strips surrounding double and single quotes from values", () => {
+    const raw = `---\nname: "quoted-name"\ndescription: 'Has a colon: yes'\n---\n\nbody\n`;
+    const { data } = parseFrontmatter(raw);
+    expect(data.name).toBe("quoted-name");
+    expect(data.description).toBe("Has a colon: yes");
+  });
 });
 
 describe("tomlString", () => {

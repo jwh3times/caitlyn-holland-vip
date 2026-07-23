@@ -174,11 +174,15 @@ them. These are the cheap gates that catch most mistakes in seconds:
 npm run format:check
 npm run lint
 npx tsc --noEmit
+npm run sync:ai && git status --porcelain -- .codex .agents
 ```
 
 `npm run format:check` is `prettier --check .` at the repo root, so it already covers
 `CHANGELOG.md`, the docs, and the source — there is no separate markdown run. Fix
-formatting with `npm run format`. If any check is red, stop and report — do not push.
+formatting with `npm run format`. The `sync:ai` line regenerates the Codex mirrors and
+must print **nothing**; any output means a `.claude/` source edit wasn't synced — commit
+the regenerated `.codex/` / `.agents/` files before pushing. If any check is red, stop
+and report — do not push.
 
 ### 7. Commit the docs and changelog
 
