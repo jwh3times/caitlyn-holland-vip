@@ -67,7 +67,7 @@ Two disjoint suites:
 
 ## Deployment
 
-Cloudflare Pages builds from the repo on every push to `main` (build command `npm run build`, output dir `out`, Node version from `.nvmrc`). Security headers are served from [`public/_headers`](public/_headers). CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validates format, coverage, build/lint, and e2e on every PR, plus (PR-only) that [`CHANGELOG.md`](CHANGELOG.md) names the version the merge will mint.
+Cloudflare Pages builds from the repo on every push to `main` (build command `npm run build`, output dir `out`, Node version from `.nvmrc`). Security headers are served from [`public/_headers`](public/_headers). CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validates format, coverage, build/lint, e2e, and AI-tool config parity on every PR, plus (PR-only) that [`CHANGELOG.md`](CHANGELOG.md) names the version the merge will mint.
 
 Every merge to `main` is also tagged and published as a GitHub Release by
 [`version.yml`](.github/workflows/version.yml) using `v<major>.<minor>.<build>`
@@ -79,7 +79,7 @@ may start at build `0`.
 Bug reports, accessibility fixes, and small improvements are welcome — see
 [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and local checks. By participating you agree to
 the [Code of Conduct](CODE_OF_CONDUCT.md). Report vulnerabilities privately per
-[SECURITY.md](SECURITY.md). Developer conventions live in [CLAUDE.md](CLAUDE.md).
+[SECURITY.md](SECURITY.md). Developer conventions live in [AGENTS.md](AGENTS.md) (Claude Code reads them via an `@AGENTS.md` import in [CLAUDE.md](CLAUDE.md)).
 
 ## License
 
