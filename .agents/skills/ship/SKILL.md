@@ -3,6 +3,8 @@ name: ship
 description: Ship the current branch — refresh docs, write the CHANGELOG entry for the version this merge will mint, run fast checks, push, and open or update the PR. Use when a feature branch is ready for review, or when the user says "ship it", "open a PR", or "push this".
 ---
 
+<!-- AUTO-GENERATED from .claude/skills/ship/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # Ship
 
 Take the current branch from "code is done" to "PR is open and green-able", and make

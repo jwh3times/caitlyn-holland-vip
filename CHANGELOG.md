@@ -9,6 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.1.14] - 2026-07-23
+
+### Added
+
+- Single source of truth for AI coding-tool configuration. `AGENTS.md` is now the canonical, tool-neutral project guide, and `CLAUDE.md` imports it via `@AGENTS.md` plus a short Claude-specific section, so shared guidance is authored once. A new `scripts/sync-ai.mjs` generator (`npm run sync:ai`) derives the Codex mirrors `.codex/agents/docs-updater.toml` and `.agents/skills/ship/SKILL.md` from the authored `.claude/` agent and skill sources.
+- `AI Config Parity` CI job that regenerates the Codex mirrors and fails if the committed copies have drifted from their `.claude/` sources, so the two tools' configuration can no longer silently diverge.
+
+### Changed
+
+- The `docs-updater` agent and the `ship` skill now maintain `AGENTS.md` instead of `CLAUDE.md`, and `ship` regenerates and verifies Codex mirror parity as part of its pre-push fast checks. `README.md` now points developers to `AGENTS.md` for conventions and lists the new parity check among the CI gates.
+
+## [1.1.13] - 2026-07-23
+
+### Changed
+
+- Bumped `lucide-react` from 1.25.0 to 1.26.0 in the npm-minor-and-patch group (dependabot, PR #76).
+
+## [1.1.12] - 2026-07-22
+
+### Changed
+
+- Bumped `next` and `@next/eslint-plugin-next` from 16.2.10 to 16.2.11, `react` and `react-dom` from 19.2.7 to 19.2.8, and `@vitejs/plugin-react` from 6.0.3 to 6.0.4 in the npm-minor-and-patch group (dependabot, PR #75).
+
+## [1.1.11] - 2026-07-21
+
+### Changed
+
+- Bumped `prettier` from 3.9.5 to 3.9.6 in the npm-minor-and-patch group (dependabot, PR #72).
+
 ## [1.1.10] - 2026-07-21
 
 ### Fixed

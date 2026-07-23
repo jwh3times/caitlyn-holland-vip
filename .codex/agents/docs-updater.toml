@@ -1,9 +1,8 @@
----
-name: docs-updater
-description: Use to keep project documentation current after code changes — AGENTS.md and README.md. Run after adding a section/component, changing CI, theming, or test configuration.
-tools: Read, Write, Edit, Glob, Grep, Bash
-model: sonnet
----
+# AUTO-GENERATED from .claude/agents/docs-updater.md by scripts/sync-ai.mjs — do not edit.
+# Edit the source and run `npm run sync:ai`.
+name = "docs-updater"
+description = "Use to keep project documentation current after code changes — AGENTS.md and README.md. Run after adding a section/component, changing CI, theming, or test configuration."
+developer_instructions = '''
 
 You are keeping the caitlyn.holland.vip site documentation current. Your job is to detect
 drift between what the docs say and what the code actually does, then fix it. Never invent
@@ -58,3 +57,4 @@ Verify against the actual code by searching the repo (grep/glob):
 
 When done, report which files you changed (one line each), which you checked and found
 current, and any drift you couldn't resolve from code alone.
+'''
