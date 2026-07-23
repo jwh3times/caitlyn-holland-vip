@@ -23,7 +23,7 @@ ahead of yours. If that happens your entry is numbered for a version someone els
 and the guard may still be showing green from its earlier run. Re-run ship to renumber
 (step 5).
 
-All git / gh / script commands in this skill run via the **Bash** tool (git-bash on
+All git / gh / script commands in this skill run in a bash/POSIX shell (git-bash on
 this Windows machine), not PowerShell.
 
 ## Steps
@@ -105,12 +105,15 @@ git diff $(git merge-base origin/main HEAD)..HEAD --stat
 Use `origin/main`, not local `main` — step 2 fetched, so `origin/main` is current while a
 stale local `main` would silently widen the diff to include work already merged.
 
-Tell it exactly what changed and let it update the docs it owns (CLAUDE.md and
+Tell it exactly what changed and let it update the docs it owns (AGENTS.md and
 README.md). **You** write the changelog section in step 5 — tell it to leave
 `CHANGELOG.md` alone so you don't fight over the file.
 
-`AGENTS.md` mirrors CLAUDE.md but is **not** owned by `docs-updater`. If the branch
-changed CI, commands, architecture, or docs automation, update `AGENTS.md` yourself.
+`docs-updater` owns `AGENTS.md` and `README.md`. `CLAUDE.md` is a thin `@AGENTS.md`
+import plus Claude-specific notes and rarely needs edits. The Codex mirrors under
+`.codex/` and `.agents/` are generated: after `docs-updater` runs — and after any
+`.claude/` agent or skill edits on this branch — run `npm run sync:ai` and commit the
+regenerated files in step 7 so the `AI Config Parity` gate stays green.
 
 ### 5. Write the CHANGELOG entry
 
