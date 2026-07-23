@@ -34,6 +34,7 @@ All commands below run via the **Bash** tool (git-bash) unless noted.
 ### Task 1: Make `AGENTS.md` canonical; `CLAUDE.md` imports it
 
 **Files:**
+
 - Modify: `AGENTS.md` (replace with the neutralized copy of the current `CLAUDE.md`)
 - Modify: `CLAUDE.md` (shrink to `@AGENTS.md` + Claude-only section)
 
@@ -44,6 +45,7 @@ All commands below run via the **Bash** tool (git-bash) unless noted.
 This makes the concise, link-rich `CLAUDE.md` content the new canonical base, replacing the older reworded `AGENTS.md`.
 
 Run:
+
 ```bash
 cp CLAUDE.md AGENTS.md
 ```
@@ -53,19 +55,25 @@ cp CLAUDE.md AGENTS.md
 Edit `AGENTS.md`:
 
 Change line 1:
+
 ```
 # CLAUDE.md
 ```
+
 to:
+
 ```
 # AGENTS.md
 ```
 
 Change the intro line:
+
 ```
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 ```
+
 to:
+
 ```
 This file provides guidance to AI coding agents (Claude Code, Codex, and others) working in this repository.
 ```
@@ -140,14 +148,17 @@ These `.claude/` files are the **authored source of truth**. Their Codex counter
 - [ ] **Step 5: Prettier-normalize the two docs**
 
 Run:
+
 ```bash
 npx prettier --write CLAUDE.md AGENTS.md
 ```
+
 Expected: prints both filenames (formatted).
 
 - [ ] **Step 6: Verify the restructure**
 
 Run:
+
 ```bash
 grep -n '^@AGENTS.md$' CLAUDE.md          # -> line match (import present, not in a code span)
 grep -c 'Project Overview' CLAUDE.md      # -> 0 (shared content no longer duplicated here)
@@ -155,6 +166,7 @@ grep -c 'Project Overview' AGENTS.md      # -> 1 (moved to the canonical doc)
 grep -c 'guidance to AI coding agents' AGENTS.md  # -> 1 (intro neutralized)
 npx prettier --check CLAUDE.md AGENTS.md  # -> "All matched files use Prettier code style!"
 ```
+
 Expected: the four `grep` results are `match`, `0`, `1`, `1`; the prettier check passes.
 
 - [ ] **Step 7: Commit**
@@ -169,6 +181,7 @@ git commit -m "$(printf 'docs: make AGENTS.md canonical; CLAUDE.md imports it\n\
 ### Task 2: Retarget & neutralize the docs-updater agent
 
 **Files:**
+
 - Modify: `.claude/agents/docs-updater.md`
 
 **Rationale:** The doc source moved to `AGENTS.md`, so the subagent now maintains `AGENTS.md`. Neutralizing the remaining Claude-specific wording lets the generated Codex body be identical to the source body (empty swap map).
@@ -178,6 +191,7 @@ git commit -m "$(printf 'docs: make AGENTS.md canonical; CLAUDE.md imports it\n\
 In `.claude/agents/docs-updater.md`, replace **every** occurrence of `CLAUDE.md` with `AGENTS.md`. This covers the frontmatter `description`, the "Documents you maintain" table row, each trigger bullet, and the "What NOT to change" line.
 
 Run to confirm none remain:
+
 ```bash
 grep -c 'CLAUDE.md' .claude/agents/docs-updater.md   # -> 0
 ```
@@ -185,23 +199,30 @@ grep -c 'CLAUDE.md' .claude/agents/docs-updater.md   # -> 0
 - [ ] **Step 2: Neutralize the audience wording**
 
 In the "Documents you maintain" table, change:
+
 ```
 | `AGENTS.md` | Claude agents (every session) |
 ```
+
 to:
+
 ```
 | `AGENTS.md` | AI coding agents (every session) |
 ```
+
 (The path cell already reads `AGENTS.md` after Step 1.)
 
 - [ ] **Step 3: Neutralize the drift-detection intro**
 
 Replace:
+
 ```
 Verify against actual code using the **Grep and Glob tools** (not shell commands — portable
 and permission-free):
 ```
+
 with:
+
 ```
 Verify against the actual code by searching the repo (grep/glob):
 ```
@@ -209,12 +230,14 @@ Verify against the actual code by searching the repo (grep/glob):
 - [ ] **Step 4: Prettier-normalize and verify**
 
 Run:
+
 ```bash
 npx prettier --write .claude/agents/docs-updater.md
 grep -c 'CLAUDE' .claude/agents/docs-updater.md      # -> 0 (no tool-specific doc name)
 grep -c 'Claude agents' .claude/agents/docs-updater.md  # -> 0 (audience neutralized)
 grep -c 'AGENTS.md and README.md' .claude/agents/docs-updater.md  # -> 1 (description retargeted)
 ```
+
 Expected: all three `grep -c` results are `0`, `0`, `1`.
 
 - [ ] **Step 5: Commit**
@@ -229,6 +252,7 @@ git commit -m "$(printf 'chore: retarget docs-updater to AGENTS.md, neutralize t
 ### Task 3: Update the ship skill for the `AGENTS.md` source + `sync:ai`
 
 **Files:**
+
 - Modify: `.claude/skills/ship/SKILL.md`
 
 **Rationale:** Ship must (a) tell docs-updater to update `AGENTS.md`, (b) drop the now-false "AGENTS.md mirrors CLAUDE.md" note, (c) regenerate the Codex mirrors so the parity gate stays green, and (d) use tool-neutral wording. **Do not** blanket-replace `CLAUDE.md`→`AGENTS.md` here — that is exactly what produced the "mirrors AGENTS.md" bug in the stale Codex copy. Apply the three targeted edits below.
@@ -236,12 +260,15 @@ git commit -m "$(printf 'chore: retarget docs-updater to AGENTS.md, neutralize t
 - [ ] **Step 1: Retarget the docs-updater ownership line (step 4 of the skill)**
 
 Replace:
+
 ```
 Tell it exactly what changed and let it update the docs it owns (CLAUDE.md and
 README.md). **You** write the changelog section in step 5 — tell it to leave
 `CHANGELOG.md` alone so you don't fight over the file.
 ```
+
 with:
+
 ```
 Tell it exactly what changed and let it update the docs it owns (AGENTS.md and
 README.md). **You** write the changelog section in step 5 — tell it to leave
@@ -251,11 +278,14 @@ README.md). **You** write the changelog section in step 5 — tell it to leave
 - [ ] **Step 2: Replace the obsolete mirror note with the sync instruction**
 
 Replace:
+
 ```
 `AGENTS.md` mirrors CLAUDE.md but is **not** owned by `docs-updater`. If the branch
 changed CI, commands, architecture, or docs automation, update `AGENTS.md` yourself.
 ```
+
 with:
+
 ```
 `docs-updater` owns `AGENTS.md` and `README.md`. `CLAUDE.md` is a thin `@AGENTS.md`
 import plus Claude-specific notes and rarely needs edits. The Codex mirrors under
@@ -267,11 +297,14 @@ regenerated files in step 7 so the `AI Config Parity` gate stays green.
 - [ ] **Step 3: Neutralize the shell wording**
 
 Replace:
+
 ```
 All git / gh / script commands in this skill run via the **Bash** tool (git-bash on
 this Windows machine), not PowerShell.
 ```
+
 with:
+
 ```
 All git / gh / script commands in this skill run in a bash/POSIX shell (git-bash on
 this Windows machine), not PowerShell.
@@ -280,6 +313,7 @@ this Windows machine), not PowerShell.
 - [ ] **Step 4: Prettier-normalize and verify**
 
 Run:
+
 ```bash
 npx prettier --write .claude/skills/ship/SKILL.md
 grep -c 'mirrors CLAUDE.md' .claude/skills/ship/SKILL.md   # -> 0 (obsolete note gone)
@@ -287,6 +321,7 @@ grep -c 'the \*\*Bash\*\* tool' .claude/skills/ship/SKILL.md  # -> 0 (shell word
 grep -c 'npm run sync:ai' .claude/skills/ship/SKILL.md      # -> 1 (sync step added)
 grep -c 'docs it owns (AGENTS.md' .claude/skills/ship/SKILL.md  # -> 1 (retargeted)
 ```
+
 Expected: `0`, `0`, `1`, `1`.
 
 - [ ] **Step 5: Commit**
@@ -301,10 +336,12 @@ git commit -m "$(printf 'chore: update ship skill for AGENTS.md source + sync:ai
 ### Task 4: Write the sync generator + unit tests (TDD)
 
 **Files:**
+
 - Create: `scripts/sync-ai.mjs`
 - Test: `test/scripts/sync-ai.test.ts`
 
 **Interfaces:**
+
 - Produces (imported by the test, and driven via `npm run sync:ai` in Task 5):
   - `applySwapMap(text: string, swaps?: [string,string][]): string`
   - `splitFrontmatter(raw: string): { frontmatter: string, body: string }`
@@ -359,7 +396,7 @@ describe("applySwapMap", () => {
       applySwapMap("foo", [
         ["foo", "bar"],
         ["bar", "baz"],
-      ]),
+      ])
     ).toBe("baz");
   });
   it("is a no-op with the default empty map", () => {
@@ -370,9 +407,7 @@ describe("applySwapMap", () => {
 describe("splitFrontmatter", () => {
   it("separates frontmatter and body", () => {
     const { frontmatter, body } = splitFrontmatter(SKILL_FIXTURE);
-    expect(frontmatter).toBe(
-      "---\nname: sample-skill\ndescription: A sample skill.\n---\n",
-    );
+    expect(frontmatter).toBe("---\nname: sample-skill\ndescription: A sample skill.\n---\n");
     expect(body).toBe("\n# Sample\n\nBody text.\n");
   });
   it("normalizes CRLF", () => {
@@ -404,14 +439,11 @@ describe("tomlString", () => {
 });
 
 describe("agentMarkdownToToml", () => {
-  const toml = agentMarkdownToToml(
-    AGENT_FIXTURE,
-    ".claude/agents/sample-agent.md",
-  );
+  const toml = agentMarkdownToToml(AGENT_FIXTURE, ".claude/agents/sample-agent.md");
 
   it("emits the generated header with the source path", () => {
     expect(toml).toContain(
-      "# AUTO-GENERATED from .claude/agents/sample-agent.md by scripts/sync-ai.mjs — do not edit.",
+      "# AUTO-GENERATED from .claude/agents/sample-agent.md by scripts/sync-ai.mjs — do not edit."
     );
   });
   it("emits name and description as TOML strings", () => {
@@ -432,28 +464,21 @@ describe("agentMarkdownToToml", () => {
   });
   it("throws when the body contains a ''' sequence", () => {
     const bad = "---\nname: x\ndescription: y\n---\n\nhas ''' triple\n";
-    expect(() => agentMarkdownToToml(bad, ".claude/agents/x.md")).toThrow(
-      /'''/,
-    );
+    expect(() => agentMarkdownToToml(bad, ".claude/agents/x.md")).toThrow(/'''/);
   });
 });
 
 describe("skillTransform", () => {
-  const out = skillTransform(
-    SKILL_FIXTURE,
-    ".claude/skills/sample-skill/SKILL.md",
-  );
+  const out = skillTransform(SKILL_FIXTURE, ".claude/skills/sample-skill/SKILL.md");
 
   it("preserves the frontmatter verbatim at the top", () => {
-    expect(
-      out.startsWith(
-        "---\nname: sample-skill\ndescription: A sample skill.\n---\n",
-      ),
-    ).toBe(true);
+    expect(out.startsWith("---\nname: sample-skill\ndescription: A sample skill.\n---\n")).toBe(
+      true
+    );
   });
   it("inserts the generated marker after the frontmatter, before the body", () => {
     expect(out).toContain(
-      "<!-- AUTO-GENERATED from .claude/skills/sample-skill/SKILL.md by scripts/sync-ai.mjs — do not edit.",
+      "<!-- AUTO-GENERATED from .claude/skills/sample-skill/SKILL.md by scripts/sync-ai.mjs — do not edit."
     );
     expect(out.indexOf("AUTO-GENERATED")).toBeLessThan(out.indexOf("# Sample"));
   });
@@ -467,9 +492,11 @@ describe("skillTransform", () => {
 - [ ] **Step 2: Run the test to verify it fails**
 
 Run:
+
 ```bash
 npm run test:unit -- test/scripts/sync-ai.test.ts
 ```
+
 Expected: FAIL — cannot resolve `../../scripts/sync-ai.mjs` (module does not exist yet).
 
 - [ ] **Step 3: Write the generator**
@@ -482,13 +509,7 @@ Create `scripts/sync-ai.mjs`:
 // Single source of truth: edit .claude/agents/*.md and .claude/skills/*/SKILL.md,
 // then run `npm run sync:ai`. The .codex/ and .agents/ mirrors are generated —
 // do not edit them by hand. The `AI Config Parity` CI job fails if they drift.
-import {
-  readFileSync,
-  writeFileSync,
-  readdirSync,
-  existsSync,
-  mkdirSync,
-} from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -564,7 +585,7 @@ export function agentMarkdownToToml(raw, sourcePath) {
   const outBody = applySwapMap(body).replace(/\s+$/, "");
   if (outBody.includes("'''")) {
     throw new Error(
-      `Agent body for ${sourcePath} contains ''' which cannot be embedded in a TOML literal string`,
+      `Agent body for ${sourcePath} contains ''' which cannot be embedded in a TOML literal string`
     );
   }
   return [
@@ -620,10 +641,7 @@ export function syncAll({ write = true } = {}) {
   const results = [];
   for (const { kind, src, dest } of discover()) {
     const raw = readFileSync(join(ROOT, src), "utf8");
-    const content =
-      kind === "agent"
-        ? agentMarkdownToToml(raw, src)
-        : skillTransform(raw, src);
+    const content = kind === "agent" ? agentMarkdownToToml(raw, src) : skillTransform(raw, src);
     if (write) {
       const destAbs = join(ROOT, dest);
       mkdirSync(dirname(destAbs), { recursive: true });
@@ -648,9 +666,11 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
 - [ ] **Step 4: Run the test to verify it passes**
 
 Run:
+
 ```bash
 npm run test:unit -- test/scripts/sync-ai.test.ts
 ```
+
 Expected: PASS (all tests green).
 
 - [ ] **Step 5: Commit**
@@ -665,32 +685,39 @@ git commit -m "$(printf 'feat: add scripts/sync-ai.mjs generator with unit tests
 ### Task 5: Wire `sync:ai`, generate the mirrors, commit them
 
 **Files:**
+
 - Modify: `package.json` (add the `sync:ai` script)
 - Regenerated: `.codex/agents/docs-updater.toml`, `.agents/skills/ship/SKILL.md`
 - Commit as-is: `.codex/config.toml` (hand-maintained Codex MCP config)
 
 **Interfaces:**
+
 - Consumes: `scripts/sync-ai.mjs` from Task 4; the neutralized sources from Tasks 1–3.
 
 - [ ] **Step 1: Add the npm script**
 
 In `package.json`, add to `"scripts"`:
+
 ```json
 "sync:ai": "node scripts/sync-ai.mjs && prettier --write \".agents/**/*.md\""
 ```
+
 The generator writes both mirrors; `prettier --write` then normalizes the generated Markdown so it never fights `format:check`. `.toml` is not formatted by Prettier and is emitted final by the generator.
 
 - [ ] **Step 2: Generate the mirrors**
 
 Run:
+
 ```bash
 npm run sync:ai
 ```
+
 Expected: prints `wrote .codex/agents/docs-updater.toml` and `wrote .agents/skills/ship/SKILL.md`, then Prettier reports the `.agents` file.
 
 - [ ] **Step 3: Confirm the stale copies were corrected**
 
 Run:
+
 ```bash
 grep -c 'mirrors AGENTS.md' .agents/skills/ship/SKILL.md   # -> 0 (the old copy-paste bug is gone)
 grep -c 'AGENTS.md' .codex/agents/docs-updater.toml         # -> >=1 (embeds the retargeted body)
@@ -698,30 +725,37 @@ grep -c 'CLAUDE.md' .codex/agents/docs-updater.toml         # -> 0 (no stale doc
 grep -c 'AUTO-GENERATED' .codex/agents/docs-updater.toml    # -> 1
 grep -c 'AUTO-GENERATED' .agents/skills/ship/SKILL.md       # -> 1
 ```
+
 Expected: `0`, a positive number, `0`, `1`, `1`.
 
 - [ ] **Step 4: Confirm the generated TOML parses**
 
 Run (Node's built-in TOML is not guaranteed; this is a lightweight structural check):
+
 ```bash
 grep -q "^developer_instructions = '''$" .codex/agents/docs-updater.toml && \
   tail -n 1 .codex/agents/docs-updater.toml | grep -q "^'''$" && echo "toml literal block OK"
 ```
+
 Expected: prints `toml literal block OK`.
 
 - [ ] **Step 5: Verify formatting and parity locally**
 
 Run:
+
 ```bash
 npm run format:check
 ```
+
 Expected: PASS. (Contingency: if it flags a `.codex/**/*.toml` file — meaning a TOML Prettier plugin is installed — create `.prettierignore` if absent and add the line `.codex/**/*.toml`, then re-run.)
 
 Then prove the mirrors are byte-current — the exact check CI runs:
+
 ```bash
 npm run sync:ai
 git status --porcelain -- .codex .agents
 ```
+
 Expected: the second command prints **nothing** (regenerating produced no change → in sync).
 
 - [ ] **Step 6: Commit the script, mirrors, and Codex config**
@@ -736,10 +770,12 @@ git commit -m "$(printf 'feat: add sync:ai and generate the Codex config mirrors
 ### Task 6: Add the `AI Config Parity` CI gate
 
 **Files:**
+
 - Modify: `.github/workflows/ci.yml` (add the `ai-parity` job)
 - Create: `.gitattributes` (mark generated files)
 
 **Interfaces:**
+
 - Consumes: the `sync:ai` npm script and committed mirrors from Task 5.
 
 - [ ] **Step 1: Add the parity job**
@@ -747,35 +783,35 @@ git commit -m "$(printf 'feat: add sync:ai and generate the Codex config mirrors
 In `.github/workflows/ci.yml`, add a new job under `jobs:` (sibling of `format`, `coverage`, etc.):
 
 ```yaml
-  ai-parity:
-    name: AI Config Parity
-    runs-on: ubuntu-latest
+ai-parity:
+  name: AI Config Parity
+  runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v7
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version-file: ".nvmrc"
-          cache: "npm"
+    - name: Setup Node.js
+      uses: actions/setup-node@v7
+      with:
+        node-version-file: ".nvmrc"
+        cache: "npm"
 
-      - name: Install dependencies
-        run: npm ci
+    - name: Install dependencies
+      run: npm ci
 
-      - name: Regenerate AI tool config mirrors
-        run: npm run sync:ai
+    - name: Regenerate AI tool config mirrors
+      run: npm run sync:ai
 
-      - name: Verify generated AI configs are committed
-        run: |
-          if [ -n "$(git status --porcelain -- .codex .agents)" ]; then
-            echo "::error::Generated AI tool configs are out of date. Run 'npm run sync:ai' and commit the result."
-            git --no-pager diff -- .codex .agents
-            git status --porcelain -- .codex .agents
-            exit 1
-          fi
-          echo "AI tool config mirrors are in sync."
+    - name: Verify generated AI configs are committed
+      run: |
+        if [ -n "$(git status --porcelain -- .codex .agents)" ]; then
+          echo "::error::Generated AI tool configs are out of date. Run 'npm run sync:ai' and commit the result."
+          git --no-pager diff -- .codex .agents
+          git status --porcelain -- .codex .agents
+          exit 1
+        fi
+        echo "AI tool config mirrors are in sync."
 ```
 
 `git status --porcelain` (not just `git diff`) catches both modified tracked files and new untracked mirrors. Scoping to `.codex .agents` leaves the hand-maintained `.codex/config.toml` (untouched by sync) from tripping the gate.
@@ -793,10 +829,12 @@ Create `.gitattributes` (or append if it exists):
 - [ ] **Step 3: Validate the workflow YAML and simulate the gate**
 
 Run:
+
 ```bash
 node -e "const s=require('fs').readFileSync('.github/workflows/ci.yml','utf8'); if(!/ai-parity:/.test(s)||!/AI Config Parity/.test(s)) throw new Error('job missing'); console.log('workflow contains ai-parity job')"
 npm run sync:ai && git status --porcelain -- .codex .agents
 ```
+
 Expected: prints `workflow contains ai-parity job`, and the `git status` line prints nothing (the gate would pass).
 
 - [ ] **Step 4: Commit**
@@ -818,6 +856,7 @@ git commit -m "$(printf 'ci: add AI Config Parity gate for generated tool config
 ## Self-Review
 
 **1. Spec coverage:**
+
 - Root-doc restructure (spec §1) → Task 1. ✔
 - Sync generator with discovery, transforms, swap map, zero deps, testable exports (spec §2) → Task 4. ✔
 - `sync:ai` npm script + Prettier normalization (spec §2) → Task 5 Step 1. ✔
@@ -829,7 +868,7 @@ git commit -m "$(printf 'ci: add AI Config Parity gate for generated tool config
 - `.codex/config.toml` out of scope but tracked → Task 5 Step 6. ✔
 - Rollout order (spec) → Tasks 1→6 then Finalization. ✔
 
-**Intentional deviation from spec:** the spec mentioned an optional `--check` flag on the generator. It is **omitted**: generated Markdown is Prettier-normalized *after* generation, so an in-memory generator-vs-disk compare would report false drift on the skill mirror. The authoritative check is `npm run sync:ai` (which includes Prettier) followed by `git status` — exactly what Task 6 does. No functionality is lost.
+**Intentional deviation from spec:** the spec mentioned an optional `--check` flag on the generator. It is **omitted**: generated Markdown is Prettier-normalized _after_ generation, so an in-memory generator-vs-disk compare would report false drift on the skill mirror. The authoritative check is `npm run sync:ai` (which includes Prettier) followed by `git status` — exactly what Task 6 does. No functionality is lost.
 
 **2. Placeholder scan:** No `TBD`/`TODO`/"implement later"/"handle edge cases". Every code step shows complete code; every doc edit shows exact old→new text.
 

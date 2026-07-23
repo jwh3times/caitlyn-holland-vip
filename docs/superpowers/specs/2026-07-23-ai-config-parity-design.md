@@ -44,12 +44,12 @@ and a CI gate that fails when the derived files drift from their source.
 
 ## Source-of-truth model
 
-| Concern                | Single source (authored)      | Derived / secondary                         | Kept in sync by            |
-| ---------------------- | ----------------------------- | ------------------------------------------- | -------------------------- |
-| Shared project guidance | **`AGENTS.md`**              | `CLAUDE.md` (imports it via `@AGENTS.md`)   | Claude's native import     |
-| Agent definitions       | **`.claude/agents/*.md`**    | `.codex/agents/*.toml`                       | `scripts/sync-ai.mjs`      |
-| Skill definitions       | **`.claude/skills/*/SKILL.md`** | `.agents/skills/*/SKILL.md`               | `scripts/sync-ai.mjs`      |
-| Codex MCP config        | `.codex/config.toml`          | — (no twin)                                  | hand-maintained (out of scope) |
+| Concern                 | Single source (authored)        | Derived / secondary                       | Kept in sync by                |
+| ----------------------- | ------------------------------- | ----------------------------------------- | ------------------------------ |
+| Shared project guidance | **`AGENTS.md`**                 | `CLAUDE.md` (imports it via `@AGENTS.md`) | Claude's native import         |
+| Agent definitions       | **`.claude/agents/*.md`**       | `.codex/agents/*.toml`                    | `scripts/sync-ai.mjs`          |
+| Skill definitions       | **`.claude/skills/*/SKILL.md`** | `.agents/skills/*/SKILL.md`               | `scripts/sync-ai.mjs`          |
+| Codex MCP config        | `.codex/config.toml`            | — (no twin)                               | hand-maintained (out of scope) |
 
 The only files a human edits are **`AGENTS.md`** and the **`.claude/`** sources.
 
