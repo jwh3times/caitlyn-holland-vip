@@ -42,6 +42,7 @@ export function splitFrontmatter(raw) {
 export function parseFrontmatter(raw) {
   const { frontmatter, body } = splitFrontmatter(raw);
   const inner = frontmatter.replace(/^---\n/, "").replace(/\n---\n$/, "");
+  /** @type {Record<string, string>} */
   const data = {};
   for (const line of inner.split("\n")) {
     const m = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
