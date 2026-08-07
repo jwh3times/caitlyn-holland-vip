@@ -1,3 +1,5 @@
+<!-- AUTO-GENERATED from .agents/skills/setup-matt-pocock-skills/domain.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # Domain Docs
 
 How the engineering skills should consume this repo's domain documentation when exploring the codebase.

@@ -1,3 +1,5 @@
+<!-- AUTO-GENERATED from .agents/skills/setup-matt-pocock-skills/issue-tracker-local.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # Issue tracker: Local Markdown
 
 Issues and specs for this repo live as markdown files in `.scratch/`.

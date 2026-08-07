@@ -1,3 +1,5 @@
+<!-- AUTO-GENERATED from .agents/skills/codebase-design/DEEPENING.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # Deepening
 
 How to deepen a cluster of shallow modules safely, given its dependencies. Assumes the vocabulary in [SKILL.md](SKILL.md) — **module**, **interface**, **seam**, **adapter**.

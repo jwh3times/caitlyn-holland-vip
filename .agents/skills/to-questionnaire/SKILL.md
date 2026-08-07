@@ -4,8 +4,6 @@ description: Turn a decision you can't fully answer into a questionnaire for som
 disable-model-invocation: true
 ---
 
-<!-- AUTO-GENERATED from .claude/skills/to-questionnaire/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
-
 Turn something the user can't answer alone into a **questionnaire** — a Markdown document they hand to one person to fill in async, or fill out together over a meeting. The recipient holds knowledge the user lacks; the questionnaire pulls it out of them.
 
 **Grill the send, not the subject.** Interview the user only about the _send_, which they can always answer: who it goes to, and what they need back. The questions in the document then target the **gap** between what the recipient knows and what the user needs.

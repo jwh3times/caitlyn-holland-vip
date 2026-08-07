@@ -4,6 +4,8 @@ description: Move issues and external PRs through a state machine of triage role
 disable-model-invocation: true
 ---
 
+<!-- AUTO-GENERATED from .agents/skills/triage/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # Triage
 
 Move issues on the project issue tracker through a small state machine of triage roles.

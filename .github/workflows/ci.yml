@@ -165,10 +165,13 @@ jobs:
 
       - name: Verify generated AI configs are committed
         run: |
-          if [ -n "$(git status --porcelain -- .codex .agents)" ]; then
+          # .claude/skills and .codex are generated; .agents is the skill source
+          # but sync:ai reformats it, so a drifted source shows up here too.
+          PATHS=".codex .claude/skills .agents"
+          if [ -n "$(git status --porcelain -- $PATHS)" ]; then
             echo "::error::Generated AI tool configs are out of date. Run 'npm run sync:ai' and commit the result."
-            git --no-pager diff -- .codex .agents
-            git status --porcelain -- .codex .agents
+            git --no-pager diff -- $PATHS
+            git status --porcelain -- $PATHS
             exit 1
           fi
           echo "AI tool config mirrors are in sync."

@@ -1,3 +1,5 @@
+<!-- AUTO-GENERATED from .agents/skills/triage/OUT-OF-SCOPE.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # Out-of-Scope Knowledge Base
 
 The `.out-of-scope/` directory in a repo stores persistent records of rejected feature requests. It serves two purposes:

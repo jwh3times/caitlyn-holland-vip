@@ -1,3 +1,5 @@
+<!-- AUTO-GENERATED from .agents/skills/ask-matt/PHASE-BOUNDARIES.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # Phase boundaries
 
 A **phase** is a chunk of work inside a session — the grilling, the implementation, the QA. The definition is fuzzy on purpose: a phase ends when you think _"ok, we're done with that"_.

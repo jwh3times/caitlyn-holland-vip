@@ -1,3 +1,5 @@
+<!-- AUTO-GENERATED from .agents/skills/teach/MISSION-FORMAT.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # MISSION.md Format
 
 `MISSION.md` lives at the workspace root. It captures the _reason_ the user is learning this topic. Every teaching decision — what to teach next, which resources to surface, which exercises to design — should trace back to this document.

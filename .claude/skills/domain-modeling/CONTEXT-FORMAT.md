@@ -1,3 +1,5 @@
+<!-- AUTO-GENERATED from .agents/skills/domain-modeling/CONTEXT-FORMAT.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # CONTEXT.md Format
 
 ## Structure

@@ -1,3 +1,5 @@
+<!-- AUTO-GENERATED from .agents/skills/setup-matt-pocock-skills/issue-tracker-github.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # Issue tracker: GitHub
 
 Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all operations.

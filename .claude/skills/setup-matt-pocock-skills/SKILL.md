@@ -4,6 +4,8 @@ description: Configure this repo for the engineering skills — set up its issue
 disable-model-invocation: true
 ---
 
+<!-- AUTO-GENERATED from .agents/skills/setup-matt-pocock-skills/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # Setup Matt Pocock's Skills
 
 Scaffold the per-repo configuration that the engineering skills assume:

@@ -1,3 +1,5 @@
+<!-- AUTO-GENERATED from .agents/skills/teach/LEARNING-RECORD-FORMAT.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # Learning Record Format
 
 Learning records live in `./learning-records/` and use sequential numbering: `0001-slug.md`, `0002-slug.md`, etc. Create the directory lazily — only when the first record is written.

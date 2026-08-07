@@ -4,6 +4,8 @@ description: Ask which skill or flow fits your situation. A router over the skil
 disable-model-invocation: true
 ---
 
+<!-- AUTO-GENERATED from .agents/skills/ask-matt/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # Ask Matt
 
 You don't remember every skill, so ask.

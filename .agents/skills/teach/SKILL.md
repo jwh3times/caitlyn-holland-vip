@@ -5,8 +5,6 @@ disable-model-invocation: true
 argument-hint: "What would you like to learn about?"
 ---
 
-<!-- AUTO-GENERATED from .claude/skills/teach/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
-
 The user has asked you to teach them something. This is a stateful request - they intend to learn the topic over multiple sessions.
 
 ## Teaching Workspace

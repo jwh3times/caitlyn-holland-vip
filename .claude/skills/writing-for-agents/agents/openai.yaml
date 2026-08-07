@@ -1,3 +1,5 @@
+# AUTO-GENERATED from .agents/skills/writing-for-agents/agents/openai.yaml by scripts/sync-ai.mjs — do not edit.
+# Edit the source and run `npm run sync:ai`.
 interface:
   display_name: "Writing for Agents"
   short_description: "Write documents agents consume"

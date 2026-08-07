@@ -4,8 +4,6 @@ description: "Implement a piece of work based on a spec or set of tickets."
 disable-model-invocation: true
 ---
 
-<!-- AUTO-GENERATED from .claude/skills/implement/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
-
 Implement the work described by the user in the spec or tickets.
 
 Use /tdd where possible, at pre-agreed seams.

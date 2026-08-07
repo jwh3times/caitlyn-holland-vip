@@ -1,3 +1,5 @@
+# AUTO-GENERATED from .agents/skills/to-spec/agents/openai.yaml by scripts/sync-ai.mjs — do not edit.
+# Edit the source and run `npm run sync:ai`.
 interface:
   display_name: "To Spec"
   short_description: "Turn a conversation into a spec"

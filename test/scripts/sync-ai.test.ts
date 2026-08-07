@@ -6,6 +6,8 @@ import {
   tomlString,
   agentMarkdownToToml,
   skillTransform,
+  yamlTransform,
+  skillFileTransform,
 } from "../../scripts/sync-ai.mjs";
 
 const AGENT_FIXTURE = `---
@@ -117,7 +119,8 @@ describe("agentMarkdownToToml", () => {
 });
 
 describe("skillTransform", () => {
-  const out = skillTransform(SKILL_FIXTURE, ".claude/skills/sample-skill/SKILL.md");
+  // Skills are authored in .agents/ and mirrored into .claude/.
+  const out = skillTransform(SKILL_FIXTURE, ".agents/skills/sample-skill/SKILL.md");
 
   it("preserves the frontmatter verbatim at the top", () => {
     expect(out.startsWith("---\nname: sample-skill\ndescription: A sample skill.\n---\n")).toBe(
@@ -126,12 +129,62 @@ describe("skillTransform", () => {
   });
   it("inserts the generated marker after the frontmatter, before the body", () => {
     expect(out).toContain(
-      "<!-- AUTO-GENERATED from .claude/skills/sample-skill/SKILL.md by scripts/sync-ai.mjs — do not edit."
+      "<!-- AUTO-GENERATED from .agents/skills/sample-skill/SKILL.md by scripts/sync-ai.mjs — do not edit."
     );
     expect(out.indexOf("AUTO-GENERATED")).toBeLessThan(out.indexOf("# Sample"));
   });
   it("keeps the body", () => {
     expect(out).toContain("# Sample");
     expect(out).toContain("Body text.");
+  });
+  it("is stable when re-applied to its own output (no stacked markers)", () => {
+    // The mirror is regenerated from the source every run, never from itself,
+    // but a single marker is what CI diffs against — assert it stays one.
+    expect(out.match(/AUTO-GENERATED/g)).toHaveLength(1);
+  });
+});
+
+describe("yamlTransform", () => {
+  const src = "interface:\n  display_name: TDD\n";
+  const out = yamlTransform(src, ".agents/skills/tdd/agents/openai.yaml");
+
+  it("prepends a # comment banner naming the source", () => {
+    expect(out.startsWith("# AUTO-GENERATED from .agents/skills/tdd/agents/openai.yaml")).toBe(
+      true
+    );
+  });
+  it("keeps the document intact below the banner", () => {
+    expect(out).toContain("interface:\n  display_name: TDD");
+  });
+  it("normalizes CRLF", () => {
+    expect(yamlTransform("a: 1\r\nb: 2\r\n", "s.yaml")).toContain("a: 1\nb: 2\n");
+  });
+});
+
+describe("skillFileTransform", () => {
+  it("routes markdown through skillTransform", () => {
+    const out = skillFileTransform(SKILL_FIXTURE, ".agents/skills/x/SKILL.md");
+    expect(out).toContain("<!-- AUTO-GENERATED");
+  });
+  it("routes .yaml and .yml through yamlTransform", () => {
+    expect(skillFileTransform("a: 1\n", ".agents/skills/x/agents/openai.yaml")).toContain(
+      "# AUTO-GENERATED"
+    );
+    expect(skillFileTransform("a: 1\n", ".agents/skills/x/c.yml")).toContain("# AUTO-GENERATED");
+  });
+  it("copies shell scripts verbatim so the shebang stays on line 1", () => {
+    const sh = "#!/usr/bin/env bash\nset -euo pipefail\n";
+    const out = skillFileTransform(sh, ".agents/skills/wizard/template.sh");
+    expect(out).toBe(sh);
+    expect(out.startsWith("#!/usr/bin/env bash")).toBe(true);
+    expect(out).not.toContain("AUTO-GENERATED");
+  });
+  it("copies unknown extensions verbatim", () => {
+    expect(skillFileTransform("raw\n", ".agents/skills/x/data.txt")).toBe("raw\n");
+  });
+  it("is case-insensitive about the extension", () => {
+    expect(skillFileTransform(SKILL_FIXTURE, ".agents/skills/x/SKILL.MD")).toContain(
+      "<!-- AUTO-GENERATED"
+    );
   });
 });

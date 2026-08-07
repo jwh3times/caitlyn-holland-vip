@@ -1,3 +1,5 @@
+<!-- AUTO-GENERATED from .agents/skills/triage/AGENT-BRIEF.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # Writing Agent Briefs
 
 An agent brief is a structured comment posted on a GitHub issue or PR when it moves to `ready-for-agent`. It is the authoritative specification that an AFK agent will work from. The original body and discussion are context — the agent brief is the contract.

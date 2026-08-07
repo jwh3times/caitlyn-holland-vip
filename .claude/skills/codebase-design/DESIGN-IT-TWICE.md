@@ -1,3 +1,5 @@
+<!-- AUTO-GENERATED from .agents/skills/codebase-design/DESIGN-IT-TWICE.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # Design It Twice
 
 When the user wants to explore alternative interfaces for a chosen deepening candidate, use this parallel sub-agent pattern. Based on "Design It Twice" (Ousterhout) — your first idea is unlikely to be the best.

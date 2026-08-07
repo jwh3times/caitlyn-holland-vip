@@ -13,11 +13,14 @@ No unreleased changes.
 
 ### Added
 
-- Vendored 25 third-party agent skills from [`mattpocock/skills`](https://github.com/mattpocock/skills) — including `tdd`, `code-review`, `diagnosing-bugs`, `codebase-design`, `domain-modeling`, `research`, and `wizard`. The Claude sources live in `.claude/skills/`, the Codex mirrors in `.agents/skills/`, and `skills-lock.json` records each skill's upstream path and content hash.
-- Ran `npm run sync:ai` over the new skills so the `.agents/` mirrors carry the standard `AUTO-GENERATED` banner and satisfy the `AI Config Parity` CI job, matching how the existing `ship` skill is mirrored.
+- Vendored 25 third-party agent skills from [`mattpocock/skills`](https://github.com/mattpocock/skills) — including `tdd`, `code-review`, `diagnosing-bugs`, `codebase-design`, `domain-modeling`, `research`, and `wizard`. Sources live in `.agents/skills/`, and `skills-lock.json` records each skill's upstream path and content hash.
 
 ### Changed
 
+- **Skills are now authored under `.agents/skills/` and mirrored into `.claude/skills/`** — the reverse of the previous direction. `.agents/` is the single source of truth for every skill, including the repo's own `ship` skill, which moved from `.claude/skills/ship/` to `.agents/skills/ship/`. Agent definitions are unaffected and still go `.claude/agents/*.md` → `.codex/agents/*.toml`, because that direction is a format conversion rather than a copy.
+- `npm run sync:ai` now mirrors the **entire** skill directory instead of `SKILL.md` alone, so auxiliary files (`agents/openai.yaml`, `scripts/*.sh`, reference docs) are covered by drift detection for the first time. Markdown and YAML mirrors carry an `AUTO-GENERATED` banner naming their source; shell scripts are copied verbatim so their shebang stays on line 1 and are drift-checked by content.
+- `npm run sync:ai` now prunes mirrors whose source no longer exists, so deleting a skill from `.agents/` removes its `.claude/` copy instead of leaving an orphan that drift detection could not see.
+- The `AI Config Parity` CI job now checks `.codex`, `.claude/skills`, and `.agents`.
 - Applied `npm run format` across the repository. Only the newly vendored skill files changed; no previously tracked file was reformatted.
 
 ## [1.1.21] - 2026-08-07

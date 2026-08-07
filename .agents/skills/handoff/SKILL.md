@@ -5,8 +5,6 @@ argument-hint: "What will the next session be used for?"
 disable-model-invocation: true
 ---
 
-<!-- AUTO-GENERATED from .claude/skills/handoff/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
-
 Write a handoff document summarising the current conversation so a fresh agent can continue the work. Save to the temporary directory of the user's OS - not the current workspace.
 
 Include a "suggested skills" section in the document, which suggests skills that the agent should invoke.

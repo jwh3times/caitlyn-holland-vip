@@ -1,3 +1,5 @@
+<!-- AUTO-GENERATED from .agents/skills/setup-matt-pocock-skills/issue-tracker-gitlab.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
+
 # Issue tracker: GitLab
 
 Issues and specs for this repo live as GitLab issues. Use the [`glab`](https://gitlab.com/gitlab-org/cli) CLI for all operations.

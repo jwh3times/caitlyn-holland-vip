@@ -1,10 +1,21 @@
 #!/usr/bin/env node
-// Generate the Codex AI-tool configs from the authored .claude/ sources.
-// Single source of truth: edit .claude/agents/*.md and .claude/skills/*/SKILL.md,
-// then run `npm run sync:ai`. The .codex/ and .agents/ mirrors are generated —
-// do not edit them by hand. The `AI Config Parity` CI job fails if they drift.
-import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from "node:fs";
-import { join, dirname } from "node:path";
+// Generate the mirrored AI-tool configs from their authored sources.
+//
+// Two source trees, because the two kinds of config have different shapes:
+//   - Skills: .agents/skills/<name>/**  ->  .claude/skills/<name>/**
+//     The whole skill directory is mirrored, not just SKILL.md, so every
+//     auxiliary file (agents/openai.yaml, scripts/*.sh, reference docs) is
+//     covered by drift detection. Vendored skills are fetched into .agents/
+//     by the skills installer and pinned in skills-lock.json.
+//   - Agents: .claude/agents/*.md  ->  .codex/agents/*.toml
+//     This stays .claude-authored because it is a format conversion
+//     (markdown + YAML frontmatter -> TOML), not a copy.
+//
+// Edit the source, then run `npm run sync:ai`. The generated trees
+// (.claude/skills/ and .codex/) must not be edited by hand — the
+// `AI Config Parity` CI job fails if they drift.
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync, rmSync } from "node:fs";
+import { join, dirname, extname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 // Repo root is the parent of scripts/.
@@ -95,13 +106,48 @@ export function agentMarkdownToToml(raw, sourcePath) {
   ].join("\n");
 }
 
-// Convert a Claude skill (SKILL.md) into a Codex skill (SKILL.md): keep the
-// frontmatter verbatim, insert a generated-marker comment, apply swaps to body.
+// Mirror a markdown skill file: keep the frontmatter verbatim, insert a
+// generated-marker comment, apply swaps to the body.
 export function skillTransform(raw, sourcePath) {
   const { frontmatter, body } = splitFrontmatter(raw);
   const marker = `<!-- AUTO-GENERATED from ${sourcePath} by scripts/sync-ai.mjs — do not edit. Edit the source and run \`npm run sync:ai\`. -->`;
   const outBody = applySwapMap(body).replace(/^\n+/, "");
   return `${frontmatter}\n${marker}\n\n${outBody}`;
+}
+
+// Mirror a YAML skill file. A leading `#` comment is valid anywhere in YAML,
+// so the marker goes on top without disturbing the document.
+export function yamlTransform(raw, sourcePath) {
+  const norm = raw.replace(/\r\n/g, "\n");
+  const marker = `# AUTO-GENERATED from ${sourcePath} by scripts/sync-ai.mjs — do not edit.\n# Edit the source and run \`npm run sync:ai\`.`;
+  return `${marker}\n${applySwapMap(norm)}`;
+}
+
+// Pick the mirror transform for a skill file. Markdown and YAML get a
+// provenance banner; everything else (shell templates, and any binary-ish
+// asset a skill ships) is copied byte-for-byte. Executables must stay
+// executable and shebangs must stay on line 1, so no banner is injected
+// there — drift is still caught, because the mirror is compared by content.
+export function skillFileTransform(raw, sourcePath) {
+  const ext = extname(sourcePath).toLowerCase();
+  if (ext === ".md") return skillTransform(raw, sourcePath);
+  if (ext === ".yaml" || ext === ".yml") return yamlTransform(raw, sourcePath);
+  return applySwapMap(raw.replace(/\r\n/g, "\n"));
+}
+
+// Recursively list files under `dir`, returned as paths relative to `dir`
+// with forward slashes, sorted so output order is stable across platforms.
+function listFilesRecursive(dir, prefix = "") {
+  const out = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) {
+      out.push(...listFilesRecursive(join(dir, entry.name), rel));
+    } else if (entry.isFile()) {
+      out.push(rel);
+    }
+  }
+  return out.sort();
 }
 
 // Discover source -> dest pairs by convention. Paths use forward slashes so the
@@ -119,13 +165,20 @@ function discover() {
       });
     }
   }
-  const skillsDir = join(ROOT, ".claude", "skills");
+  const skillsDir = join(ROOT, ".agents", "skills");
   if (existsSync(skillsDir)) {
     for (const entry of readdirSync(skillsDir, { withFileTypes: true })) {
       if (!entry.isDirectory()) continue;
-      const rel = `.claude/skills/${entry.name}/SKILL.md`;
-      if (!existsSync(join(ROOT, rel))) continue;
-      pairs.push({ kind: "skill", src: rel, dest: `.agents/skills/${entry.name}/SKILL.md` });
+      // A directory without a SKILL.md is not a skill; skip it rather than
+      // mirroring stray files into .claude/.
+      if (!existsSync(join(skillsDir, entry.name, "SKILL.md"))) continue;
+      for (const rel of listFilesRecursive(join(skillsDir, entry.name))) {
+        pairs.push({
+          kind: "skill",
+          src: `.agents/skills/${entry.name}/${rel}`,
+          dest: `.claude/skills/${entry.name}/${rel}`,
+        });
+      }
     }
   }
   return pairs;
@@ -136,7 +189,7 @@ export function syncAll({ write = true } = {}) {
   const results = [];
   for (const { kind, src, dest } of discover()) {
     const raw = readFileSync(join(ROOT, src), "utf8");
-    const content = kind === "agent" ? agentMarkdownToToml(raw, src) : skillTransform(raw, src);
+    const content = kind === "agent" ? agentMarkdownToToml(raw, src) : skillFileTransform(raw, src);
     if (write) {
       const destAbs = join(ROOT, dest);
       mkdirSync(dirname(destAbs), { recursive: true });
@@ -144,7 +197,38 @@ export function syncAll({ write = true } = {}) {
     }
     results.push({ dest, content });
   }
+  if (write) {
+    pruneOrphans(results.map((r) => r.dest));
+  }
   return results;
+}
+
+// Delete anything under .claude/skills/ that the current sources no longer
+// produce. Without this, removing a skill from .agents/ would leave its
+// mirror behind as a committed orphan that `AI Config Parity` cannot see:
+// the job diffs the working tree after regenerating, and an untouched
+// committed file is not dirty. Pruning turns that into a visible deletion.
+export function pruneOrphans(generatedDests) {
+  const skillsDest = join(ROOT, ".claude", "skills");
+  if (!existsSync(skillsDest)) return [];
+  const expected = new Set(generatedDests);
+  const removed = [];
+  for (const entry of readdirSync(skillsDest, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const dirAbs = join(skillsDest, entry.name);
+    for (const rel of listFilesRecursive(dirAbs)) {
+      const dest = `.claude/skills/${entry.name}/${rel}`;
+      if (!expected.has(dest)) {
+        rmSync(join(ROOT, dest));
+        removed.push(dest);
+      }
+    }
+    // Drop the directory itself once it holds no generated files.
+    if (listFilesRecursive(dirAbs).length === 0) {
+      rmSync(dirAbs, { recursive: true, force: true });
+    }
+  }
+  return removed;
 }
 
 function main() {
