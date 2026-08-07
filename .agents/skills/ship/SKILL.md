@@ -3,8 +3,6 @@ name: ship
 description: Ship the current branch — refresh docs, write the CHANGELOG entry for the version this merge will mint, run fast checks, push, and open or update the PR. Use when a feature branch is ready for review, or when the user says "ship it", "open a PR", or "push this".
 ---
 
-<!-- AUTO-GENERATED from .claude/skills/ship/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
-
 # Ship
 
 Take the current branch from "code is done" to "PR is open and green-able", and make
@@ -112,10 +110,11 @@ README.md). **You** write the changelog section in step 5 — tell it to leave
 `CHANGELOG.md` alone so you don't fight over the file.
 
 `docs-updater` owns `AGENTS.md` and `README.md`. `CLAUDE.md` is a thin `@AGENTS.md`
-import plus Claude-specific notes and rarely needs edits. The Codex mirrors under
-`.codex/` and `.agents/` are generated: after `docs-updater` runs — and after any
-`.claude/` agent or skill edits on this branch — run `npm run sync:ai` and commit the
-regenerated files in step 7 so the `AI Config Parity` gate stays green.
+import plus Claude-specific notes and rarely needs edits. The mirrors under
+`.claude/skills/` and `.codex/` are generated: after `docs-updater` runs — and after any
+skill edit under `.agents/skills/` or agent edit under `.claude/agents/` on this branch —
+run `npm run sync:ai` and commit the regenerated files in step 7 so the
+`AI Config Parity` gate stays green.
 
 ### 5. Write the CHANGELOG entry
 
@@ -174,15 +173,15 @@ them. These are the cheap gates that catch most mistakes in seconds:
 npm run format:check
 npm run lint
 npx tsc --noEmit
-npm run sync:ai && git status --porcelain -- .codex .agents
+npm run sync:ai && git status --porcelain -- .codex .claude/skills .agents
 ```
 
 `npm run format:check` is `prettier --check .` at the repo root, so it already covers
 `CHANGELOG.md`, the docs, and the source — there is no separate markdown run. Fix
-formatting with `npm run format`. The `sync:ai` line regenerates the Codex mirrors and
-must print **nothing**; any output means a `.claude/` source edit wasn't synced — commit
-the regenerated `.codex/` / `.agents/` files before pushing. If any check is red, stop
-and report — do not push.
+formatting with `npm run format`. The `sync:ai` line regenerates the mirrors and must
+print **nothing**; any output means a source edit wasn't synced — commit the regenerated
+`.claude/skills/` / `.codex/` files before pushing. If any check is red, stop and report —
+do not push.
 
 ### 7. Commit the docs and changelog
 

@@ -1,0 +1,7 @@
+# AUTO-GENERATED from .agents/skills/wait-what/agents/openai.yaml by scripts/sync-ai.mjs — do not edit.
+# Edit the source and run `npm run sync:ai`.
+interface:
+  display_name: "Wait What"
+  short_description: "Re-pitch that — simpler, with the context I'm missing"
+policy:
+  allow_implicit_invocation: false

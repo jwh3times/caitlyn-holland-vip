@@ -1,0 +1,5 @@
+# AUTO-GENERATED from .agents/skills/domain-modeling/agents/openai.yaml by scripts/sync-ai.mjs — do not edit.
+# Edit the source and run `npm run sync:ai`.
+interface:
+  display_name: "Domain Modeling"
+  short_description: "Build and sharpen a domain model"

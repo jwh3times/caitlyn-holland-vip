@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "sync:ai": "node scripts/sync-ai.mjs && prettier --write \".agents/**/*.md\"",
+    "sync:ai": "prettier --write \".agents/**/*.md\" && node scripts/sync-ai.mjs && prettier --write \".claude/skills/**/*.md\"",
     "test": "playwright test",
     "test:e2e": "playwright test",
     "test:unit": "vitest run",

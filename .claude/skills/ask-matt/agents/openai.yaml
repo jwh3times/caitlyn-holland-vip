@@ -1,0 +1,7 @@
+# AUTO-GENERATED from .agents/skills/ask-matt/agents/openai.yaml by scripts/sync-ai.mjs — do not edit.
+# Edit the source and run `npm run sync:ai`.
+interface:
+  display_name: "Ask Matt"
+  short_description: "Find the right skill or workflow"
+policy:
+  allow_implicit_invocation: false

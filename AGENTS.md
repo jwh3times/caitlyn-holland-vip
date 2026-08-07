@@ -90,11 +90,23 @@ is edited once:
 
 - **Shared project guidance** lives in this file, `AGENTS.md`. Claude Code reads it through an
   `@AGENTS.md` import in [CLAUDE.md](CLAUDE.md); other tools read `AGENTS.md` directly.
-- **Agent and skill definitions** are authored under `.claude/` (agents in `.claude/agents/`,
-  skills in `.claude/skills/`). The Codex mirrors (`.codex/agents/*.toml`,
-  `.agents/skills/*/SKILL.md`) are **generated** from those sources by `npm run sync:ai`. Never
-  edit a generated file; edit the `.claude/` source and re-run the sync. The `AI Config Parity`
-  CI job fails if the mirrors drift.
+- **Skills** are authored under **`.agents/skills/<name>/`** and mirrored to
+  `.claude/skills/<name>/` by `npm run sync:ai`. The **whole skill directory** is mirrored —
+  `SKILL.md` plus every auxiliary file (`agents/openai.yaml`, `scripts/*.sh`, reference
+  docs) — so all of it is covered by drift detection. Most skills are vendored from
+  [`mattpocock/skills`](https://github.com/mattpocock/skills), fetched into `.agents/` by the
+  skills installer and pinned by content hash in [skills-lock.json](skills-lock.json).
+- **Agents** go the other way: authored under **`.claude/agents/*.md`** and generated into
+  `.codex/agents/*.toml` by the same command. This direction is `.claude`-first because it is
+  a format conversion (markdown + YAML frontmatter → TOML), not a copy.
+
+Never edit a generated file — that means anything under **`.claude/skills/`** or **`.codex/`**.
+Edit the source and re-run `npm run sync:ai`. Generated markdown and YAML carry an
+`AUTO-GENERATED` banner naming their source; shell scripts are copied verbatim so their
+shebang stays on line 1, and are drift-checked by content instead. The sync also **prunes**
+mirrors whose source is gone, so deleting a skill from `.agents/` removes its `.claude/` copy.
+The `AI Config Parity` CI job regenerates everything and fails if the result differs from what
+is committed.
 
 The `docs-updater` subagent keeps `AGENTS.md` and `README.md` in sync with the code. Docs are
 refreshed when you **ship a branch**: the `ship` skill invokes `docs-updater` (scoped to the

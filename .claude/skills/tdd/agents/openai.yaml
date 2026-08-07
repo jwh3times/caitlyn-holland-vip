@@ -1,0 +1,5 @@
+# AUTO-GENERATED from .agents/skills/tdd/agents/openai.yaml by scripts/sync-ai.mjs — do not edit.
+# Edit the source and run `npm run sync:ai`.
+interface:
+  display_name: "TDD"
+  short_description: "Test-driven red-green-refactor"

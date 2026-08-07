@@ -1,0 +1,5 @@
+# AUTO-GENERATED from .agents/skills/research/agents/openai.yaml by scripts/sync-ai.mjs — do not edit.
+# Edit the source and run `npm run sync:ai`.
+interface:
+  display_name: "Research"
+  short_description: "Research from high-trust sources"

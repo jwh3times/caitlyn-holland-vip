@@ -1,0 +1,7 @@
+# AUTO-GENERATED from .agents/skills/improve-codebase-architecture/agents/openai.yaml by scripts/sync-ai.mjs — do not edit.
+# Edit the source and run `npm run sync:ai`.
+interface:
+  display_name: "Improve Codebase Architecture"
+  short_description: "Find and grill architecture improvements"
+policy:
+  allow_implicit_invocation: false
