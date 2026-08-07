@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.1.22] - 2026-08-07
+
+### Added
+
+- Vendored 25 third-party agent skills from [`mattpocock/skills`](https://github.com/mattpocock/skills) — including `tdd`, `code-review`, `diagnosing-bugs`, `codebase-design`, `domain-modeling`, `research`, and `wizard`. The Claude sources live in `.claude/skills/`, the Codex mirrors in `.agents/skills/`, and `skills-lock.json` records each skill's upstream path and content hash.
+- Ran `npm run sync:ai` over the new skills so the `.agents/` mirrors carry the standard `AUTO-GENERATED` banner and satisfy the `AI Config Parity` CI job, matching how the existing `ship` skill is mirrored.
+
+### Changed
+
+- Applied `npm run format` across the repository. Only the newly vendored skill files changed; no previously tracked file was reformatted.
+
 ## [1.1.21] - 2026-08-07
 
 ### Security
