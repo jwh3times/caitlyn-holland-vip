@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.1.21] - 2026-08-07
+
+### Security
+
+- Resolved the open Dependabot alerts for `postcss` (GHSA-6g55-p6wh-862q and its incomplete-fix follow-up), where an attacker-controlled `sourceMappingURL` could read arbitrary `.map` files when `from` is unset. The `postcss` devDependency and the `overrides` pin both move from `^8.5.15` to `^8.5.23`; the lockfile now resolves `postcss` 8.5.26 everywhere.
+- Cleared the remaining advisories reported by `npm audit`: `brace-expansion` (two DoS advisories, via `eslint` → `minimatch`) and `sharp` < 0.35.0 (inherited libvips CVEs, via `next`). `next` moves from 16.2.9 to 16.3.0 and `sharp` to 0.35.3, both within the existing semver ranges. `npm audit` now reports 0 vulnerabilities.
+
 ## [1.1.14] - 2026-07-23
 
 ### Added
