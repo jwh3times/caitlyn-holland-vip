@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.1.23] - 2026-08-08
+
+### Added
+
+- Agent-skill configuration scaffolding from the `setup-matt-pocock-skills` skill: a new `## Agent skills` section in `AGENTS.md`, plus `docs/agents/issue-tracker.md` (GitHub Issues via the `gh` CLI), `docs/agents/triage-labels.md` (the default five-role label vocabulary), and `docs/agents/domain.md` (single-context `CONTEXT.md`/`docs/adr/` layout). Skills like `triage`, `to-tickets`, `to-spec`, and `/wayfinder` now read these instead of falling back to unconfigured defaults.
+
 ## [1.1.22] - 2026-08-07
 
 ### Added
@@ -29,6 +35,42 @@ No unreleased changes.
 
 - Resolved the open Dependabot alerts for `postcss` (GHSA-6g55-p6wh-862q and its incomplete-fix follow-up), where an attacker-controlled `sourceMappingURL` could read arbitrary `.map` files when `from` is unset. The `postcss` devDependency and the `overrides` pin both move from `^8.5.15` to `^8.5.23`; the lockfile now resolves `postcss` 8.5.26 everywhere.
 - Cleared the remaining advisories reported by `npm audit`: `brace-expansion` (two DoS advisories, via `eslint` → `minimatch`) and `sharp` < 0.35.0 (inherited libvips CVEs, via `next`). `next` moves from 16.2.9 to 16.3.0 and `sharp` to 0.35.3, both within the existing semver ranges. `npm audit` now reports 0 vulnerabilities.
+
+## [1.1.20] - 2026-08-07
+
+### Changed
+
+- Bumped `next` and `@next/eslint-plugin-next` from 16.2.12 to 16.3.0, `@testing-library/user-event` from 14.6.1 to 14.6.3, and `@types/react` in the npm-minor-and-patch group (dependabot, PR #84).
+
+## [1.1.19] - 2026-08-03
+
+### Changed
+
+- Bumped `@playwright/test` from 1.62.0 to 1.62.1, `@types/react` from 19.2.17 to 19.2.18, and `@vitejs/plugin-react` from 6.0.4 to 6.0.5 in the npm-minor-and-patch group (dependabot, PR #83).
+
+## [1.1.18] - 2026-07-30
+
+### Changed
+
+- Bumped `lucide-react` from 1.27.0 to 1.28.0 in the npm-minor-and-patch group (dependabot, PR #82).
+
+## [1.1.17] - 2026-07-29
+
+### Changed
+
+- Bumped `@eslint-react/eslint-plugin` from 5.13.1 to 5.18.0, `eslint` from 10.6.0 to 10.8.0, `typescript-eslint` from 8.63.0 to 8.65.0, and `@types/node`, `globals`, `jsdom` in the npm-minor-and-patch group (dependabot, PR #81).
+
+## [1.1.16] - 2026-07-27
+
+### Changed
+
+- Bumped `jsdom` from 29.1.1 to 30.0.0 (dependabot, PR #79).
+
+## [1.1.15] - 2026-07-27
+
+### Changed
+
+- Bumped `next` and `@next/eslint-plugin-next` from 16.2.11 to 16.2.12, `lucide-react` from 1.26.0 to 1.27.0, and `@playwright/test` from 1.61.1 to 1.62.0 in the npm-minor-and-patch group (dependabot, PR #78).
 
 ## [1.1.14] - 2026-07-23
 
