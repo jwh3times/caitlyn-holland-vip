@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { profile } from "../lib/profile";
 
 test.describe("SEO", () => {
   test.beforeEach(async ({ page }) => {
@@ -7,12 +8,12 @@ test.describe("SEO", () => {
 
   test("should have correct meta description", async ({ page }) => {
     const metaDescription = page.locator('meta[name="description"]');
-    await expect(metaDescription).toHaveAttribute("content", /Caitlyn Holland/);
+    await expect(metaDescription).toHaveAttribute("content", profile.description);
   });
 
   test("should have Open Graph tags", async ({ page }) => {
     const ogTitle = page.locator('meta[property="og:title"]');
-    await expect(ogTitle).toHaveAttribute("content", /Caitlyn Holland/);
+    await expect(ogTitle).toHaveAttribute("content", profile.name);
   });
 
   test("should have a manifest link", async ({ page }) => {

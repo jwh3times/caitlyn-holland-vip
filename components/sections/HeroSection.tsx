@@ -1,4 +1,5 @@
 import { buttonVariants } from "@/components/ui/button";
+import { profile } from "@/lib/profile";
 import { cn } from "@/lib/utils";
 
 export function HeroSection() {
@@ -9,16 +10,13 @@ export function HeroSection() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
         <div className="text-center">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fadeInUp text-heading">
-            Hi, I&apos;m <span className="gradient-text">Caitlyn Holland</span>
+            Hi, I&apos;m <span className="gradient-text">{profile.name}</span>
           </h1>
           <p className="text-2xl md:text-3xl text-subheading mb-6 animate-fadeInUp font-semibold">
             Software Engineering Manager at SAS
           </p>
           <p className="text-lg md:text-xl text-muted max-w-3xl mx-auto mb-10 animate-fadeInUp leading-relaxed">
-            I work with the Platform Products DevOps and Integrated Quality team at SAS, providing
-            customer-like deployments for testing and maintaining the division&apos;s automated GUI
-            smoke tests in our CI/CD pipeline. I enjoy helping others work on challenges and
-            discover their passion.
+            {profile.bio}
           </p>
 
           <div className="flex flex-wrap gap-4 justify-center animate-fadeInUp">

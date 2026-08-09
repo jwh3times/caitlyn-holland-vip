@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Navigation } from "@/components/navigation";
+import { profile } from "@/lib/profile";
 
 vi.mock("next-themes", () => ({
   useTheme: () => ({ resolvedTheme: "light", setTheme: vi.fn() }),
@@ -10,7 +11,7 @@ vi.mock("next-themes", () => ({
 describe("Navigation", () => {
   it("renders the brand and nav links", () => {
     render(<Navigation />);
-    expect(screen.getByText("Caitlyn Holland")).toBeInTheDocument();
+    expect(screen.getByText(profile.name)).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "About" }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole("link", { name: "Contact" }).length).toBeGreaterThan(0);
   });

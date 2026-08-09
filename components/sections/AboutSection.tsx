@@ -1,3 +1,5 @@
+import { profile } from "@/lib/profile";
+
 const experience = [
   {
     title: "Software Engineering Manager",
@@ -49,12 +51,7 @@ export function AboutSection() {
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-heading">About Me</h2>
 
         <div className="max-w-4xl mx-auto text-center mb-16">
-          <p className="text-lg text-muted leading-relaxed">
-            I work with the Platform Products DevOps and Integrated Quality team at SAS. We provide
-            our division with customer-like deployments used for testing, and maintain the
-            division&apos;s automated GUI smoke tests that run in our CI/CD pipeline. I enjoy
-            helping others work on challenges and discover their passion.
-          </p>
+          <p className="text-lg text-muted leading-relaxed">{profile.bio}</p>
         </div>
 
         <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12">

@@ -1,39 +1,38 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Theme } from "@/components/theme-provider";
-
-const siteUrl = "https://caitlyn.holland.vip";
+import { profile } from "@/lib/profile";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(profile.siteUrl),
   title: {
-    default: "Caitlyn Holland",
-    template: "%s | Caitlyn Holland",
+    default: profile.name,
+    template: `%s | ${profile.name}`,
   },
-  description: "Personal website for Caitlyn Holland.",
-  keywords: ["Caitlyn Holland"],
-  authors: [{ name: "Caitlyn Holland", url: siteUrl }],
-  creator: "Caitlyn Holland",
+  description: profile.description,
+  keywords: [profile.name],
+  authors: [{ name: profile.name, url: profile.siteUrl }],
+  creator: profile.name,
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: siteUrl,
-    siteName: "Caitlyn Holland",
-    title: "Caitlyn Holland",
-    description: "Personal website for Caitlyn Holland.",
+    url: profile.siteUrl,
+    siteName: profile.name,
+    title: profile.name,
+    description: profile.description,
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Caitlyn Holland",
+        alt: profile.name,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Caitlyn Holland",
-    description: "Personal website for Caitlyn Holland.",
+    title: profile.name,
+    description: profile.description,
     images: ["/og-image.png"],
   },
   robots: {

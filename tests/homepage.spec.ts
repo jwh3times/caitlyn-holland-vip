@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { profile } from "../lib/profile";
 
 test.describe("Homepage", () => {
   test.beforeEach(async ({ page }) => {
@@ -6,12 +7,12 @@ test.describe("Homepage", () => {
   });
 
   test("should load the homepage with correct title", async ({ page }) => {
-    await expect(page).toHaveTitle(/Caitlyn Holland/);
+    await expect(page).toHaveTitle(new RegExp(profile.name));
   });
 
   test("should display the hero section with name", async ({ page }) => {
     const heroName = page.locator("h1");
-    await expect(heroName).toContainText("Caitlyn Holland");
+    await expect(heroName).toContainText(profile.name);
   });
 
   test("should display all main sections", async ({ page }) => {
