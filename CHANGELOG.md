@@ -26,6 +26,8 @@ No unreleased changes.
 - Authored skill sources were marked as generated content, collapsing them by default in review and hiding real edits. The marking now applies to the generated mirrors instead.
 - Added the mirror-regeneration command to the README command table, and pointed a script comment at the ship skill's authored source rather than its generated copy.
 
+## [1.1.27] - 2026-08-09
+
 ### Changed
 
 - Replaced repeated CTA-link styling at six call sites with a semantic `CtaLink` interface that owns link rendering, class composition, tone, and size mapping. Button CTA variants are now constrained to their padding-based sizes, making invalid gradient/standard-size combinations unrepresentable in TypeScript.
