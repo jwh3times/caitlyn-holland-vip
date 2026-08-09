@@ -3,7 +3,7 @@
 # merge to main. Single source of truth shared by:
 #   - .github/workflows/version.yml   (tag/release workflow)
 #   - .github/workflows/ci.yml        ("Changelog Version" PR guard)
-#   - .claude/skills/ship/SKILL.md    (the ship skill)
+#   - .agents/skills/ship/SKILL.md    (the ship skill — the authored source, not the mirror)
 #
 # floor = package.json "version" (x.y.z: the major/minor line and the build floor)
 # build = highest existing v<major>.<minor>.<int> tag + 1, never below the floor's

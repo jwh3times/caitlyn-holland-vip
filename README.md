@@ -33,6 +33,7 @@ npm run dev      # start the dev server at http://localhost:3000
 | `npm run lint`         | ESLint                                            |
 | `npm run format`       | Prettier write                                    |
 | `npm run format:check` | Prettier check (used in CI)                       |
+| `npm run sync:ai`      | Regenerate the AI-tool config mirrors             |
 | `npm run test:unit`    | Vitest unit/component tests                       |
 | `npm run coverage`     | Vitest with coverage (fails below 80%)            |
 | `npm test`             | Playwright e2e tests (auto-starts the dev server) |
@@ -72,7 +73,7 @@ Cloudflare Pages builds from the repo on every push to `main` (build command `np
 Every merge to `main` is also tagged and published as a GitHub Release by
 [`version.yml`](.github/workflows/version.yml) using `v<major>.<minor>.<build>`
 SemVer tags. Build values auto-increment per major/minor line, and a new line
-may start at build `0`.
+starts at whatever build the `package.json` floor names.
 
 ## Contributing
 

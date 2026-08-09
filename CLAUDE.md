@@ -20,6 +20,9 @@ before editing:
   `npm run sync:ai`. The `ship` skill source is
   [.agents/skills/ship/SKILL.md](.agents/skills/ship/SKILL.md).
 
-**Never edit anything under `.claude/skills/` or `.codex/` — both are generated**, and
+**Never edit anything under `.claude/skills/` or `.codex/agents/` — both are generated**, and
 `npm run sync:ai` will overwrite your changes. Every file in a skill directory is
 mirrored, not just `SKILL.md`. The `AI Config Parity` CI job fails if a mirror drifts.
+
+The one exception under `.codex/` is [.codex/config.toml](.codex/config.toml) — hand-authored
+Codex configuration (the context7 MCP server) with no generating source. Edit it directly.
