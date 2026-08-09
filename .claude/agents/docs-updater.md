@@ -22,7 +22,7 @@ features or capabilities that don't exist in the code.
 
 - `AGENTS.md`: "Single-page layout" paragraph (section order, anchor ids), Development Patterns
 
-**New reusable primitive or theme-dependent component (`components/ui/`, anything using `useTheme()`)**
+**New reusable primitive or theme-dependent component (`components/ui/`, anything using `useThemeToggle()`)**
 
 - `AGENTS.md`: Theme system / mounted-guard pattern notes if the pattern evolved
 
@@ -33,7 +33,14 @@ features or capabilities that don't exist in the code.
 **CI or test configuration change (`.github/workflows/`, `vitest.config.ts`, `playwright.config.ts`)**
 
 - `AGENTS.md`: CI/CD section (job names, gates, thresholds) and Testing sections — keep the
-  coverage threshold number in the docs matching `vitest.config.ts`
+  coverage threshold number in the docs matching `vitest.config.ts`, and the job **count** and
+  names matching `ci.yml`
+
+**AI config change (`.agents/skills/**`, `.claude/agents/**`)**
+
+- Run `npm run sync:ai` and commit the regenerated mirrors. The `AI Config Parity` job fails
+  otherwise — including on a drifted `.agents/` source, because the sync reformats it.
+- `AGENTS.md`: the "Agent configuration & docs automation" section, if the layout changed
 
 **Metadata or headers change (`app/layout.tsx`, `public/_headers`)**
 
@@ -46,7 +53,10 @@ Verify against the actual code by searching the repo (grep/glob):
 - **Sections that exist** — Glob `components/sections/*.tsx`
 - **Anchor ids** — Grep pattern `id="` in `components/sections/`
 - **Coverage thresholds** — Grep pattern `thresholds|statements|branches` in `vitest.config.ts`
-- **CI jobs** — Grep pattern `name:` in `.github/workflows/ci.yml`
+- **CI jobs** — Grep pattern `^  [a-z-]+:$` in `.github/workflows/ci.yml` to list the job keys,
+  then read each one's `name:`. Do **not** grep bare `name:` — every step carries one too, so it
+  cannot separate the jobs from the steps, and undercounting the jobs is exactly how the docs
+  drifted before
 - **npm scripts** — Read `package.json`
 
 ## What NOT to change

@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.1.28] - 2026-08-09
+
+### Added
+
+- A `CONTEXT.md` glossary at the repo root defining the project's vocabulary — the site's terms (section, profile, CTA tone, theme token, mounted guard) and the configuration machinery's terms (source versus mirror, skill versus agent, parity, minted version, floor) — so agent output stops drifting between synonyms for the same concept.
+- Architecture decision records under `docs/adr/` covering the five decisions a reader would otherwise reverse-engineer or re-litigate: the static-export deployment and everything it forbids, the two opposite directions the AI-config trees sync in, the changelog naming the version its own merge will mint, the one-letter difference between the unit and end-to-end test directories, and the theme access seam. Both artifacts were already described as existing in the project guidance; they now do.
+
+### Fixed
+
+- The project guidance described continuous integration as five jobs when it defines six, omitting the job that regenerates the AI-config mirrors and fails on drift. A branch touching skill or agent definitions could therefore be prepared with no indication that a gate would reject it. The guidance now also records that the same job fails on an unformatted source file, which previously surfaced as an unexplained failure in a job that appeared unrelated.
+- The documentation-maintenance subagent detected theme work by searching for a hook no component has called since the theme interface was introduced, so it silently matched nothing and could not see the components it exists to keep documented. It now matches the real interface, and recognizes edits to skill and agent definitions as requiring a mirror regeneration.
+- The same subagent enumerated continuous-integration jobs with a search that also matches every step within them, giving no way to separate the two — the likely origin of the incorrect job count. It now reads job keys directly.
+- Guidance stated that no file under the Codex configuration directory may be edited because all of it is generated, which forbade maintaining the one file there that is hand-authored and has no source to regenerate from.
+- Versioning documentation claimed a new major/minor line begins at build zero; it begins at whatever build the manifest's version names. The manifest version is also now described as the lower bound it is, rather than implying it tracks the current release.
+- Authored skill sources were marked as generated content, collapsing them by default in review and hiding real edits. The marking now applies to the generated mirrors instead.
+- Added the mirror-regeneration command to the README command table, and pointed a script comment at the ship skill's authored source rather than its generated copy.
+
 ## [1.1.27] - 2026-08-09
 
 ### Changed

@@ -12,15 +12,17 @@ If any of these files don't exist, **proceed silently**. Don't flag their absenc
 
 ## File structure
 
-Single-context repo (most repos):
+This repo is single-context:
 
 ```
 /
 ├── CONTEXT.md
 ├── docs/adr/
-│   ├── 0001-event-sourced-orders.md
-│   └── 0002-postgres-for-write-model.md
-└── src/
+│   ├── 0001-static-export-cloudflare-pages.md
+│   └── 0002-agents-md-canonical-two-sync-directions.md
+├── app/
+├── components/
+└── lib/
 ```
 
 Multi-context repo (presence of `CONTEXT-MAP.md` at the root):
