@@ -22,7 +22,12 @@ export default defineConfig({
       reporter: ["text", "text-summary", "html", "lcov"],
       reportsDirectory: "./coverage",
       // Count every source file, not just the ones a test happens to import.
-      include: ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}", "lib/**/*.{ts,tsx}"],
+      include: [
+        "app/**/*.{ts,tsx}",
+        "components/**/*.{ts,tsx}",
+        "lib/**/*.{ts,tsx}",
+        "scripts/**/*.mjs",
+      ],
       exclude: [
         "**/*.d.ts",
         // Structural app shell (renders <html>/<body>); exercised by Playwright

@@ -28,7 +28,7 @@ There are two test layers: **Vitest + Testing Library** for fast unit/component 
 
 #### Unit tests (Vitest)
 
-Unit/component tests live in [test/](test/) (note: singular — `tests/` holds the Playwright specs), mirroring the source tree (`test/app/`, `test/components/`, `test/lib/`). They run in jsdom with [vitest.setup.ts](vitest.setup.ts). Coverage is collected with V8 and **gated at 80%** (statements/branches/functions/lines) in [vitest.config.ts](vitest.config.ts); `app/layout.tsx` and the `components/sections/index.ts` barrel are excluded (covered by Playwright instead).
+Vitest tests live in [test/](test/) (note: singular — `tests/` holds the Playwright specs), mirroring the tested source areas (`test/app/`, `test/components/`, `test/lib/`, `test/scripts/`). They run in jsdom with [vitest.setup.ts](vitest.setup.ts). Coverage is collected with V8 across `app/`, `components/`, `lib/`, and `scripts/**/*.mjs`, and is **gated at 80%** (statements/branches/functions/lines) in [vitest.config.ts](vitest.config.ts); `app/layout.tsx` and the logic-free `components/sections/index.ts` barrel are excluded.
 
 ```bash
 npm run test:unit        # Run unit tests once
