@@ -51,7 +51,7 @@ npx playwright test --project=chromium
 app/          App Router: layout, page, globals.css, error / loading / not-found
 components/   Navigation, Footer, mode-toggle, theme-provider
   sections/   HeroSection, AboutSection, ContactSection
-  ui/         button (cva variants)
+  ui/         button and CTA link primitives
 lib/          shared profile facts, utils (cn helper)
 public/       _headers, manifest, robots, icons
 test/         Vitest unit/component tests (mirrors the source tree)

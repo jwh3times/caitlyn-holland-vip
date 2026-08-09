@@ -78,6 +78,7 @@ E2E specs in [tests/](tests/) cover homepage rendering, navigation, theme toggli
 ## Development Patterns
 
 - New reusable primitives go in `components/ui/`; new page sections go in `components/sections/` and are re-exported from the index barrel.
+- Use [components/ui/button.tsx](components/ui/button.tsx) `CtaLink` for CTA navigation (`tone`: `primary`/`secondary`; `size`: `md`/`lg`) and `Button` for button actions. The variant composer is internal; gradient `Button` variants must be paired with `cta`/`ctaLg` sizes.
 - Use `"use client"` only where client interactivity is needed.
 - Use the semantic CSS-variable classes — never hardcode colors.
 - Unit-test coverage is gated at 80% in CI, so new components generally need a matching test under `test/` (mirroring the source path).
