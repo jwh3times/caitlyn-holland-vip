@@ -23,6 +23,10 @@ If the prototype is for something that doesn't yet have a page but _would natura
 
 ### Sub-shape B — a new page (last resort)
 
+> **In this repo, a throwaway route is not throwaway.** The site is a static export deployed by Cloudflare Pages from `out/` on every push to `main` ([ADR-0001](../../../docs/adr/0001-static-export-cloudflare-pages.md)). Every route under `app/` compiles into that directory, so a prototype route merged to `main` is **live on the public site**. Gating the switcher bar on `NODE_ENV` does not help — that hides the bar, not the page.
+>
+> So on this repo: prefer sub-shape A, which changes an existing page and ships nothing new. If you genuinely need a separate page, keep it on the `prototype/<name>` branch and **never merge it to `main`** — promote the winning variant into a real route instead, as the Landing section already describes.
+
 Only use this when the thing being prototyped genuinely has no existing page to live inside — e.g. an entirely new top-level surface, or a flow that can't be embedded anywhere sensible.
 
 Create a **throwaway route** following whatever routing convention the project already uses — don't invent a new top-level structure. Name it so it's obviously a prototype (e.g. include the word `prototype` in the path or filename). Same `?variant=` pattern.
