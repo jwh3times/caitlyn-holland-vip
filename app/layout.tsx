@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import { Theme } from "@/components/theme-provider";
 
 const siteUrl = "https://caitlyn.holland.vip";
 
@@ -78,14 +78,7 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <Theme>{children}</Theme>
       </body>
     </html>
   );

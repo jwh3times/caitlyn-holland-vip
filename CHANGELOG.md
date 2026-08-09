@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.1.25] - 2026-08-09
+
+### Changed
+
+- Deepened the theme module behind a single public interface: `<Theme>` now owns the `next-themes` provider policy, while `useThemeToggle()` encapsulates the mounted guard, resolved theme state, and toggle action so consumers remain rendering-focused without duplicating hydration-sensitive behavior.
+
 ## [1.1.24] - 2026-08-09
 
 ### Changed
