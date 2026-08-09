@@ -102,13 +102,14 @@ is edited once:
   `.codex/agents/*.toml` by the same command. This direction is `.claude`-first because it is
   a format conversion (markdown + YAML frontmatter → TOML), not a copy.
 
-Never edit a generated file — that means anything under **`.claude/skills/`** or **`.codex/`**.
-Edit the source and re-run `npm run sync:ai`. Generated markdown and YAML carry an
-`AUTO-GENERATED` banner naming their source; shell scripts are copied verbatim so their
+Never edit a generated file — that means anything under **`.claude/skills/`** or
+**`.codex/agents/`**. Edit the source and re-run `npm run sync:ai`. Generated markdown and YAML
+carry an `AUTO-GENERATED` banner naming their source; shell scripts are copied verbatim so their
 shebang stays on line 1, and are drift-checked by content instead. The sync also **prunes**
 mirrors whose source is gone, so deleting a skill from `.agents/` removes its `.claude/` copy.
-The `AI Config Parity` CI job regenerates everything and fails if the result differs from what
-is committed.
+The one exception is [.codex/config.toml](.codex/config.toml) — hand-authored Codex
+configuration with no generating source, safe to edit directly. The `AI Config Parity` CI job
+regenerates everything and fails if the result differs from what is committed.
 
 The `docs-updater` subagent keeps `AGENTS.md` and `README.md` in sync with the code. Docs are
 refreshed when you **ship a branch**: the `ship` skill invokes `docs-updater` (scoped to the
