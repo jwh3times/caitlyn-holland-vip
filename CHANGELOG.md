@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.1.27] - 2026-08-09
+
+### Changed
+
+- Replaced repeated CTA-link styling at six call sites with a semantic `CtaLink` interface that owns link rendering, class composition, tone, and size mapping. Button CTA variants are now constrained to their padding-based sizes, making invalid gradient/standard-size combinations unrepresentable in TypeScript.
+
 ## [1.1.26] - 2026-08-09
 
 ### Changed

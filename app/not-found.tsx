@@ -1,6 +1,4 @@
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { CtaLink } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
@@ -11,9 +9,7 @@ export default function NotFound() {
         <p className="text-lg text-muted max-w-md mx-auto mb-8">
           Sorry, the page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
-        <Link href="/" className={cn(buttonVariants({ variant: "gradient", size: "cta" }))}>
-          Back to Home
-        </Link>
+        <CtaLink href="/">Back to Home</CtaLink>
       </div>
     </div>
   );

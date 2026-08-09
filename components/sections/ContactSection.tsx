@@ -1,5 +1,4 @@
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { CtaLink } from "@/components/ui/button";
 
 export function ContactSection() {
   return (
@@ -10,20 +9,15 @@ export function ContactSection() {
           Feel free to reach out — I&apos;d love to hear from you.
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
-          <a
-            href="mailto:caitlyn@holland.vip"
-            className={cn(buttonVariants({ variant: "gradient", size: "cta" }))}
-          >
-            Send Me an Email
-          </a>
-          <a
+          <CtaLink href="mailto:caitlyn@holland.vip">Send Me an Email</CtaLink>
+          <CtaLink
             href="https://www.linkedin.com/in/caitlyn-holland-debona-93140678/"
+            tone="secondary"
             target="_blank"
             rel="noopener noreferrer"
-            className={cn(buttonVariants({ variant: "gradientOutline", size: "cta" }))}
           >
             LinkedIn
-          </a>
+          </CtaLink>
         </div>
       </div>
     </section>
