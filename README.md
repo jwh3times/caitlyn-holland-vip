@@ -52,7 +52,7 @@ app/          App Router: layout, page, globals.css, error / loading / not-found
 components/   Navigation, Footer, mode-toggle, theme-provider
   sections/   HeroSection, AboutSection, ContactSection
   ui/         button (cva variants)
-lib/          utils (cn helper)
+lib/          shared profile facts, utils (cn helper)
 public/       _headers, manifest, robots, icons
 test/         Vitest unit/component tests (mirrors the source tree)
 tests/        Playwright end-to-end specs

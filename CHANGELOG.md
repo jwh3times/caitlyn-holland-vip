@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.1.26] - 2026-08-09
+
+### Changed
+
+- Centralized the site's shared name, URL, description, and biography behind one profile interface. Metadata, sitemap, navigation, footer, page sections, and their tests now read the same facts, preventing identity and biography copy from drifting while single-reader contact and résumé details remain local.
+- Added a parity test for the static web manifest so its unavoidable duplicate profile fields cannot silently diverge from the shared profile.
+
 ## [1.1.25] - 2026-08-09
 
 ### Changed

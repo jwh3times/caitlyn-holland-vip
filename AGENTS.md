@@ -81,6 +81,7 @@ E2E specs in [tests/](tests/) cover homepage rendering, navigation, theme toggli
 - Use `"use client"` only where client interactivity is needed.
 - Use the semantic CSS-variable classes — never hardcode colors.
 - Unit-test coverage is gated at 80% in CI, so new components generally need a matching test under `test/` (mirroring the source path).
+- Shared profile facts (`name`, `siteUrl`, `description`, `bio`) live in [lib/profile.ts](lib/profile.ts) and feed metadata, the sitemap, and repeated page copy; experience, skills, email, and LinkedIn stay local to their owning sections. [public/manifest.json](public/manifest.json) remains static, with its duplicated profile fields kept aligned by [test/lib/profile.test.ts](test/lib/profile.test.ts).
 - Site metadata lives in the [app/layout.tsx](app/layout.tsx) `Metadata` export; the SEO Playwright spec asserts it.
 
 ## Agent configuration & docs automation
