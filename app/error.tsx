@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button, CtaLink } from "@/components/ui/button";
 
 export default function Error({
   error,
@@ -43,12 +41,9 @@ export default function Error({
           <Button variant="gradient" size="cta" onClick={reset}>
             Try Again
           </Button>
-          <Link
-            href="/"
-            className={cn(buttonVariants({ variant: "gradientOutline", size: "cta" }))}
-          >
+          <CtaLink href="/" tone="secondary">
             Go Home
-          </Link>
+          </CtaLink>
         </div>
       </div>
     </div>

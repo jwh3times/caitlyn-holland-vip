@@ -1,6 +1,5 @@
-import { buttonVariants } from "@/components/ui/button";
+import { CtaLink } from "@/components/ui/button";
 import { profile } from "@/lib/profile";
-import { cn } from "@/lib/utils";
 
 export function HeroSection() {
   return (
@@ -20,15 +19,12 @@ export function HeroSection() {
           </p>
 
           <div className="flex flex-wrap gap-4 justify-center animate-fadeInUp">
-            <a href="#about" className={cn(buttonVariants({ variant: "gradient", size: "ctaLg" }))}>
+            <CtaLink href="#about" size="lg">
               About Me
-            </a>
-            <a
-              href="#contact"
-              className={cn(buttonVariants({ variant: "gradientOutline", size: "ctaLg" }))}
-            >
+            </CtaLink>
+            <CtaLink href="#contact" tone="secondary" size="lg">
               Get in Touch
-            </a>
+            </CtaLink>
           </div>
         </div>
       </div>

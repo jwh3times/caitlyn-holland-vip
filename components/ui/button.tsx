@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
@@ -16,8 +17,8 @@ const buttonVariants = cva(
           "bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700",
         ghost: "text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800",
         link: "text-blue-600 dark:text-blue-400 underline-offset-4 hover:underline",
-        // Primary call-to-action: blue gradient fill. Shared by the Hero,
-        // Contact, error, and not-found CTAs (use a `cta`/`ctaLg` size).
+        // Primary call-to-action: blue gradient fill. ButtonProps and CtaLink
+        // keep gradient variants paired with padding-based CTA sizes.
         gradient:
           "rounded-xl text-base font-semibold text-white shadow-lg transition-all bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:scale-105 hover:shadow-2xl dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700",
         // Secondary call-to-action: blue outline that fills on hover.
@@ -41,10 +42,28 @@ const buttonVariants = cva(
   }
 );
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
-  ref?: React.Ref<HTMLButtonElement>;
-}
+type ButtonVariant = NonNullable<VariantProps<typeof buttonVariants>["variant"]>;
+type ButtonSize = NonNullable<VariantProps<typeof buttonVariants>["size"]>;
+type CtaVariant = Extract<ButtonVariant, "gradient" | "gradientOutline">;
+type CtaSize = Extract<ButtonSize, "cta" | "ctaLg">;
+
+type ButtonStyleProps =
+  | { variant: CtaVariant; size: CtaSize }
+  | {
+      variant?: Exclude<ButtonVariant, CtaVariant>;
+      size?: Exclude<ButtonSize, CtaSize>;
+    };
+
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+  ButtonStyleProps & {
+    ref?: React.Ref<HTMLButtonElement>;
+  };
+
+export type CtaLinkProps = Omit<React.ComponentProps<typeof Link>, "className"> & {
+  tone?: "primary" | "secondary";
+  size?: "md" | "lg";
+  className?: string;
+};
 
 function Button({ className, variant, size, ref, ...props }: ButtonProps) {
   return (
@@ -52,4 +71,19 @@ function Button({ className, variant, size, ref, ...props }: ButtonProps) {
   );
 }
 
-export { Button, buttonVariants };
+function CtaLink({ className, tone = "primary", size = "md", ...props }: CtaLinkProps) {
+  return (
+    <Link
+      className={cn(
+        buttonVariants({
+          variant: tone === "primary" ? "gradient" : "gradientOutline",
+          size: size === "md" ? "cta" : "ctaLg",
+          className,
+        })
+      )}
+      {...props}
+    />
+  );
+}
+
+export { Button, CtaLink };
