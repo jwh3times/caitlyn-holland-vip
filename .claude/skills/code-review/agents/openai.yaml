@@ -1,5 +1,0 @@
-# AUTO-GENERATED from .agents/skills/code-review/agents/openai.yaml by scripts/sync-ai.mjs — do not edit.
-# Edit the source and run `npm run sync:ai`.
-interface:
-  display_name: "Code Review"
-  short_description: "Review a diff on standards and spec"

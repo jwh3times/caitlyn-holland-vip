@@ -1,7 +1,0 @@
-# AUTO-GENERATED from .agents/skills/setup-matt-pocock-skills/agents/openai.yaml by scripts/sync-ai.mjs — do not edit.
-# Edit the source and run `npm run sync:ai`.
-interface:
-  display_name: "Setup Matt Pocock Skills"
-  short_description: "Configure a repo for the skills"
-policy:
-  allow_implicit_invocation: false

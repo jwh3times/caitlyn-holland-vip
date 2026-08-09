@@ -1,5 +1,0 @@
-# AUTO-GENERATED from .agents/skills/wizard/agents/openai.yaml by scripts/sync-ai.mjs — do not edit.
-# Edit the source and run `npm run sync:ai`.
-interface:
-  display_name: "Wizard"
-  short_description: "Generate an interactive setup wizard"
