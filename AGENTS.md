@@ -95,9 +95,13 @@ is edited once:
 - **Skills** are authored under **`.agents/skills/<name>/`** and mirrored to
   `.claude/skills/<name>/` by `npm run sync:ai`. The **whole skill directory** is mirrored —
   `SKILL.md` plus every auxiliary file (`agents/openai.yaml`, `scripts/*.sh`, reference
-  docs) — so all of it is covered by drift detection. Most skills are vendored from
-  [`mattpocock/skills`](https://github.com/mattpocock/skills), fetched into `.agents/` by the
-  skills installer and pinned by content hash in [skills-lock.json](skills-lock.json).
+  docs) — so all of it is covered by drift detection. The 15 surviving skills originated in
+  [`mattpocock/skills`](https://github.com/mattpocock/skills) but are now forked and owned
+  locally — edited in place rather than tracked upstream — per
+  [ADR-0006](docs/adr/0006-vendored-skill-policy.md). [skills-lock.json](skills-lock.json)
+  records provenance only (nothing reads it): the `computedHash` per skill is what was
+  originally fetched, not current content, and `localized: true` flags skills that have
+  since diverged from that upstream source.
 - **Agents** go the other way: authored under **`.claude/agents/*.md`** and generated into
   `.codex/agents/*.toml` by the same command. This direction is `.claude`-first because it is
   a format conversion (markdown + YAML frontmatter → TOML), not a copy.
