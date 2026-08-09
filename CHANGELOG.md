@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.1.24] - 2026-08-09
+
+### Changed
+
+- Deepened the `scripts/sync-ai.mjs` module around a single `syncAll({ root, write })` interface. Discovery, mirroring, and orphan pruning now stay beneath the supplied repository root, making destructive cleanup testable against isolated temporary trees instead of the real checkout; script coverage now participates in the existing 80% gate.
+
 ## [1.1.23] - 2026-08-08
 
 ### Added
