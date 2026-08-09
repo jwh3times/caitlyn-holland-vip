@@ -18,22 +18,19 @@ import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync, rmSync
 import { join, dirname, extname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-// Repo root is the parent of scripts/.
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-
 // Exact-string replacements applied to generated (Codex) content. Empty today
 // because the .claude/ sources are authored tool-neutral; this is the seam for
 // genuinely tool-specific tokens or a future third tool. Order matters.
-export const SWAP_MAP = [];
+const SWAP_MAP = [];
 
-export function applySwapMap(text, swaps = SWAP_MAP) {
+function applySwapMap(text, swaps = SWAP_MAP) {
   return swaps.reduce((acc, [from, to]) => acc.split(from).join(to), text);
 }
 
 // Split raw file text into its frontmatter block (including the `---`
 // delimiters) and the body. Newlines are normalized to \n so output is
 // identical on Windows and Linux.
-export function splitFrontmatter(raw) {
+function splitFrontmatter(raw) {
   const norm = raw.replace(/\r\n/g, "\n");
   if (!norm.startsWith("---\n")) {
     return { frontmatter: "", body: norm };
@@ -50,7 +47,7 @@ export function splitFrontmatter(raw) {
 
 // Parse the flat `key: value` frontmatter into an object. Quoted values are
 // unquoted. Assumes single-line values (matches our sources).
-export function parseFrontmatter(raw) {
+function parseFrontmatter(raw) {
   const { frontmatter, body } = splitFrontmatter(raw);
   const inner = frontmatter.replace(/^---\n/, "").replace(/\n---\n$/, "");
   /** @type {Record<string, string>} */
@@ -73,7 +70,7 @@ export function parseFrontmatter(raw) {
 // Render a single-line TOML string. Uses a literal string when the value has a
 // double quote but no single quote; otherwise a basic string with backslashes
 // and double quotes escaped.
-export function tomlString(value) {
+function tomlString(value) {
   if (value.includes('"') && !value.includes("'")) {
     return `'${value}'`;
   }
@@ -86,7 +83,7 @@ export function tomlString(value) {
 // multi-line *literal* string ('''), which performs no escape processing, so
 // arbitrary markdown/regex/backslashes embed verbatim. The one sequence a
 // literal string cannot hold is ''' itself — assert it is absent.
-export function agentMarkdownToToml(raw, sourcePath) {
+function agentMarkdownToToml(raw, sourcePath) {
   const { data, body } = parseFrontmatter(raw);
   const outBody = applySwapMap(body).replace(/\s+$/, "");
   if (outBody.includes("'''")) {
@@ -108,7 +105,7 @@ export function agentMarkdownToToml(raw, sourcePath) {
 
 // Mirror a markdown skill file: keep the frontmatter verbatim, insert a
 // generated-marker comment, apply swaps to the body.
-export function skillTransform(raw, sourcePath) {
+function skillTransform(raw, sourcePath) {
   const { frontmatter, body } = splitFrontmatter(raw);
   const marker = `<!-- AUTO-GENERATED from ${sourcePath} by scripts/sync-ai.mjs — do not edit. Edit the source and run \`npm run sync:ai\`. -->`;
   const outBody = applySwapMap(body).replace(/^\n+/, "");
@@ -117,7 +114,7 @@ export function skillTransform(raw, sourcePath) {
 
 // Mirror a YAML skill file. A leading `#` comment is valid anywhere in YAML,
 // so the marker goes on top without disturbing the document.
-export function yamlTransform(raw, sourcePath) {
+function yamlTransform(raw, sourcePath) {
   const norm = raw.replace(/\r\n/g, "\n");
   const marker = `# AUTO-GENERATED from ${sourcePath} by scripts/sync-ai.mjs — do not edit.\n# Edit the source and run \`npm run sync:ai\`.`;
   return `${marker}\n${applySwapMap(norm)}`;
@@ -128,7 +125,7 @@ export function yamlTransform(raw, sourcePath) {
 // asset a skill ships) is copied byte-for-byte. Executables must stay
 // executable and shebangs must stay on line 1, so no banner is injected
 // there — drift is still caught, because the mirror is compared by content.
-export function skillFileTransform(raw, sourcePath) {
+function skillFileTransform(raw, sourcePath) {
   const ext = extname(sourcePath).toLowerCase();
   if (ext === ".md") return skillTransform(raw, sourcePath);
   if (ext === ".yaml" || ext === ".yml") return yamlTransform(raw, sourcePath);
@@ -152,9 +149,9 @@ function listFilesRecursive(dir, prefix = "") {
 
 // Discover source -> dest pairs by convention. Paths use forward slashes so the
 // text embedded in generated files is identical on every platform.
-function discover() {
+function discover(root) {
   const pairs = [];
-  const agentsDir = join(ROOT, ".claude", "agents");
+  const agentsDir = join(root, ".claude", "agents");
   if (existsSync(agentsDir)) {
     for (const file of readdirSync(agentsDir)) {
       if (!file.endsWith(".md")) continue;
@@ -165,7 +162,7 @@ function discover() {
       });
     }
   }
-  const skillsDir = join(ROOT, ".agents", "skills");
+  const skillsDir = join(root, ".agents", "skills");
   if (existsSync(skillsDir)) {
     for (const entry of readdirSync(skillsDir, { withFileTypes: true })) {
       if (!entry.isDirectory()) continue;
@@ -185,20 +182,23 @@ function discover() {
 }
 
 // Generate every mirror. Returns [{ dest, content }]; writes to disk unless write=false.
-export function syncAll({ write = true } = {}) {
+export function syncAll({ root, write = true }) {
   const results = [];
-  for (const { kind, src, dest } of discover()) {
-    const raw = readFileSync(join(ROOT, src), "utf8");
+  for (const { kind, src, dest } of discover(root)) {
+    const raw = readFileSync(join(root, src), "utf8");
     const content = kind === "agent" ? agentMarkdownToToml(raw, src) : skillFileTransform(raw, src);
     if (write) {
-      const destAbs = join(ROOT, dest);
+      const destAbs = join(root, dest);
       mkdirSync(dirname(destAbs), { recursive: true });
       writeFileSync(destAbs, content);
     }
     results.push({ dest, content });
   }
   if (write) {
-    pruneOrphans(results.map((r) => r.dest));
+    pruneOrphans(
+      root,
+      results.map((r) => r.dest)
+    );
   }
   return results;
 }
@@ -208,8 +208,8 @@ export function syncAll({ write = true } = {}) {
 // mirror behind as a committed orphan that `AI Config Parity` cannot see:
 // the job diffs the working tree after regenerating, and an untouched
 // committed file is not dirty. Pruning turns that into a visible deletion.
-export function pruneOrphans(generatedDests) {
-  const skillsDest = join(ROOT, ".claude", "skills");
+function pruneOrphans(root, generatedDests) {
+  const skillsDest = join(root, ".claude", "skills");
   if (!existsSync(skillsDest)) return [];
   const expected = new Set(generatedDests);
   const removed = [];
@@ -219,7 +219,7 @@ export function pruneOrphans(generatedDests) {
     for (const rel of listFilesRecursive(dirAbs)) {
       const dest = `.claude/skills/${entry.name}/${rel}`;
       if (!expected.has(dest)) {
-        rmSync(join(ROOT, dest));
+        rmSync(join(root, dest));
         removed.push(dest);
       }
     }
@@ -232,7 +232,8 @@ export function pruneOrphans(generatedDests) {
 }
 
 function main() {
-  for (const { dest } of syncAll()) {
+  const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+  for (const { dest } of syncAll({ root })) {
     console.log(`wrote ${dest}`);
   }
 }
