@@ -1,21 +1,12 @@
 "use client";
 
-import * as React from "react";
-import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 
+import { useThemeToggle } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 
-const useIsMounted = () =>
-  React.useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
-  );
-
 export function ModeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
-  const mounted = useIsMounted();
+  const { mounted, isDark, toggle } = useThemeToggle();
 
   if (!mounted) {
     return (
@@ -25,14 +16,12 @@ export function ModeToggle() {
     );
   }
 
-  const isDark = resolvedTheme === "dark";
-
   return (
     <Button
       variant="ghost"
       size="icon"
       className="relative h-10 w-10 rounded-full border border-transparent hover:border-blue-500/40 hover:bg-blue-500/10 dark:hover:bg-blue-500/10"
-      onClick={() => setTheme(isDark ? "light" : "dark")}
+      onClick={toggle}
       aria-label={isDark ? "Activate light mode" : "Activate dark mode"}
     >
       {isDark ? (
