@@ -11,7 +11,7 @@ A single-page site (Hero → About → Contact) built as a fully static export �
 - **[Tailwind CSS v4](https://tailwindcss.com/)** with CSS custom-property theme tokens
 - **[next-themes](https://github.com/pacocoursey/next-themes)** for dark/light mode (system default)
 - **[lucide-react](https://lucide.dev/)** icons
-- Tooling: **ESLint 10** (flat config, `@eslint-react`) · **Prettier** · **Vitest** (unit) · **Playwright** (e2e)
+- Tooling: **Oxlint** (native rules plus ESLint-plugin compatibility bridges) · **Prettier** · **Vitest** (unit) · **Playwright** (e2e)
 - Hosting: **Cloudflare Pages**
 
 ## Getting started
@@ -30,7 +30,8 @@ npm run dev      # start the dev server at http://localhost:3000
 | ---------------------- | ------------------------------------------------- |
 | `npm run dev`          | Start the dev server at <http://localhost:3000>   |
 | `npm run build`        | Production build → static export in `./out`       |
-| `npm run lint`         | ESLint                                            |
+| `npm run lint`         | Oxlint                                            |
+| `npm run lint:fix`     | Oxlint with safe autofixes                        |
 | `npm run format`       | Prettier write                                    |
 | `npm run format:check` | Prettier check (used in CI)                       |
 | `npm run sync:ai`      | Regenerate the AI-tool config mirrors             |

@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.1.30] - 2026-08-09
+
+### Changed
+
+- Replaced ESLint as the project's lint runner with Oxlint while preserving the existing rule contract through native rules and compatibility bridges for the remaining React and Next.js checks. This removes the lint workflow's dependency on `typescript-eslint` and its TypeScript parser ahead of the planned TypeScript 7 transition; the compiler itself remains on TypeScript 6 in this release.
+- Added a safe-autofix command, moved the lint configuration to `.oxlintrc.json`, and updated dependency automation for the new toolchain. ESLint remains installed only as a peer dependency of the compatibility plugins until Oxlint implements those rules natively.
+
 ## [1.1.29] - 2026-08-09
 
 ### Removed
