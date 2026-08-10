@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.1.29] - 2026-08-09
+
+### Removed
+
+- Eleven of the twenty-six vendored agent skills, leaving fifteen. The set was written for a backend product with a real domain model, and on a statically exported personal site the unused majority cost context and made skill selection ambiguous rather than helpful. Three removals fixed active hazards: a setup skill that had already run and would duplicate configuration into a second file if run again, a wizard skill reachable automatically whose entire purpose is credential and environment-variable provisioning this site has none of, and a review skill that both duplicated and name-collided with the editor's built-in review command.
+- The two one-line interview shims, folded into the interview skill itself. The variant that recorded terminology and decisions as it went was the one a human had to invoke by name, so the record was never written automatically — which is why the glossary and decision records did not exist until this release. The surviving skill is automatically reachable and now carries that behavior.
+
+### Changed
+
+- The surviving skills now describe this repository rather than a generic one: where unit tests and end-to-end tests each live and how a file in the wrong directory fails, the coverage threshold and typecheck command a build must satisfy, that a prototype page becomes publicly reachable once merged because the site is statically exported, and the package manager actually in use. Several pointed at files and commands that do not exist here — a script path that resolved nowhere, a skill deleted in this release, and a promise of research running in the background while you keep working, which the tooling does not do.
+- The issue tracker guide dropped the pull-request triage flag, whose only reader was a removed skill, and narrowed its dependency section to the parent-child and blocking-edge mechanics that still have a consumer.
+- Skill provenance is now recorded as history rather than as a constraint: the lock file marks which skills have deliberately diverged from what was originally fetched, so a future re-install cannot quietly overwrite local edits without that being a visible choice.
+
+### Added
+
+- A decision record for the vendored-skill policy, covering why these are forked and owned locally rather than tracked upstream, what was removed, and the cost that choice carries — upstream improvements now have to be read and applied by hand.
+
 ## [1.1.28] - 2026-08-09
 
 ### Added

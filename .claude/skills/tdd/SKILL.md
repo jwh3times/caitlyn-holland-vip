@@ -9,7 +9,26 @@ description: Test-driven development. Use when the user wants to build features 
 
 TDD is the red → green loop. This skill is the reference that makes that loop produce tests worth keeping: what a good test is, where tests go, the anti-patterns, and the rules of the loop. Every section applies on every cycle — consult them before and during the loop, not after.
 
-When exploring the codebase, read `CONTEXT.md` (if it exists) so test names and interface vocabulary match the project's domain language, and respect ADRs in the area you're touching.
+When exploring the codebase, read `CONTEXT.md` so test names and interface vocabulary match the project's domain language, and respect ADRs in the area you're touching.
+
+## Where tests go in this repo
+
+Two directories, one letter apart, and putting a file in the wrong one fails in two different ways. See [ADR-0004](../../../docs/adr/0004-test-split-vitest-playwright.md).
+
+| Layer          | Directory | Pattern                        | Command             |
+| -------------- | --------- | ------------------------------ | ------------------- |
+| Unit/component | `test/`   | `**/*.test.{ts,tsx}`           | `npm run test:unit` |
+| End-to-end     | `tests/`  | Playwright default `testMatch` | `npm test`          |
+
+- A Vitest-style test placed in `tests/` is collected by Playwright and fails against a browser runner — noisy, but at least it fails.
+- A `.spec.ts` placed in `test/` matches **neither** config and silently never runs. This is the one to watch for: nothing goes red, and it reads as passing coverage.
+- `test/` mirrors the source path — a component at `components/ui/button.tsx` is tested at `test/components/ui/button.test.tsx`.
+
+**Gates this repo enforces**, so a red-green loop that ignores them produces a branch CI will reject:
+
+- Unit coverage is gated at **80%** (statements, branches, functions, lines) across `app/`, `components/`, `lib/`, and `scripts/**/*.mjs`. A new component generally needs a matching file under `test/`.
+- Typechecking is `npx tsc --noEmit` — there is no `typecheck` script.
+- `npm test` is the **Playwright** suite: it boots a dev server and runs five browser projects locally. Don't reach for it as the quick inner-loop command; `npm run test:unit` is that.
 
 ## What a good test is
 
@@ -37,4 +56,4 @@ When the shape of that interface is itself in question — how deep the module i
 
 - **Red before green.** Write the failing test first, then only enough code to pass it. Don't anticipate future tests or add speculative features.
 - **One slice at a time.** One seam, one test, one minimal implementation per cycle.
-- **Refactoring is not part of the loop.** It belongs to the review stage (see the `code-review` skill), not the red → green implementation cycle.
+- **Refactoring is not part of the loop.** It belongs to the review stage — Claude Code's built-in `/code-review`; this repo does not vendor a review skill — not the red → green implementation cycle.
