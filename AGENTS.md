@@ -121,10 +121,11 @@ regenerates everything and fails if the result differs from what is committed.
 
 The `docs-updater` subagent keeps `AGENTS.md` and `README.md` in sync with the code. Docs are
 refreshed when you **ship a branch**: the `ship` skill invokes `docs-updater` (scoped to the
-branch diff) as part of opening a PR — alongside computing the version the merge will mint via
-[scripts/next-version.sh](scripts/next-version.sh), writing the [CHANGELOG.md](CHANGELOG.md)
-entry for it, running `npm run sync:ai`, running the fast checks (`format:check`, `lint`,
-`tsc --noEmit`), and pushing. Say "ship it" when a branch is ready for review. The
+branch diff) as part of opening a PR — alongside evaluating whether the changes warrant a major,
+minor, or standard build-number release, adjusting the package-version floor when needed,
+computing the exact version via [scripts/next-version.sh](scripts/next-version.sh), writing the
+[CHANGELOG.md](CHANGELOG.md) entry for it, running `npm run sync:ai`, running the fast checks
+(`format:check`, `lint`, `tsc --noEmit`), and pushing. Say "ship it" when a branch is ready for review. The
 `Changelog Version` CI job then verifies the changelog names the version the merge will actually
 mint.
 
