@@ -4,7 +4,7 @@ This file provides guidance to AI coding agents (Claude Code, Codex, and others)
 
 ## Project Overview
 
-Personal website for Caitlyn Holland built with Next.js 16 (App Router), React 19, TypeScript, and Tailwind CSS v4. The site is configured for **static export** (`output: "export"` in [next.config.ts](next.config.ts)): it builds to `./out/` and deploys to **Cloudflare Pages** at caitlyn.holland.vip, with security headers served from [public/\_headers](public/_headers). There is no backend, no API routes, and no server-side rendering — everything is client-side or statically rendered.
+Personal website for Caitlyn Holland built with Next.js 16 (App Router), React 19, TypeScript 7, and Tailwind CSS v4. The site is configured for **static export** (`output: "export"` in [next.config.ts](next.config.ts)): it builds to `./out/` and deploys to **Cloudflare Pages** at caitlyn.holland.vip, with security headers served from [public/\_headers](public/_headers). There is no backend, no API routes, and no server-side rendering — everything is client-side or statically rendered.
 
 Tailwind v4 is loaded via `@import "tailwindcss"` in [app/globals.css](app/globals.css) and configured entirely in CSS (custom properties + utility classes) — there is no `tailwind.config.ts`.
 
@@ -17,11 +17,12 @@ npm run dev          # Start dev server at http://localhost:3000
 npm run build        # Build for production (outputs to ./out as static export)
 npm run lint         # Oxlint
 npm run lint:fix     # Oxlint safe autofixes
+npx tsc --noEmit     # TypeScript 7 native CLI type-check
 npm run format       # Prettier write
 npm run format:check # Prettier check (the CI "Format Check" job runs this)
 ```
 
-Lint rules live in [.oxlintrc.json](.oxlintrc.json). Oxlint runs both its native rules and the remaining React/Next compatibility plugins; the `eslint` package stays installed only to satisfy those plugins' peer dependencies.
+Lint rules live in [.oxlintrc.json](.oxlintrc.json). Oxlint owns the core, TypeScript, React, React Compiler, and React Hooks checks natively; one unsupported Next.js navigation rule still runs through `@next/eslint-plugin-next`. ESLint is only a transitive compatibility dependency of that plugin, not the lint runner. Next.js uses the TypeScript 7 project-local CLI for production type-checking through `experimental.useTypeScriptCli` in [next.config.ts](next.config.ts).
 
 Node version is pinned in [.nvmrc](.nvmrc) — run `nvm use` to match CI and Cloudflare.
 

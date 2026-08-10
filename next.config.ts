@@ -4,6 +4,9 @@ import path from "path";
 const nextConfig: NextConfig = {
   output: "export",
   basePath: "",
+  experimental: {
+    useTypeScriptCli: true,
+  },
   images: {
     unoptimized: true,
   },
