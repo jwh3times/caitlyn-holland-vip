@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.3.0] - 2026-08-09
+
+### Added
+
+- The ship workflow now evaluates every branch as a major, minor, or standard build-number release before computing its tag. It adjusts the package-version floor for new release lines, remains idempotent when re-run, and includes the decision and rationale in the pull request and final report.
+
+## [1.2.1] - 2026-08-09
+
+### Changed
+
+- Updated the direct `lucide-react` dependency from 1.28.0 to 1.29.0 via Dependabot.
+
 ## [1.2.0] - 2026-08-09
 
 ### Changed
