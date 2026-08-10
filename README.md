@@ -7,11 +7,11 @@ A single-page site (Hero → About → Contact) built as a fully static export �
 ## Tech stack
 
 - **[Next.js 16](https://nextjs.org/)** (App Router, `output: "export"` static export)
-- **[React 19](https://react.dev/)** + **TypeScript** (`strict`)
+- **[React 19](https://react.dev/)** + **TypeScript 7** (`strict`)
 - **[Tailwind CSS v4](https://tailwindcss.com/)** with CSS custom-property theme tokens
 - **[next-themes](https://github.com/pacocoursey/next-themes)** for dark/light mode (system default)
 - **[lucide-react](https://lucide.dev/)** icons
-- Tooling: **Oxlint** (native rules plus ESLint-plugin compatibility bridges) · **Prettier** · **Vitest** (unit) · **Playwright** (e2e)
+- Tooling: **Oxlint** (native React/TypeScript rules plus one Next.js compatibility bridge) · **Prettier** · **Vitest** (unit) · **Playwright** (e2e)
 - Hosting: **Cloudflare Pages**
 
 ## Getting started

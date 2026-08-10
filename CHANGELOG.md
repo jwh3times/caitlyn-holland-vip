@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.2.0] - 2026-08-09
+
+### Changed
+
+- Upgraded the project from TypeScript 6 to the TypeScript 7 native compiler and explicitly configured Next.js to use its local TypeScript CLI for production type-checking.
+- Replaced the remaining TypeScript-dependent React lint compatibility plugins with Oxlint's native React, Hooks, and React Compiler rules, removing ESLint and the incompatible `typescript-eslint` dependency chain while retaining the one Next.js rule that still requires a compatibility bridge.
+
 ## [1.1.30] - 2026-08-09
 
 ### Changed

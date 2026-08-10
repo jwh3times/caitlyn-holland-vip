@@ -66,14 +66,11 @@ updates:
         update-types:
           - "major"
 
-      # Oxlint owns lint execution. Compatibility plugins still peer-depend on
-      # ESLint while Oxlint runs their remaining non-native rules.
+      # Oxlint owns lint execution and TypeScript owns the compiler CLI. The one
+      # remaining Next.js compatibility plugin follows the next-ecosystem group.
       lint-and-typescript:
         patterns:
           - "oxlint"
-          - "eslint"
-          - "@eslint-react/*"
-          - "eslint-plugin-*"
           - "typescript"
         update-types:
           - "major"
