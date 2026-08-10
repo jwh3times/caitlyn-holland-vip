@@ -15,7 +15,7 @@ Tailwind v4 is loaded via `@import "tailwindcss"` in [app/globals.css](app/globa
 ```bash
 npm run dev          # Start dev server at http://localhost:3000
 npm run build        # Build for production (outputs to ./out as static export)
-npm run lint         # ESLint
+npm run lint         # Oxlint
 npm run format       # Prettier write
 npm run format:check # Prettier check (the CI "Format Check" job runs this)
 ```

@@ -66,17 +66,14 @@ updates:
         update-types:
           - "major"
 
-      # @eslint/js is lockstep-versioned with eslint; plugins peer-cap on the eslint
-      # major; typescript-eslint peer-bounds both eslint and typescript.
+      # Oxlint owns lint execution. Compatibility plugins still peer-depend on
+      # ESLint while Oxlint runs their remaining non-native rules.
       lint-and-typescript:
         patterns:
+          - "oxlint"
           - "eslint"
-          - "@eslint/*"
           - "@eslint-react/*"
           - "eslint-plugin-*"
-          - "eslint-config-*"
-          - "typescript-eslint"
-          - "globals"
           - "typescript"
         update-types:
           - "major"
