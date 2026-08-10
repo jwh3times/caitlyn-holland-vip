@@ -31,7 +31,7 @@
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.28.0",
+    "lucide-react": "^1.29.0",
     "next": "^16.3.0",
     "next-themes": "^0.4.6",
     "react": "^19.2.8",
@@ -39,7 +39,7 @@
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
-    "@eslint-react/eslint-plugin": "^5.18.0",
+    "@eslint-react/eslint-plugin": "^5.18.3",
     "@next/eslint-plugin-next": "^16.3.0",
     "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4.3.3",
