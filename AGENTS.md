@@ -16,9 +16,12 @@ Tailwind v4 is loaded via `@import "tailwindcss"` in [app/globals.css](app/globa
 npm run dev          # Start dev server at http://localhost:3000
 npm run build        # Build for production (outputs to ./out as static export)
 npm run lint         # Oxlint
+npm run lint:fix     # Oxlint safe autofixes
 npm run format       # Prettier write
 npm run format:check # Prettier check (the CI "Format Check" job runs this)
 ```
+
+Lint rules live in [.oxlintrc.json](.oxlintrc.json). Oxlint runs both its native rules and the remaining React/Next compatibility plugins; the `eslint` package stays installed only to satisfy those plugins' peer dependencies.
 
 Node version is pinned in [.nvmrc](.nvmrc) — run `nvm use` to match CI and Cloudflare.
 
