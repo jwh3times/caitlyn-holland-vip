@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.3.2] - 2026-08-11
+
+### Changed
+
+- Disabled the Next.js 16.3 agent-rules generator with `agentRules: false`, so starting the dev server — directly or through the Playwright end-to-end suite — no longer appends a tool-written block to `AGENTS.md` and leaves the working tree dirty. `AGENTS.md` stays entirely hand-authored, and the block's pointer to the version-matched bundled Next.js docs is now re-stated there by hand, alongside the reasoning and a regression test.
+
 ## [1.3.0] - 2026-08-09
 
 ### Added
