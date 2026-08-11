@@ -36,7 +36,7 @@ There are two test layers: **Vitest + Testing Library** for fast unit/component 
 
 #### Unit tests (Vitest)
 
-Vitest tests live in [test/](test/) (note: singular — `tests/` holds the Playwright specs), mirroring the tested source areas (`test/app/`, `test/components/`, `test/lib/`, `test/scripts/`). They run in jsdom with [vitest.setup.ts](vitest.setup.ts). Coverage is collected with V8 across `app/`, `components/`, `lib/`, and `scripts/**/*.mjs`, and is **gated at 80%** (statements/branches/functions/lines) in [vitest.config.ts](vitest.config.ts); `app/layout.tsx` and the logic-free `components/sections/index.ts` barrel are excluded.
+Vitest tests live in [test/](test/) (note: singular — `tests/` holds the Playwright specs), mirroring the tested source areas (`test/app/`, `test/components/`, `test/lib/`, `test/scripts/`); a test for a repo-root file such as [next.config.ts](next.config.ts) sits at `test/` root too (e.g. `test/next-config.test.ts`), not in one of those subdirectories. They run in jsdom with [vitest.setup.ts](vitest.setup.ts). Coverage is collected with V8 across `app/`, `components/`, `lib/`, and `scripts/**/*.mjs`, and is **gated at 80%** (statements/branches/functions/lines) in [vitest.config.ts](vitest.config.ts); `app/layout.tsx` and the logic-free `components/sections/index.ts` barrel are excluded.
 
 ```bash
 npm run test:unit        # Run unit tests once

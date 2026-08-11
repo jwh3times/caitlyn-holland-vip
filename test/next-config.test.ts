@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-// Guards the ADR-0007 opt-out: `next dev` on Next.js 16.3+ appends a managed
+// Guards the ADR-0008 opt-out: `next dev` on Next.js 16.3+ appends a managed
 // <!-- BEGIN:nextjs-agent-rules --> block to AGENTS.md whenever it detects a coding
 // agent, unless `agentRules: false` is set. Both halves are asserted here because
 // dropping the flag re-dirties the tree silently, on someone else's machine.
