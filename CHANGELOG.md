@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.4.0] - 2026-08-11
+
+### Added
+
+- An architecture decision record covering the Node runtime pin: why the runtime moved up to 26 rather than the typings moving back to 24, and the three consequences worth remembering — the pre-LTS support window, Cloudflare Pages resolving `.nvmrc` on its own, and a future `@types/node` major only being mergeable alongside a matching `.nvmrc` bump.
+
+### Changed
+
+- The Node version required to develop, test, and build the site moved from 24 to 26. `.nvmrc` is the single source for all five CI jobs, the Cloudflare Pages build, and local development, so contributors should run `nvm use` after pulling. Node 26 is currently a _Current_ release rather than Active LTS; because the site is a static export, Node runs only in CI, on the Pages builder, and on developer machines, and never serves production traffic.
+- `.nvmrc` and `@types/node` now name the same major. Previously the runtime was pinned to 24 while the typings resolved to 26.x, which let the compiler advertise Node 26 APIs that neither CI nor the Cloudflare build could execute. The two are treated as one decision from here on and move together in either direction.
+
+## [1.3.1] - 2026-08-11
+
+### Changed
+
+- Dependency updates from dependabot's grouped minor/patch pull request: `lucide-react` 1.29.0 → 1.30.0 and `@types/node` 26.1.2 → 26.2.0.
+
 ## [1.3.0] - 2026-08-09
 
 ### Added
