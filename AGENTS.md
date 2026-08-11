@@ -24,7 +24,11 @@ npm run format:check # Prettier check (the CI "Format Check" job runs this)
 
 Lint rules live in [.oxlintrc.json](.oxlintrc.json). Oxlint owns the core, TypeScript, React, React Compiler, and React Hooks checks natively; one unsupported Next.js navigation rule still runs through `@next/eslint-plugin-next`. ESLint is only a transitive compatibility dependency of that plugin, not the lint runner. Next.js uses the TypeScript 7 project-local CLI for production type-checking through `experimental.useTypeScriptCli` in [next.config.ts](next.config.ts).
 
-Node version is pinned in [.nvmrc](.nvmrc) — run `nvm use` to match CI and Cloudflare.
+Node version is pinned in [.nvmrc](.nvmrc) — run `nvm use` to match CI and Cloudflare. The pin
+is **Node 26**, currently a _Current_ (pre-LTS) release rather than Active LTS; `@types/node` is
+held on the matching `26.x` typings line so the compiler cannot promise APIs the runtime lacks.
+See [ADR-0007](docs/adr/0007-node-runtime-pin-tracks-types-node.md) — the pin and the typings move
+together, in either direction.
 
 ### Testing
 
@@ -125,7 +129,7 @@ regenerates everything and fails if the result differs from what is committed.
 `BEGIN:nextjs-agent-rules` / `END:nextjs-agent-rules` — to `AGENTS.md` whenever it detects a
 coding agent in the environment. **This repo opts out** with
 `agentRules: false` in [next.config.ts](next.config.ts) — see
-[ADR-0007](docs/adr/0007-nextjs-agent-rules-opt-out.md). `AGENTS.md` stays entirely
+[ADR-0008](docs/adr/0008-nextjs-agent-rules-opt-out.md). `AGENTS.md` stays entirely
 hand-authored, so no tool writes into it and no unrelated diff picks up a dirty `AGENTS.md`.
 Do not remove the flag, and do not commit the block if you see it — restore the flag instead.
 [test/next-config.test.ts](test/next-config.test.ts) guards both halves of that.

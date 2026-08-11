@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   output: "export",
   basePath: "",
   // Stop `next dev` writing its managed <!-- BEGIN:nextjs-agent-rules --> block into
-  // AGENTS.md. AGENTS.md is hand-authored here; see ADR-0007 and the "Next.js agent
+  // AGENTS.md. AGENTS.md is hand-authored here; see ADR-0008 and the "Next.js agent
   // rules" section of AGENTS.md, which carries the bundled-docs pointer by hand.
   agentRules: false,
   experimental: {
