@@ -79,6 +79,9 @@ E2E specs in [tests/](tests/) cover homepage rendering, navigation, theme toggli
 **Styling conventions:**
 
 - Tailwind v4 (`@import "tailwindcss"` syntax, not the v3 `@tailwind` directives)
+- Tailwind's `dark` variant is class-based via `@custom-variant` in `globals.css`, matching the
+  `.dark` class managed by `next-themes`; keep Tailwind configuration in CSS and the PostCSS
+  config limited to loading `@tailwindcss/postcss`.
 - Custom CSS utilities defined in `globals.css` for themed colors, gradients (`.gradient-text`, `.gradient-text-blue`), glassmorphism (`.glass`), section backgrounds (`.section-surface`, `.section-surface-contrast`), and an entrance animation (`.animate-fadeInUp`). A `@media (prefers-reduced-motion: reduce)` block neutralizes animations/transitions.
 - Always compose class names with the `cn()` helper from [lib/utils.ts](lib/utils.ts) (`clsx` + `tailwind-merge`) — no raw string concatenation.
 - Icons: `lucide-react` for UI icons.

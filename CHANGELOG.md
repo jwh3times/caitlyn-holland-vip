@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.4.2] - 2026-08-11
+
+### Changed
+
+- Simplified the Tailwind CSS v4 PostCSS pipeline by removing the redundant direct Autoprefixer dependency and its orphaned packages, aligning the Tailwind package floors, and moving class-based dark-mode selection into CSS so the existing theme toggle continues to control `dark:` utilities.
+
 ## [1.4.1] - 2026-08-11
 
 ### Changed
