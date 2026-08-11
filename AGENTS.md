@@ -36,7 +36,7 @@ There are two test layers: **Vitest + Testing Library** for fast unit/component 
 
 #### Unit tests (Vitest)
 
-Vitest tests live in [test/](test/) (note: singular — `tests/` holds the Playwright specs), mirroring the tested source areas (`test/app/`, `test/components/`, `test/lib/`, `test/scripts/`). They run in jsdom with [vitest.setup.ts](vitest.setup.ts). Coverage is collected with V8 across `app/`, `components/`, `lib/`, and `scripts/**/*.mjs`, and is **gated at 80%** (statements/branches/functions/lines) in [vitest.config.ts](vitest.config.ts); `app/layout.tsx` and the logic-free `components/sections/index.ts` barrel are excluded.
+Vitest tests live in [test/](test/) (note: singular — `tests/` holds the Playwright specs), mirroring the tested source areas (`test/app/`, `test/components/`, `test/lib/`, `test/scripts/`); a test for a repo-root file such as [next.config.ts](next.config.ts) sits at `test/` root too (e.g. `test/next-config.test.ts`), not in one of those subdirectories. They run in jsdom with [vitest.setup.ts](vitest.setup.ts). Coverage is collected with V8 across `app/`, `components/`, `lib/`, and `scripts/**/*.mjs`, and is **gated at 80%** (statements/branches/functions/lines) in [vitest.config.ts](vitest.config.ts); `app/layout.tsx` and the logic-free `components/sections/index.ts` barrel are excluded.
 
 ```bash
 npm run test:unit        # Run unit tests once
@@ -122,6 +122,28 @@ mirrors whose source is gone, so deleting a skill from `.agents/` removes its `.
 The one exception is [.codex/config.toml](.codex/config.toml) — hand-authored Codex
 configuration with no generating source, safe to edit directly. The `AI Config Parity` CI job
 regenerates everything and fails if the result differs from what is committed.
+
+### Next.js agent rules — auto-generation is off
+
+`next dev` on Next.js 16.3+ appends a managed block — delimited by HTML comments named
+`BEGIN:nextjs-agent-rules` / `END:nextjs-agent-rules` — to `AGENTS.md` whenever it detects a
+coding agent in the environment. **This repo opts out** with
+`agentRules: false` in [next.config.ts](next.config.ts) — see
+[ADR-0008](docs/adr/0008-nextjs-agent-rules-opt-out.md). `AGENTS.md` stays entirely
+hand-authored, so no tool writes into it and no unrelated diff picks up a dirty `AGENTS.md`.
+Do not remove the flag, and do not commit the block if you see it — restore the flag instead.
+[test/next-config.test.ts](test/next-config.test.ts) guards both halves of that.
+
+Note what the opt-out does **not** touch: `npm run sync:ai` and the `AI Config Parity` CI job
+only regenerate `.agents/`, `.claude/skills/`, and `.codex/agents/`. Neither reads or writes
+`AGENTS.md`, so the block was never a parity failure — only a dirty working tree.
+
+The block's actual advice is worth keeping, so it lives here by hand instead:
+
+> **Next.js 16 differs from most training data.** Before writing Next.js code, read the relevant
+> guide under `node_modules/next/dist/docs/` (mirrors the structure of nextjs.org/docs, and is
+> version-matched to the installed `next`). Heed deprecation notices. Appending `.md` to any
+> nextjs.org/docs URL returns the same content over the network.
 
 The `docs-updater` subagent keeps `AGENTS.md` and `README.md` in sync with the code. Docs are
 refreshed when you **ship a branch**: the `ship` skill invokes `docs-updater` (scoped to the
