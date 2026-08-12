@@ -15,6 +15,10 @@ describe("next.config.ts", () => {
   it("opts out of Next.js agent-rules auto-generation", () => {
     expect(read("next.config.ts")).toMatch(/agentRules:\s*false/);
   });
+
+  it("uses Next.js's default project-local TypeScript CLI", () => {
+    expect(read("next.config.ts")).not.toContain("useTypeScriptCli");
+  });
 });
 
 describe.each(["AGENTS.md", "CLAUDE.md"])("%s", (file) => {

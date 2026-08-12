@@ -8,9 +8,6 @@ const nextConfig: NextConfig = {
   // AGENTS.md. AGENTS.md is hand-authored here; see ADR-0008 and the "Next.js agent
   // rules" section of AGENTS.md, which carries the bundled-docs pointer by hand.
   agentRules: false,
-  experimental: {
-    useTypeScriptCli: true,
-  },
   images: {
     unoptimized: true,
   },

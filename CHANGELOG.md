@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.5.1] - 2026-08-12
+
+### Changed
+
+- Removed the redundant Next.js `experimental.useTypeScriptCli` setting now that Next.js 16.3 defaults production builds to the project-local TypeScript 7 CLI, retaining type-error enforcement while documenting and testing the upstream default.
+
 ## [1.5.0] - 2026-08-12
 
 ### Added
