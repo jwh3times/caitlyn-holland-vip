@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
   },
   turbopack: {
     root: path.resolve(__dirname),
+    rules: {
+      "*.css": {
+        loaders: ["@tailwindcss/webpack"],
+        type: "css",
+      },
+    },
   },
   // Security headers are served by Cloudflare Pages via public/_headers.
 };
