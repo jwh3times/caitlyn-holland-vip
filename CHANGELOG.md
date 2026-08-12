@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.4.3] - 2026-08-11
+
+### Changed
+
+- Removed the obsolete global PostCSS override now that Next.js directly requires a patched release, allowing the framework to use its exact tested PostCSS version while the Tailwind pipeline continues to use the current compatible release.
+
 ## [1.4.2] - 2026-08-11
 
 ### Changed
