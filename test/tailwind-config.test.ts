@@ -4,22 +4,23 @@ import { describe, expect, it } from "vitest";
 
 const read = (file: string) => readFileSync(join(process.cwd(), file), "utf-8");
 
-describe("Tailwind PostCSS configuration", () => {
-  it("uses only the Tailwind v4 PostCSS plugin", () => {
-    expect(read("postcss.config.mjs")).toContain('"@tailwindcss/postcss": {}');
-    expect(read("postcss.config.mjs")).not.toContain("darkMode");
+describe("Tailwind webpack integration", () => {
+  it("uses the Tailwind webpack loader through Turbopack", () => {
+    expect(read("next.config.ts")).toContain('loaders: ["@tailwindcss/webpack"]');
+    expect(read("next.config.ts")).toContain('type: "css"');
   });
 
-  it("keeps the Tailwind package floors aligned without Autoprefixer", () => {
+  it("contains no leftover PostCSS integration dependencies", () => {
     const manifest = JSON.parse(read("package.json")) as {
       devDependencies: Record<string, string>;
       overrides?: Record<string, string>;
     };
 
     expect(manifest.devDependencies.autoprefixer).toBeUndefined();
-    expect(manifest.devDependencies.postcss).toBeDefined();
-    expect(manifest.devDependencies.tailwindcss).toBe(
-      manifest.devDependencies["@tailwindcss/postcss"]
+    expect(manifest.devDependencies.postcss).toBeUndefined();
+    expect(manifest.devDependencies["@tailwindcss/postcss"]).toBeUndefined();
+    expect(manifest.devDependencies["@tailwindcss/webpack"]).toBe(
+      manifest.devDependencies.tailwindcss
     );
     expect(manifest.overrides).toBeUndefined();
   });

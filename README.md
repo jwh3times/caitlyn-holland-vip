@@ -8,7 +8,7 @@ A single-page site (Hero → About → Contact) built as a fully static export �
 
 - **[Next.js 16](https://nextjs.org/)** (App Router, `output: "export"` static export)
 - **[React 19](https://react.dev/)** + **TypeScript 7** (`strict`)
-- **[Tailwind CSS v4](https://tailwindcss.com/)** with CSS custom-property theme tokens
+- **[Tailwind CSS v4](https://tailwindcss.com/)** with CSS custom-property theme tokens, compiled through Next.js/Turbopack by `@tailwindcss/webpack`
 - **[next-themes](https://github.com/pacocoursey/next-themes)** for dark/light mode (system default)
 - **[lucide-react](https://lucide.dev/)** icons
 - Tooling: **Oxlint** (native React/TypeScript rules plus one Next.js compatibility bridge) · **Prettier** · **Vitest** (unit) · **Playwright** (e2e)
@@ -26,19 +26,20 @@ npm run dev      # start the dev server at http://localhost:3000
 
 ## Commands
 
-| Command                | Description                                       |
-| ---------------------- | ------------------------------------------------- |
-| `npm run dev`          | Start the dev server at <http://localhost:3000>   |
-| `npm run build`        | Production build → static export in `./out`       |
-| `npm run lint`         | Oxlint                                            |
-| `npm run lint:fix`     | Oxlint with safe autofixes                        |
-| `npm run format`       | Prettier write                                    |
-| `npm run format:check` | Prettier check (used in CI)                       |
-| `npm run sync:ai`      | Regenerate the AI-tool config mirrors             |
-| `npm run test:unit`    | Vitest unit/component tests                       |
-| `npm run coverage`     | Vitest with coverage (fails below 80%)            |
-| `npm test`             | Playwright e2e tests (auto-starts the dev server) |
-| `npm run test:ui`      | Playwright interactive UI                         |
+| Command                                           | Description                                                                                                                       |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run dev`                                     | Start the dev server at <http://localhost:3000>                                                                                   |
+| `npm run build`                                   | Production build → static export in `./out`                                                                                       |
+| `npm run benchmark:tailwind -- --variant=<label>` | Measure Tailwind build/dev performance; see the [method and recorded results](docs/research/tailwind-webpack-nextjs-benchmark.md) |
+| `npm run lint`                                    | Oxlint                                                                                                                            |
+| `npm run lint:fix`                                | Oxlint with safe autofixes                                                                                                        |
+| `npm run format`                                  | Prettier write                                                                                                                    |
+| `npm run format:check`                            | Prettier check (used in CI)                                                                                                       |
+| `npm run sync:ai`                                 | Regenerate the AI-tool config mirrors                                                                                             |
+| `npm run test:unit`                               | Vitest unit/component tests                                                                                                       |
+| `npm run coverage`                                | Vitest with coverage (fails below 80%)                                                                                            |
+| `npm test`                                        | Playwright e2e tests (auto-starts the dev server)                                                                                 |
+| `npm run test:ui`                                 | Playwright interactive UI                                                                                                         |
 
 Run a single e2e file or a single browser project:
 

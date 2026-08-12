@@ -6,7 +6,7 @@ This file provides guidance to AI coding agents (Claude Code, Codex, and others)
 
 Personal website for Caitlyn Holland built with Next.js 16 (App Router), React 19, TypeScript 7, and Tailwind CSS v4. The site is configured for **static export** (`output: "export"` in [next.config.ts](next.config.ts)): it builds to `./out/` and deploys to **Cloudflare Pages** at caitlyn.holland.vip, with security headers served from [public/\_headers](public/_headers). There is no backend, no API routes, and no server-side rendering — everything is client-side or statically rendered.
 
-Tailwind v4 is loaded via `@import "tailwindcss"` in [app/globals.css](app/globals.css) and configured entirely in CSS (custom properties + utility classes) — there is no `tailwind.config.ts`.
+Tailwind v4 is loaded via `@import "tailwindcss"` in [app/globals.css](app/globals.css), where theme tokens and custom utilities are configured; there is no `tailwind.config.ts`. Next.js compiles CSS through `@tailwindcss/webpack` using the Turbopack `*.css` rule in [next.config.ts](next.config.ts), with no PostCSS configuration.
 
 ## Commands
 
@@ -80,8 +80,9 @@ E2E specs in [tests/](tests/) cover homepage rendering, navigation, theme toggli
 
 - Tailwind v4 (`@import "tailwindcss"` syntax, not the v3 `@tailwind` directives)
 - Tailwind's `dark` variant is class-based via `@custom-variant` in `globals.css`, matching the
-  `.dark` class managed by `next-themes`; keep Tailwind configuration in CSS and the PostCSS
-  config limited to loading `@tailwindcss/postcss`.
+  `.dark` class managed by `next-themes`; keep theme and utility configuration in CSS.
+- **Tailwind integration changes:** read the compatibility analysis, benchmark method, and recorded
+  results in [docs/research/tailwind-webpack-nextjs-benchmark.md](docs/research/tailwind-webpack-nextjs-benchmark.md), then retain the regression coverage in [test/tailwind-config.test.ts](test/tailwind-config.test.ts).
 - Custom CSS utilities defined in `globals.css` for themed colors, gradients (`.gradient-text`, `.gradient-text-blue`), glassmorphism (`.glass`), section backgrounds (`.section-surface`, `.section-surface-contrast`), and an entrance animation (`.animate-fadeInUp`). A `@media (prefers-reduced-motion: reduce)` block neutralizes animations/transitions.
 - Always compose class names with the `cn()` helper from [lib/utils.ts](lib/utils.ts) (`clsx` + `tailwind-merge`) — no raw string concatenation.
 - Icons: `lucide-react` for UI icons.
