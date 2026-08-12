@@ -13,12 +13,15 @@ describe("Tailwind PostCSS configuration", () => {
   it("keeps the Tailwind package floors aligned without Autoprefixer", () => {
     const manifest = JSON.parse(read("package.json")) as {
       devDependencies: Record<string, string>;
+      overrides?: Record<string, string>;
     };
 
     expect(manifest.devDependencies.autoprefixer).toBeUndefined();
+    expect(manifest.devDependencies.postcss).toBeDefined();
     expect(manifest.devDependencies.tailwindcss).toBe(
       manifest.devDependencies["@tailwindcss/postcss"]
     );
+    expect(manifest.overrides).toBeUndefined();
   });
 
   it("uses the class-based dark variant required by next-themes", () => {
