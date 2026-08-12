@@ -77,7 +77,7 @@ Two cautions make a real build proof essential:
 
 ## Benchmark caveats for this repository
 
-This repository currently imports Tailwind through `@tailwindcss/postcss` in [`postcss.config.mjs`](../../postcss.config.mjs), imports Tailwind from [`app/globals.css`](../../app/globals.css), uses Turbopack's project root in [`next.config.ts`](../../next.config.ts), and runs a default `next build` with `output: "export"`. A static export makes one HTML file per route and writes deployable HTML/CSS/JavaScript assets to `out`; therefore whole-command timing includes much more than Tailwind compilation. ([Next.js static export guide](https://nextjs.org/docs/app/guides/static-exports))
+At the start of this benchmark, the repository imported Tailwind through `@tailwindcss/postcss` in `postcss.config.mjs`, imported Tailwind from [`app/globals.css`](../../app/globals.css), used Turbopack's project root in [`next.config.ts`](../../next.config.ts), and ran a default `next build` with `output: "export"`. A static export makes one HTML file per route and writes deployable HTML/CSS/JavaScript assets to `out`; therefore whole-command timing includes much more than Tailwind compilation. ([Next.js static export guide](https://nextjs.org/docs/app/guides/static-exports))
 
 A credible local comparison should therefore:
 
@@ -88,6 +88,31 @@ A credible local comparison should therefore:
 - Report both end-to-end `next build` time and, if instrumentation permits, CSS/Tailwind time. The site is a small single-page static export, whereas Tailwind qualifies its >2× observation as coming from large, complicated projects; fixed Next.js type-checking, bundling, prerendering, and export work can dominate here. ([Tailwind CSS v4.3 announcement](https://tailwindcss.com/blog/tailwindcss-v4-3), [Next.js static export guide](https://nextjs.org/docs/app/guides/static-exports))
 - Keep the bundler constant for the primary comparison: PostCSS-on-Turbopack versus webpack-loader-on-Turbopack. A separate `next build --webpack` result changes both the Tailwind integration and the bundler and cannot attribute a difference to `@tailwindcss/webpack`. Next.js exposes `--webpack` specifically as an opt-out from its Turbopack default. ([Next.js 16 upgrade guide](https://nextjs.org/docs/app/guides/upgrading/version-16))
 
-## Conclusion
+## Recorded benchmark
 
-Tailwind 4.3.3 provides a documented, configurable webpack loader and makes a concrete 2.17× Tailwind build-time claim from a Next.js/Turbopack test. Next.js 16.3 has the loader-rule and CSS-output-type primitives that suggest how to wire it in, but its own documentation simultaneously excludes stylesheet-returning loaders. For this static-export repository, adoption should begin as a controlled benchmark branch with output-equivalence checks; the official sources do not justify assuming either the 2.17× result or compatibility without that proof.
+The measurements were collected on 2026-08-11 on Windows 10.0.26200 x64, an AMD Ryzen 7 5800X3D (16 logical CPUs), 31.9 GiB RAM, and Node.js 26.4.0. Both variants used Next.js 16.3.0, Tailwind CSS 4.3.3, Turbopack, and the same source tree. The baseline commit was `e3bb6d9`; the captured loader prototype is commit `96ce58c` on [`codex/prototype-117-tailwind-webpack`](https://github.com/jwh3times/caitlyn-holland-vip/tree/codex/prototype-117-tailwind-webpack).
+
+The repeatable harness is [`benchmarks/tailwind-integration.mjs`](../../benchmarks/tailwind-integration.mjs). For each of three pairs it deletes only `.next` and `out`, measures a cold `next build`, immediately measures a warm `next build` with Turbopack's filesystem cache retained, starts a cold `next dev`, requests `/` through the first successful response, touches the `app/globals.css` timestamp, and measures a fresh warm request before restoring the timestamp. Run it with:
+
+```bash
+npm ci
+npm run benchmark:tailwind -- --variant=postcss --runs=3
+npm run benchmark:tailwind -- --variant=webpack-loader --runs=3
+```
+
+The variants were run sequentially on isolated branches rather than alternated after every pair. One PostCSS build pair was a large system-noise outlier, so the comparison uses medians and publishes every sample instead of presenting the arithmetic mean as precise.
+
+| End-to-end operation                                       | PostCSS samples (ms) | Loader samples (ms) | Median change                               |
+| ---------------------------------------------------------- | -------------------- | ------------------- | ------------------------------------------- |
+| Cold production build                                      | 9,289; 23,963; 8,746 | 6,552; 9,284; 7,031 | 9,289 → 7,031 (24.3% faster; 2.258 s saved) |
+| Warm production build                                      | 4,933; 14,773; 6,747 | 7,652; 4,903; 4,273 | 6,747 → 4,903 (27.3% faster; 1.844 s saved) |
+| Cold development start + first page                        | 4,643; 4,348; 5,870  | 3,949; 3,714; 3,821 | 4,643 → 3,821 (17.7% faster; 822 ms saved)  |
+| Warm development request after stylesheet timestamp change | 72; 103; 91          | 78; 91; 77          | 91 → 78 (14.3% faster; 13 ms saved)         |
+
+The production export emitted one minified CSS asset for each variant. Both assets were 32,358 bytes with SHA-256 `2fc595f5a91452c1bf86b0dccc0b18451ce1140137b515b1ddf2c9b5e8339c94`, providing byte-for-byte output equivalence rather than only a visual approximation. The loader prototype also passed formatting, lint, TypeScript, all 51 coverage tests, the production static export, and all 11 Chromium Playwright tests, including the class-driven dark-mode toggle.
+
+## Decision
+
+**Keep the webpack-loader integration.** The measured improvement is smaller than Tailwind's 2.17× Tailwind-only claim, as expected for a small end-to-end static build, but every median improved by at least 14%, the two user-noticeable cold paths saved 2.258 seconds and 822 milliseconds, and the generated CSS was byte-for-byte identical. The production configuration is also smaller: one Turbopack rule replaces the custom PostCSS configuration and removes both `@tailwindcss/postcss` and the now-unused direct `postcss` dependency.
+
+The remaining risk is maintainability rather than observed behavior: Next.js 16.3's prose still says stylesheet-returning loaders are unsupported. The explicit `type: "css"` API, successful production/dev builds, and full browser suite provide adequate evidence to adopt it here, but future Next.js upgrades should retain the configuration regression test and static-export/browser checks.
