@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "benchmark:tailwind": "node benchmarks/tailwind-integration.mjs",
     "start": "next start",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",
