@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.5.0] - 2026-08-12
+
+### Added
+
+- Added a repeatable Tailwind integration benchmark that records cold and warm production/development timings plus emitted CSS hashes, with the first controlled comparison and its primary-source research captured in the repository.
+
+### Changed
+
+- Replaced the Tailwind PostCSS integration with Tailwind's first-party webpack loader through Turbopack. The measured medians improved by 14–27% across the recorded scenarios while the minified production CSS remained byte-for-byte identical, and the unused PostCSS configuration and direct dependencies were removed.
+
 ## [1.4.3] - 2026-08-11
 
 ### Changed
