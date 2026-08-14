@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.5.4] - 2026-08-14
+
+### Added
+
+- Documented the research behind keeping the `@next/eslint-plugin-next` lint bridge: Oxlint 1.78.0 still ships no native `nextjs/no-location-assign-relative-destination`, so the write-up records the no-go decision, the configuration to adopt once the native rule lands, the Next.js behavior a replacement must match, the dependency cleanup that removal would trigger, and the conditions for revisiting it.
+
+## [1.5.3] - 2026-08-14
+
+### Changed
+
+- Bumped the development linter `oxlint` from 1.77.0 to 1.78.0 (dependabot, `npm-minor-and-patch` group).
+
+## [1.5.2] - 2026-08-13
+
+### Changed
+
+- Bumped `lucide-react` from 1.30.0 to 1.31.0 and the development dependency `@testing-library/jest-dom` from 7.0.0 to 7.0.1 (dependabot, `npm-minor-and-patch` group).
+
 ## [1.5.1] - 2026-08-12
 
 ### Changed
