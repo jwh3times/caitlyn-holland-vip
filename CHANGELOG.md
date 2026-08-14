@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.5.5] - 2026-08-14
+
+### Security
+
+- Updated the transitive `nanoid` dependency from 3.3.17 to 3.3.18, resolving a high-severity advisory where custom generators can loop indefinitely when the requested size is zero. `nanoid` reaches the tree through `postcss` under both `next` and `@vitejs/plugin-react`, and both declare ranges the patched release already satisfies, so this is a lockfile-only change with no dependency overrides. The site is a static export, so the affected code only ever ran in the build toolchain and was never served to visitors.
+
 ## [1.5.4] - 2026-08-14
 
 ### Added
