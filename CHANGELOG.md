@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-No unreleased changes.
+## [1.5.6] - 2026-08-16
+
+### Added
+
+- Added automated WCAG 2.1 A/AA accessibility audits to the Playwright suite for the homepage's default state, open mobile navigation, and dark theme.
+
+### Fixed
+
+- Increased light-theme muted-text contrast to meet WCAG AA and made theme-toggle browser tests target the visible accessible control consistently on mobile viewports.
 
 ## [1.5.5] - 2026-08-14
 

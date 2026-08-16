@@ -56,6 +56,10 @@ Items P1–P7 get full plans below; P8–P9 get short outlines.
 
 ### P1 — Automated accessibility audit (axe-core in Playwright)
 
+**Status (2026-08-16).** Implemented under
+[GitHub issue #131](https://github.com/jwh3times/caitlyn-holland-vip/issues/131): the default page,
+open mobile disclosure, and dark theme are audited against WCAG 2.1 A/AA tags.
+
 **Objective & rationale.** Lock in the existing accessibility investment (skip link, focus trap,
 `aria-expanded`/`aria-controls`/`aria-label` on the menu button, reduced-motion support) with an
 automated WCAG 2.1 A/AA gate, so regressions fail CI instead of shipping. Evidence: O1 — the
