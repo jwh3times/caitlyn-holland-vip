@@ -6,11 +6,11 @@ test.describe("Theme Toggle", () => {
   });
 
   test("should toggle between light and dark mode", async ({ page }) => {
-    const themeToggle = page.locator('button[aria-label="Activate dark mode"]').first();
+    const themeToggle = page.getByRole("button", { name: "Activate dark mode" });
     await expect(themeToggle).toBeVisible();
     await themeToggle.click();
 
-    const darkToggle = page.locator('button[aria-label="Activate light mode"]').first();
+    const darkToggle = page.getByRole("button", { name: "Activate light mode" });
     await expect(darkToggle).toBeVisible();
   });
 });

@@ -66,7 +66,7 @@ tests/        Playwright end-to-end specs
 Two disjoint suites:
 
 - **Unit / component** — Vitest + Testing Library + jsdom in [`test/`](test/). An **80% coverage gate** (lines/functions/branches/statements) is enforced and blocks merges.
-- **End-to-end** — Playwright in [`tests/`](tests/), covering homepage rendering, navigation, theme toggle, mobile menu, and SEO metadata. CI runs Chromium; locally all five browser/device projects run.
+- **End-to-end** — Playwright in [`tests/`](tests/), covering homepage rendering, navigation, theme toggle, mobile menu, SEO metadata, and WCAG 2.1 A/AA accessibility audits for the default page, open mobile disclosure, and dark theme. CI runs Chromium; locally all five browser/device projects run.
 
 ## Deployment
 
