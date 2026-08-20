@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+No unreleased changes.
+
+## [1.5.8] - 2026-08-20
+
+### Added
+
+- Added the `end-session` agent skill, a close-out pass for a work session: it flushes what the session learned into the per-project memory files, updates the gitignored `private/` working notes, brings GitHub issue tracking current, and tidies stray local files. It records and tidies only — it never commits, pushes, or merges, so a finished branch still goes through `ship`.
+
+## [1.5.7] - 2026-08-17
+
+### Changed
+
+- Bumped three dependencies in the `npm-minor-and-patch` group (dependabot): `next` and `@next/eslint-plugin-next` from 16.3.0 to 16.3.1, and `@testing-library/user-event` from 14.6.3 to 14.6.4.
+
 ## [1.5.6] - 2026-08-16
 
 ### Added
