@@ -142,6 +142,8 @@ git status --porcelain --ignored -uall | grep -v '^!! \(node_modules\|\.next\|\.
 git worktree list
 ```
 
+### Files and artifacts
+
 - **Uncommitted tracked changes** → never discard them. If the branch is finished, hand
   off to `/ship`; otherwise stop and ask. `git checkout --`, `git reset --hard`, and
   `git stash drop` are off-limits in this skill.
@@ -161,18 +163,83 @@ git worktree list
   prints nothing, so the `AI Config Parity` gate stays green. A hand-edit under
   `.claude/skills/` or `.codex/agents/` is the real bug — fix the source and re-sync.
 
+### Branches
+
+Finish by leaving the checkout on an up-to-date `main` with the spent branches gone. Do this
+**last** — after the file tidying above, so nothing you still need is sitting on the branch you
+are about to leave — and start from what the tree says:
+
+```bash
+git branch --show-current
+git status --porcelain
+```
+
+Two things stop the switch. Neither is a failure; report it and leave the checkout where it is:
+
+- **Uncommitted tracked changes.** Switching would carry them onto `main` or fail outright, and
+  step 5's first bullet already rules out discarding or stashing them. Stay on the branch.
+- **The user said they are continuing on this branch.** Ending the session is not ending their
+  work; don't move the checkout out from under them.
+
+Unpushed commits are not a stop — they ride along on the branch — but they do mean the branch is
+unfinished. Return to `main`, keep that branch, and name `/ship` in the report.
+
+Otherwise return to `main` and bring it up to date:
+
+```bash
+git switch main
+git fetch origin --prune
+git pull --ff-only origin main
+```
+
+`--prune` drops remote-tracking refs for branches deleted on GitHub after their PR merged.
+`--ff-only` keeps the pull a fast-forward: if it refuses, local `main` carries commits of its
+own — report that and leave `main` alone rather than merging, rebasing, or resetting it.
+
+Then delete the local branches whose work is already in `main`:
+
+```bash
+git branch --merged main --format='%(refname:short) %(worktreepath)' | grep -v '^main '
+```
+
+Every name that prints is fully contained in the refreshed `main` — delete each with
+`git branch -d <name>`, naming them in the report. A second column means the branch is checked
+out in a worktree and git will refuse; report those with the stale worktrees above instead of
+forcing them. Never `git branch -D`: the capital form discards unmerged commits without asking,
+and a branch `-d` refuses is telling you it still holds work.
+
+That list misses **squash- or rebase-merged branches**: their commits were rewritten on the way
+in, so git still calls them unmerged even though the change is on `main`. This repo merges PRs
+with merge commits today, so the case is rare — check the PR state before assuming a leftover
+branch is live:
+
+```bash
+for b in $(git branch --format='%(refname:short)' | grep -vx main); do
+  echo "$b -> $(gh pr list --head "$b" --state merged --json number -q '.[0].number')"
+done
+```
+
+A branch that prints a merged PR number can go. Still delete it with `-d`, not `-D` — if `-d`
+refuses one whose PR merged, the branch has commits that never reached the PR, so leave it and
+say so.
+
+**Pushed is not merged.** A branch with an open or unmerged PR stays, however green it is —
+deleting it strands the review. Only a branch whose work is on `main` goes.
+
 ## 6. Report
 
 Give the user a short close-out: memories written or updated, `private/` edits, issues
-commented / labelled / proposed, files deleted, and anything left dirty on purpose. If a
-branch is still unshipped, say so and name `/ship` as the next step. State plainly what
-you deliberately left alone.
+commented / labelled / proposed, files deleted, branches deleted, and which branch the
+checkout is sitting on. Note anything left dirty on purpose. If a branch is still unshipped,
+say so and name `/ship` as the next step. State plainly what you deliberately left alone.
 
 ## Do not
 
 - Write code, fix bugs, or refactor. This skill records and tidies; new work is a new session.
 - Delete, revert, or stash uncommitted work — ask instead.
 - Run `git clean -x` or any bulk delete of ignored files.
-- Commit, push, or merge. Anything needing a PR goes through `/ship`.
+- Commit, push, or merge. Fast-forwarding local `main` onto `origin/main` in step 5 is the
+  one exception; anything needing a PR goes through `/ship`.
+- Force-delete a branch (`git branch -D`), or delete one whose PR has not merged.
 - Close issues or open new ones without the user's go-ahead.
 - Record in memory or `private/` what `AGENTS.md`, the ADRs, or git history already say.

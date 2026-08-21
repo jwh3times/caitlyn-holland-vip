@@ -167,8 +167,11 @@ mint.
 
 `/end-session` is the close-out counterpart to `/ship`: it flushes what a session learned into
 the per-project memory files, the gitignored `private/` working notes, and GitHub issues, then
-tidies the local workspace. It records and tidies only — it never commits, pushes, or opens a
-PR, so a finished branch still goes through `ship`. Source:
+tidies the local workspace — files and artifacts, and, once the checkout is clean, the branches
+themselves: returning to an up-to-date `main` (a `--ff-only` pull) and deleting local branches
+already merged there, leaving pushed-but-unmerged branches alone. It records and tidies only —
+it never commits, pushes, or opens a PR, and that fast-forward is the only history it moves, so
+a finished branch still goes through `ship`. Source:
 [.agents/skills/end-session/SKILL.md](.agents/skills/end-session/SKILL.md).
 
 ### Issue tracker
