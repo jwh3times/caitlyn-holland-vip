@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.5.9] - 2026-08-21
+
+### Changed
+
+- The `end-session` skill's workspace cleanup now covers git branches, not just files: once the checkout is clean it returns to `main`, fast-forwards it from `origin` (pruning remote-tracking refs for branches deleted after their PR merged), and deletes the local branches whose work already landed on `main` — including squash- or rebase-merged ones, confirmed against merged PR state. Branches with an open or unmerged PR, branches held by another worktree, and any branch `git branch -d` refuses are reported and kept; force-deletion is now explicitly off-limits. The close-out report names the branches deleted and the branch the checkout is left on.
+
 ## [1.5.8] - 2026-08-20
 
 ### Added
