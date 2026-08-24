@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.5.10] - 2026-08-21
+
+### Changed
+
+- Bumped the development dependency `@testing-library/user-event` from 14.6.4 to 14.6.5 (dependabot, `npm-minor-and-patch` group).
+
 ## [1.5.9] - 2026-08-21
 
 ### Changed

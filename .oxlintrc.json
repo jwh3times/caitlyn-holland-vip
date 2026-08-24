@@ -7,6 +7,9 @@
   "env": {
     "builtin": true
   },
+  "options": {
+    "reportUnusedDisableDirectives": "error"
+  },
   "ignorePatterns": [
     ".next/**",
     "out/**",
@@ -18,7 +21,7 @@
   "rules": {},
   "overrides": [
     {
-      "files": ["**/*.{ts,tsx,js,jsx}"],
+      "files": ["**/*.{ts,tsx,js,jsx,mjs}"],
       "rules": {
         "for-direction": "error",
         "no-async-promise-executor": "error",
@@ -193,7 +196,19 @@
         "react/no-did-update-set-state": "warn",
         "react/no-will-update-set-state": "warn",
         "react/rules-of-hooks": "error",
-        "react/react-compiler": "error",
+        "react/error-boundaries": "error",
+        "react/globals": "error",
+        "react/immutability": "error",
+        "react/incompatible-library": "error",
+        "react/preserve-manual-memoization": "error",
+        "react/purity": "error",
+        "react/refs": "error",
+        "react/set-state-in-effect": "error",
+        "react/set-state-in-render": "error",
+        "react/static-components": "error",
+        "react/use-memo": "error",
+        "react/unsupported-syntax": "error",
+        "react/void-use-memo": "error",
         "react/hook-use-state": "warn",
         "react/no-children-prop": "error",
         "react/jsx-no-comment-textnodes": "warn",
