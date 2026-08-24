@@ -147,7 +147,7 @@ async function benchmarkDevelopment() {
         await new Promise((resolveWait) => setTimeout(resolveWait, 250));
         warmMs.push(await waitForPage(`${url}?benchmark=${Date.now()}`));
       } catch (error) {
-        throw new Error(`${error}\n${server.output()}`);
+        throw new Error(`${error}\n${server.output()}`, { cause: error });
       } finally {
         await stopDevServer(server.child);
       }
