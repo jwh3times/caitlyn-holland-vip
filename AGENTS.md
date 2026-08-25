@@ -163,6 +163,13 @@ mint.
 
 ## Agent skills
 
+### Private workspace and cross-device recovery
+
+When handling private working documents, ignored project knowledge, credential recovery, or
+cross-device setup, read [docs/agents/private-workspace.md](docs/agents/private-workspace.md).
+`private/` is a separate private Git repository; keep its contents out of public outputs and the
+outer repository's history.
+
 ### Ending a session
 
 `/end-session` is the close-out counterpart to `/ship`: it flushes what a session learned into

@@ -84,6 +84,12 @@ Bug reports, accessibility fixes, and small improvements are welcome — see
 the [Code of Conduct](CODE_OF_CONDUCT.md). Report vulnerabilities privately per
 [SECURITY.md](SECURITY.md). Developer conventions live in [AGENTS.md](AGENTS.md) (Claude Code reads them via an `@AGENTS.md` import in [CLAUDE.md](CLAUDE.md)).
 
+## Owner recovery
+
+Authorized maintainers setting up another computer should follow the public-safe
+[private workspace recovery runbook](docs/agents/private-workspace.md). Repository locators and
+credentials are retrieved from 1Password and are not recorded here.
+
 ## License
 
 [MIT](LICENSE) © Caitlyn Holland
