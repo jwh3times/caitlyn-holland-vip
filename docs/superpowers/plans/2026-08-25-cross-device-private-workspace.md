@@ -415,7 +415,7 @@ op whoami
 op vault list
 ```
 
-- [ ] **Step 3: Retrieve the private locator and clone both repositories**
+- [x] **Step 3: Retrieve the private locator and clone both repositories**
 
 Retrieve only the non-secret locator field with `op read`. Authenticate GitHub through the browser
 and its keyring-backed Git credential helper from Task 3. Clone the public repository, then clone
@@ -440,7 +440,7 @@ npx tsc --noEmit
 npm run build
 ```
 
-- [ ] **Step 6: Verify repository separation**
+- [x] **Step 6: Verify repository separation**
 
 The public clone must remain clean after the private clone and build. `git status --ignored` should
 summarize `private/`, dependencies, and outputs without exposing or tracking their contents.
@@ -473,7 +473,7 @@ and private prose. Remove any disclosure before staging.
 `git -C private status --short` must be clean after its private push. The outer `git status --short`
 must list only public-safe files and must not list anything below `private/`.
 
-- [ ] **Step 4: Commit the public portability changes**
+- [x] **Step 4: Commit the public portability changes**
 
 Commit the public policy, runbook, research, plan, and ignore rules on a feature branch. Do not stage
 from inside `private/` with the outer repository.
@@ -498,7 +498,7 @@ as successful.
 - [x] The private repository contains all three reviewed documents and their commit history.
 - [x] Every live work item has exactly one correctly visible Issue or advisory.
 - [x] `.claude/settings.local.json` and `/private/` are ignored by repository-owned rules.
-- [ ] The public repository contains no private locator, concrete 1Password reference, credential,
+- [x] The public repository contains no private locator, concrete 1Password reference, credential,
       or private prose.
-- [ ] A fresh recovery clone passes hash comparison and `npm run build`.
-- [ ] Public and private working trees are clean after their separate commits and pushes.
+- [x] A fresh recovery clone passes hash comparison and `npm run build`.
+- [x] Public and private working trees are clean after their separate commits and pushes.
