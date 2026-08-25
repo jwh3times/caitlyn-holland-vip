@@ -9,6 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.5.12] - 2026-08-25
+
+### Added
+
+- Added a public-safe owner recovery runbook and supporting analysis for restoring the public site repository and its independent private working-document companion with scoped 1Password automation.
+
+### Changed
+
+- Made the root private-workspace and machine-local agent-settings boundaries portable through repository-owned ignore rules and concise agent/human recovery pointers.
+
+### Fixed
+
+- Stopped Next.js from dirtying clean development and production checkouts by ignoring and untracking its generated `next-env.d.ts` file, as required by the installed Next.js documentation.
+
+## [1.5.11] - 2026-08-24
+
+### Changed
+
+- Expanded Oxlint's React Compiler coverage, enabled unused-disable reporting, and applied the JavaScript/TypeScript rules to `.mjs` files.
+- Updated `lucide-react` from 1.31.0 to 1.33.0, `@vitejs/plugin-react` from 6.0.5 to 6.1.0, `@vitest/coverage-v8` and `vitest` from 4.1.10 to 4.1.11, and `oxlint` from 1.78.0 to 1.79.0.
+
+### Fixed
+
+- Preserved the original error as the cause when the Tailwind development benchmark reports captured server output.
+
 ## [1.5.10] - 2026-08-21
 
 ### Changed
