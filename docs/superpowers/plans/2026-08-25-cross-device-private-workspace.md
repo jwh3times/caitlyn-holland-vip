@@ -478,7 +478,7 @@ must list only public-safe files and must not list anything below `private/`.
 Commit the public policy, runbook, research, plan, and ignore rules on a feature branch. Do not stage
 from inside `private/` with the outer repository.
 
-- [ ] **Step 5: Ship through the repository's normal PR workflow**
+- [x] **Step 5: Ship through the repository's normal PR workflow**
 
 Invoke the `ship` skill when the branch is ready. Its documentation refresh may adjust `AGENTS.md`
 or `README.md`; repeat the disclosure review before pushing.
