@@ -142,7 +142,7 @@ The actual vault, item, and field references stay in 1Password rather than this 
 `op read`
 ([secret references](https://www.1password.dev/cli/secret-references)).
 
-- [ ] **Step 3: Establish 1Password's own recovery path**
+- [x] **Step 3: Establish 1Password's own recovery path**
 
 Generate or confirm a 1Password recovery code where supported. Store it outside 1Password in a
 physically safe or otherwise independent protected location. Confirm access to the email address
@@ -405,7 +405,7 @@ contains no unique durable project knowledge.
 Record its resolved absolute path. Keep it scoped beneath the system temporary directory and do not
 reuse the current workspace.
 
-- [ ] **Step 2: Bootstrap 1Password as a new computer would**
+- [x] **Step 2: Bootstrap 1Password as a new computer would**
 
 Verify that the documented offline 1Password recovery material is available without revealing it.
 Use the securely provisioned service-account token for the rehearsal, then run:
@@ -493,7 +493,7 @@ as successful.
 - [x] Git uses GitHub CLI's keyring-backed credential helper; no GitHub token is exposed.
 - [x] 1Password contains the project bootstrap item and private-repository locator in an approved
       vault accessible to the service account.
-- [ ] 1Password's own recovery material is available outside 1Password.
+- [x] 1Password's own recovery material is available outside 1Password.
 - [x] GitHub reports the companion repository as `PRIVATE`.
 - [x] The private repository contains all three reviewed documents and their commit history.
 - [x] Every live work item has exactly one correctly visible Issue or advisory.
