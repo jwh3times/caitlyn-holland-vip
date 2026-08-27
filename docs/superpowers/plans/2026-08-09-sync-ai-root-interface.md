@@ -21,7 +21,7 @@
 
 **Files:**
 
-- Modify: `test/scripts/sync-ai.test.ts`
+- Modify: `tests/unit/scripts/sync-ai.test.ts`
 - Modify: `scripts/sync-ai.mjs`
 
 **Interfaces:**
@@ -34,7 +34,7 @@ Create a fixture containing `.claude/agents/sample-agent.md`, call `syncAll({ ro
 
 - [ ] **Step 2: Run the focused test and verify RED**
 
-Run: `npx vitest run test/scripts/sync-ai.test.ts -t "discovers and transforms agents beneath the supplied root"`
+Run: `npx vitest run tests/unit/scripts/sync-ai.test.ts -t "discovers and transforms agents beneath the supplied root"`
 
 Expected: FAIL because the existing implementation ignores `root` and discovers the real repository.
 
@@ -50,7 +50,7 @@ Run the command from Step 2 and expect one passing test.
 
 **Files:**
 
-- Modify: `test/scripts/sync-ai.test.ts`
+- Modify: `tests/unit/scripts/sync-ai.test.ts`
 - Modify: `scripts/sync-ai.mjs`
 
 - [ ] **Step 1: Add a failing test for valid and invalid skill directories**
@@ -59,7 +59,7 @@ Create one skill with `SKILL.md`, `agents/openai.yaml`, and `scripts/run.sh`, pl
 
 - [ ] **Step 2: Run the focused test and verify RED if behavior is not reachable**
 
-Run: `npx vitest run test/scripts/sync-ai.test.ts -t "mirrors complete skill trees and skips directories without SKILL.md"`
+Run: `npx vitest run tests/unit/scripts/sync-ai.test.ts -t "mirrors complete skill trees and skips directories without SKILL.md"`
 
 - [ ] **Step 3: Make only the root-routing changes required for GREEN**
 
@@ -73,7 +73,7 @@ Run the command from Step 2 and expect the test to pass.
 
 **Files:**
 
-- Modify: `test/scripts/sync-ai.test.ts`
+- Modify: `tests/unit/scripts/sync-ai.test.ts`
 - Modify: `scripts/sync-ai.mjs`
 
 - [ ] **Step 1: Add a failing orphan-pruning test**
@@ -82,7 +82,7 @@ Create a valid source skill, sync it with `write: true`, remove the source, sync
 
 - [ ] **Step 2: Run the pruning test and verify RED**
 
-Run: `npx vitest run test/scripts/sync-ai.test.ts -t "deletes orphaned mirrors and removes empty skill directories"`
+Run: `npx vitest run tests/unit/scripts/sync-ai.test.ts -t "deletes orphaned mirrors and removes empty skill directories"`
 
 Expected: FAIL because pruning currently targets the real repository root.
 
@@ -102,7 +102,7 @@ Snapshot the fixture tree, call `syncAll({ root, write: false })`, and assert no
 
 **Files:**
 
-- Modify: `test/scripts/sync-ai.test.ts`
+- Modify: `tests/unit/scripts/sync-ai.test.ts`
 - Modify: `scripts/sync-ai.mjs`
 
 - [ ] **Step 1: Migrate remaining transformation guarantees to fixture inputs**
@@ -111,7 +111,7 @@ Through `syncAll`, assert frontmatter conversion, TOML escaping, newline normali
 
 - [ ] **Step 2: Run the script test suite while helpers are still exported**
 
-Run: `npx vitest run test/scripts/sync-ai.test.ts`
+Run: `npx vitest run tests/unit/scripts/sync-ai.test.ts`
 
 Expected: PASS through the public seam.
 
@@ -138,7 +138,7 @@ Extend the existing coverage `include` array without changing its thresholds or 
 Run:
 
 ```powershell
-npx vitest run test/scripts/sync-ai.test.ts
+npx vitest run tests/unit/scripts/sync-ai.test.ts
 npm run coverage
 npm run format:check
 npm run lint
@@ -152,4 +152,4 @@ Expected: every command exits zero, coverage remains at or above 80% in all cate
 
 - [ ] **Step 3: Review the branch diff against issue #88 and the approved design**
 
-Confirm only the design/plan, `scripts/sync-ai.mjs`, `test/scripts/sync-ai.test.ts`, and `vitest.config.ts` changed, apart from generated formatting that `sync:ai` proves unchanged.
+Confirm only the design/plan, `scripts/sync-ai.mjs`, `tests/unit/scripts/sync-ai.test.ts`, and `vitest.config.ts` changed, apart from generated formatting that `sync:ai` proves unchanged.

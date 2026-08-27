@@ -14,7 +14,7 @@
 
 ## 1. Latent-TODO inventory
 
-A sweep for `TODO`, `FIXME`, `HACK`, and `XXX` across `app/`, `components/`, `lib/`, `test/`,
+A sweep for `TODO`, `FIXME`, `HACK`, and `XXX` across `app/`, `components/`, `lib/`, `tests/unit/`,
 `tests/`, and `.github/` found **zero matches**. There are no latent work-item markers anywhere in
 the codebase.
 
@@ -22,12 +22,12 @@ Observations that function as latent work items (with citations):
 
 | #   | Observation                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Evidence |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
-| O1  | No automated accessibility audit exists. E2E specs cover homepage, mobile nav, SEO, theme ([tests/homepage.spec.ts](../tests/homepage.spec.ts), [tests/mobile-navigation.spec.ts](../tests/mobile-navigation.spec.ts), [tests/seo.spec.ts](../tests/seo.spec.ts), [tests/theme.spec.ts](../tests/theme.spec.ts)) but there is no `a11y`/axe spec. The sibling `holland-vip` repo's test suite includes accessibility specs. The code has real a11y investment worth locking in — skip link ([app/layout.tsx](../app/layout.tsx) L75–80), mobile-menu focus trap + Escape handling ([components/navigation.tsx](../components/navigation.tsx) L22–52), `prefers-reduced-motion` block ([app/globals.css](../app/globals.css) L133–142).                                                                                                                                                                                                           |
+| O1  | No automated accessibility audit exists. E2E specs cover homepage, mobile nav, SEO, theme ([tests/e2e/homepage.spec.ts](../tests/e2e/homepage.spec.ts), [tests/e2e/mobile-navigation.spec.ts](../tests/e2e/mobile-navigation.spec.ts), [tests/e2e/seo.spec.ts](../tests/e2e/seo.spec.ts), [tests/e2e/theme.spec.ts](../tests/e2e/theme.spec.ts)) but there is no `a11y`/axe spec. The sibling `holland-vip` repo's test suite includes accessibility specs. The code has real a11y investment worth locking in — skip link ([app/layout.tsx](../app/layout.tsx) L75–80), mobile-menu focus trap + Escape handling ([components/navigation.tsx](../components/navigation.tsx) L22–52), `prefers-reduced-motion` block ([app/globals.css](../app/globals.css) L133–142).                                                                                                                                                                           |
 | O2  | No post-deploy check. `.github/workflows/` contains only `ci.yml`, `dependency-review.yml`, `version.yml`. The sibling `holland-vip` repo additionally runs a daily **smoke** workflow curling the live site (HTTP 200 + content + security headers). Nothing in this repo ever exercises the deployed `caitlyn.holland.vip`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | O3  | Site metadata is thin: `description: "Personal website for Caitlyn Holland."` and `keywords: ["Caitlyn Holland"]` ([app/layout.tsx](../app/layout.tsx) L13–14), and there is no JSON-LD structured data anywhere (no `application/ld+json` in the repo).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | O4  | The About section carries four distinct content blocks — an `experience` array (4 roles), a 14-item `skills` array, Education, and Certifications — inside one component ([components/sections/AboutSection.tsx](../components/sections/AboutSection.tsx) L1–43, L60–115), while navigation exposes only two anchors (`#about`, `#contact` — [components/navigation.tsx](../components/navigation.tsx) L7–10). The content for dedicated Experience/Skills sections already exists in code; only the sectioning does not.                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | O5  | Raw Tailwind palette classes contradict the repo's own convention ("Use the semantic CSS-variable classes — never hardcode colors", [CLAUDE.md](../CLAUDE.md)): `border-blue-500 dark:border-blue-400` and `text-blue-700 dark:text-blue-300` in [components/sections/AboutSection.tsx](../components/sections/AboutSection.tsx) (L71, L85, L96, L108); `hover:text-blue-600 dark:hover:text-blue-400`, `border-gray-200/50 dark:border-gray-800/50`, `hover:bg-gray-100 dark:hover:bg-gray-800` in [components/navigation.tsx](../components/navigation.tsx) (L55, L68, L82, L97, L105); `focus:bg-blue-600` on the skip link in [app/layout.tsx](../app/layout.tsx) (L77); `border-gray-200 dark:border-gray-800` in [components/footer.tsx](../components/footer.tsx). The token set in [app/globals.css](../app/globals.css) currently defines only four text tokens + `--card-blue` — there are no accent/link/border tokens to migrate to. |
-| O6  | CI runs the desktop `chromium` project only ([.github/workflows/ci.yml](../.github/workflows/ci.yml) L136). The sibling `holland-vip` CI runs `chromium` **and** `Mobile Chrome`. Mobile behavior is partially covered because [tests/mobile-navigation.spec.ts](../tests/mobile-navigation.spec.ts) forces a 375×812 viewport (L4), but no spec runs under real mobile-device emulation (touch, mobile UA) in CI.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| O6  | CI runs the desktop `chromium` project only ([.github/workflows/ci.yml](../.github/workflows/ci.yml) L136). The sibling `holland-vip` CI runs `chromium` **and** `Mobile Chrome`. Mobile behavior is partially covered because [tests/e2e/mobile-navigation.spec.ts](../tests/e2e/mobile-navigation.spec.ts) forces a 375×812 viewport (L4), but no spec runs under real mobile-device emulation (touch, mobile UA) in CI.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | O7  | `package.json` has `"start": "next start"`, which does **not** serve a static export (`output: "export"`), and there is no preview script for the built `out/` directory. The sibling `holland-vip` repo documents `npm run preview` (`npx serve out`) for exactly this reason. README's command table ([README.md](../README.md) L29–39) omits `start`, implicitly acknowledging it is misleading.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | O8  | No CodeQL scanning is documented or configured. The sibling `holland-vip` repo documents CodeQL **default setup** (settings-side, deliberately no workflow file). This repo's CLAUDE.md/README mention no code scanning at all; whether default setup is enabled cannot be verified from the repo contents.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | O9  | The CSP in [public/\_headers](../public/_headers) (L10) keeps `'unsafe-inline'` in `script-src` without a rationale comment. The sibling repo documents why (`next-themes` + Next inline scripts; no nonces on a static export). Same technical constraint applies here, but the reasoning is undocumented, inviting a well-meaning "tightening" that would break theming.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
@@ -66,39 +66,39 @@ automated WCAG 2.1 A/AA gate, so regressions fail CI instead of shipping. Eviden
 groundwork exists but nothing asserts it holistically; the sibling repo's suite covers
 accessibility and this one's does not.
 
-**Current state.** E2E specs: [tests/homepage.spec.ts](../tests/homepage.spec.ts),
-[tests/mobile-navigation.spec.ts](../tests/mobile-navigation.spec.ts),
-[tests/seo.spec.ts](../tests/seo.spec.ts), [tests/theme.spec.ts](../tests/theme.spec.ts). No axe
+**Current state.** E2E specs: [tests/e2e/homepage.spec.ts](../tests/e2e/homepage.spec.ts),
+[tests/e2e/mobile-navigation.spec.ts](../tests/e2e/mobile-navigation.spec.ts),
+[tests/e2e/seo.spec.ts](../tests/e2e/seo.spec.ts), [tests/e2e/theme.spec.ts](../tests/e2e/theme.spec.ts). No axe
 dependency in [package.json](../package.json). Individual a11y features exist piecemeal in
 [app/layout.tsx](../app/layout.tsx) and [components/navigation.tsx](../components/navigation.tsx).
 
 **Design/approach.** Pure e2e concern — no app code changes, so all static-export constraints are
 untouched. Use `@axe-core/playwright` (dev dependency; runs in the browser page, no runtime
-dependency shipped). One new spec `tests/a11y.spec.ts` that, for the single page:
+dependency shipped). One new spec `tests/e2e/a11y.spec.ts` that, for the single page:
 
 1. scans the default (light-resolved or system) render for WCAG 2.1 A/AA violations
    (`withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])`), asserting zero violations;
 2. scans again with the mobile menu open (375×812 viewport, after clicking the menu button);
 3. scans in dark mode (toggle via the existing mode-toggle button, as
-   [tests/theme.spec.ts](../tests/theme.spec.ts) already does) — dark-theme contrast is the likely
+   [tests/e2e/theme.spec.ts](../tests/e2e/theme.spec.ts) already does) — dark-theme contrast is the likely
    place a token tweak silently fails contrast.
 
-Playwright specs live in `tests/` (not `test/` — that is the Vitest tree), so the Vitest 80%
+Playwright specs live in `tests/e2e/` (not `tests/unit/` — that is the Vitest tree), so the Vitest 80%
 coverage gate is unaffected.
 
 **Step-by-step tasks.**
 
 1. `npm i -D @axe-core/playwright` (updates [package.json](../package.json) +
    [package-lock.json](../package-lock.json); `dependency-review.yml` will vet it on the PR).
-2. Create `tests/a11y.spec.ts` with the three scans above; follow the locator style of the
+2. Create `tests/e2e/a11y.spec.ts` with the three scans above; follow the locator style of the
    existing specs (e.g. `button[aria-label="Open menu"]` from
-   [tests/mobile-navigation.spec.ts](../tests/mobile-navigation.spec.ts)).
+   [tests/e2e/mobile-navigation.spec.ts](../tests/e2e/mobile-navigation.spec.ts)).
 3. Fix any violations the first run surfaces (expected candidates: color-contrast on
    `text-muted`/gradient text — fix in [app/globals.css](../app/globals.css) tokens, never with
    raw colors).
 4. Run `npm run format` (the Format Check job gates Prettier drift).
 
-**Testing plan.** `npm run test:e2e -- --project=chromium tests/a11y.spec.ts` locally, then the
+**Testing plan.** `npm run test:e2e -- --project=chromium tests/e2e/a11y.spec.ts` locally, then the
 full local matrix (`npm test`) since WebKit/Firefox render differences can change contrast results.
 CI needs no changes — the new spec is picked up by the existing Playwright job. Vitest coverage
 unaffected (no source changes unless step 3 touches CSS, which is outside coverage collection).
@@ -135,7 +135,7 @@ schedule` (daily cron, e.g. `17 8 * * *` — offset minutes to avoid top-of-hour
 
 1. HTTP 200 on `/`;
 2. expected content marker (e.g. `Caitlyn Holland` in the body — matches what
-   [tests/homepage.spec.ts](../tests/homepage.spec.ts) asserts pre-deploy);
+   [tests/e2e/homepage.spec.ts](../tests/e2e/homepage.spec.ts) asserts pre-deploy);
 3. each security header from [public/\_headers](../public/_headers) is present
    (`strict-transport-security`, `content-security-policy`, `x-content-type-options`,
    `x-frame-options`, `referrer-policy`, `permissions-policy`) — this is the only place the
@@ -177,7 +177,7 @@ richer facts (role, employer, focus) in [components/sections/HeroSection.tsx](..
 
 **Current state.** [app/layout.tsx](../app/layout.tsx) L7–55 holds the `Metadata` export; L13/L23/L36
 repeat the thin description. No `application/ld+json` anywhere.
-[tests/seo.spec.ts](../tests/seo.spec.ts) asserts the current metadata (per CLAUDE.md, "the SEO
+[tests/e2e/seo.spec.ts](../tests/e2e/seo.spec.ts) asserts the current metadata (per CLAUDE.md, "the SEO
 Playwright spec asserts it") and must be updated in lockstep.
 
 **Design/approach.** All build-time, fully compatible with static export:
@@ -207,14 +207,14 @@ Playwright spec asserts it") and must be updated in lockstep.
    description fields; expand `keywords`; render the JSON-LD `<script>` in `<head>` (Next places
    `metadata` head content automatically; the script tag can sit at the top of `<body>` or via the
    layout JSX — Google parses either).
-3. Add `test/lib/structured-data.test.ts` (mirrors source path per convention): assert shape,
+3. Add `tests/unit/lib/structured-data.test.ts` (mirrors source path per convention): assert shape,
    `@context`/`@type`, URL, and that serialization is valid JSON.
-4. Update [tests/seo.spec.ts](../tests/seo.spec.ts): new description assertions + a check that
+4. Update [tests/e2e/seo.spec.ts](../tests/e2e/seo.spec.ts): new description assertions + a check that
    `script[type="application/ld+json"]` exists and parses with `@type: "Person"`.
 5. `npm run format`.
 
 **Testing plan.** `npm run coverage` (new `lib/` file needs its unit test to hold the 80% gate);
-`npx playwright test tests/seo.spec.ts` for the updated spec; validate the emitted JSON-LD with
+`npx playwright test tests/e2e/seo.spec.ts` for the updated spec; validate the emitted JSON-LD with
 Google's Rich Results test after deploy (manual, post-merge).
 
 **Docs updates.** CLAUDE.md "Site metadata lives in…" bullet: mention the JSON-LD helper in
@@ -245,7 +245,7 @@ composed in [app/page.tsx](../app/page.tsx) L11–13. Nav links in
 [components/navigation.tsx](../components/navigation.tsx) L7–10. Section backgrounds alternate via
 `.section-surface` (About) and `.section-surface-contrast` (Contact) per
 [app/globals.css](../app/globals.css) L70–82. Unit tests exist per component under
-[test/components/sections/](../test/components/sections/); e2e specs assert section presence and
+[tests/unit/components/sections/](../tests/unit/components/sections/); e2e specs assert section presence and
 nav behavior.
 
 **Design/approach.** Honors all repo constraints — server components (no `"use client"` needed;
@@ -276,12 +276,12 @@ these are static), semantic classes only, `cn()` for any conditional classes, ba
 3. Re-export both from [components/sections/index.ts](../components/sections/index.ts).
 4. Update [app/page.tsx](../app/page.tsx) composition and section-surface alternation.
 5. Update `navLinks` in [components/navigation.tsx](../components/navigation.tsx).
-6. Add `test/components/sections/ExperienceSection.test.tsx` and `SkillsSection.test.tsx`
+6. Add `tests/unit/components/sections/ExperienceSection.test.tsx` and `SkillsSection.test.tsx`
    (mirroring existing section tests: renders heading, renders each role/skill, correct `id`);
-   update `AboutSection.test.tsx` and `test/app/page.test.tsx` (section composition) and
-   `test/components/navigation.test.tsx` (link count/labels).
-7. Update e2e: [tests/homepage.spec.ts](../tests/homepage.spec.ts) (section visibility/order) and
-   [tests/mobile-navigation.spec.ts](../tests/mobile-navigation.spec.ts) if it asserts link counts.
+   update `AboutSection.test.tsx` and `tests/unit/app/page.test.tsx` (section composition) and
+   `tests/unit/components/navigation.test.tsx` (link count/labels).
+7. Update e2e: [tests/e2e/homepage.spec.ts](../tests/e2e/homepage.spec.ts) (section visibility/order) and
+   [tests/e2e/mobile-navigation.spec.ts](../tests/e2e/mobile-navigation.spec.ts) if it asserts link counts.
 8. `npm run format`.
 
 **Testing plan.** `npm run coverage` — two new components must carry tests to hold 80% on
@@ -351,9 +351,9 @@ No behavior change intended — this is a refactor with pixel-identical output i
 
 **Testing plan.** Unit tests assert classes/behavior, not colors — most should pass unchanged;
 update any test that asserts a literal class string (check
-[test/components/navigation.test.tsx](../test/components/) and section tests). `npm run coverage`
+[tests/unit/components/navigation.test.tsx](../tests/unit/components/) and section tests). `npm run coverage`
 must stay ≥80% (no new logic, so no new tests strictly required). Full Playwright run — the theme
-spec ([tests/theme.spec.ts](../tests/theme.spec.ts)) is the main regression guard. If P1 (axe)
+spec ([tests/e2e/theme.spec.ts](../tests/e2e/theme.spec.ts)) is the main regression guard. If P1 (axe)
 lands first, it also guards contrast through this migration — a good reason to sequence P1 before P5.
 
 **Docs updates.** CLAUDE.md "Theme system" / styling bullets: extend the utility-class list
@@ -377,7 +377,7 @@ menu, sticky nav, and touch affordances are mobile-critical surfaces; the siblin
 **Current state.** [.github/workflows/ci.yml](../.github/workflows/ci.yml) L136:
 `npm run test:e2e -- --project=chromium`. [playwright.config.ts](../playwright.config.ts) already
 defines a `Mobile Chrome` (Pixel 5) project — zero config work needed.
-[tests/mobile-navigation.spec.ts](../tests/mobile-navigation.spec.ts) currently fakes mobile with
+[tests/e2e/mobile-navigation.spec.ts](../tests/e2e/mobile-navigation.spec.ts) currently fakes mobile with
 `test.use({ viewport })` on desktop Chrome.
 
 **Design/approach.** Change the CI run line to
@@ -394,8 +394,8 @@ run there today via `test.use`).
 1. Edit [.github/workflows/ci.yml](../.github/workflows/ci.yml) L136 (quote `"Mobile Chrome"`).
 2. Locally run `npx playwright test --project=chromium --project="Mobile Chrome"` and fix any
    spec that assumed a desktop viewport (likely candidates:
-   [tests/homepage.spec.ts](../tests/homepage.spec.ts) nav-link visibility,
-   [tests/theme.spec.ts](../tests/theme.spec.ts) toggle location — the toggle renders in both
+   [tests/e2e/homepage.spec.ts](../tests/e2e/homepage.spec.ts) nav-link visibility,
+   [tests/e2e/theme.spec.ts](../tests/e2e/theme.spec.ts) toggle location — the toggle renders in both
    layouts per [components/navigation.tsx](../components/navigation.tsx) L73/L78, so probably fine).
 3. `npm run format`.
 
@@ -481,7 +481,7 @@ asserted. **Size: S.**
 
 1. **P2, P7, P9** — independent, small, zero app-code risk; can land as one or three tiny PRs.
 2. **P1** — establish the axe gate _before_ visual refactors.
-3. **P3** — metadata + structured data (touches `tests/seo.spec.ts` only among specs).
+3. **P3** — metadata + structured data (touches `tests/e2e/seo.spec.ts` only among specs).
 4. **P5** — token migration under the protection of P1's contrast audit.
 5. **P4** — section split (largest visual change; benefits from P5's tokens and P1's gate).
 6. **P6** — flip CI to two Playwright projects once the suite is stable post-P4.

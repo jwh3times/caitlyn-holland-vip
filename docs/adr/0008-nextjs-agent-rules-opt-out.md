@@ -12,7 +12,7 @@ Disabling costs the pointer to the version-matched bundled docs, which is the bl
 
 ## Consequences
 
-- `agentRules: false` is load-bearing. Removing it silently restores the dirty-tree behavior on the next agent-run `next dev`, so `test/next-config.test.ts` asserts the flag is present and that no `nextjs-agent-rules` marker has been committed into `AGENTS.md` or `CLAUDE.md`.
+- `agentRules: false` is load-bearing. Removing it silently restores the dirty-tree behavior on the next agent-run `next dev`, so `tests/unit/next-config.test.ts` asserts the flag is present and that no `nextjs-agent-rules` marker has been committed into `AGENTS.md` or `CLAUDE.md`.
 - The bundled-docs guidance is now this repo's to maintain. On a major `next` upgrade, re-read `node_modules/next/dist/docs/01-app/02-guides/ai-agents.md` and refresh the quoted paragraph in `AGENTS.md` if upstream's advice has moved on.
 - The opt-out is a `next.config.ts` key, validated by Next's config schema. Downgrading below 16.3 would make it an unknown key and produce a config warning.
 - Only agent-detected environments were ever affected — `@vercel/detect-agent` keys off `CLAUDECODE`, `CODEX_*`, `CURSOR_*` and similar. CI never set them, so this changes nothing about GitHub Actions.

@@ -44,7 +44,7 @@ npm run dev      # start the dev server at http://localhost:3000
 Run a single e2e file or a single browser project:
 
 ```bash
-npx playwright test tests/homepage.spec.ts
+npx playwright test tests/e2e/homepage.spec.ts
 npx playwright test --project=chromium
 ```
 
@@ -57,16 +57,17 @@ components/   Navigation, Footer, mode-toggle, theme-provider
   ui/         button and CTA link primitives
 lib/          shared profile facts, utils (cn helper)
 public/       _headers, manifest, robots, icons
-test/         Vitest unit/component tests (mirrors the source tree)
-tests/        Playwright end-to-end specs
+tests/        Test suites
+  unit/       Vitest unit/component tests (mirrors the source tree)
+  e2e/        Playwright end-to-end specs
 ```
 
 ## Testing
 
 Two disjoint suites:
 
-- **Unit / component** — Vitest + Testing Library + jsdom in [`test/`](test/). An **80% coverage gate** (lines/functions/branches/statements) is enforced and blocks merges.
-- **End-to-end** — Playwright in [`tests/`](tests/), covering homepage rendering, navigation, theme toggle, mobile menu, SEO metadata, and WCAG 2.1 A/AA accessibility audits for the default page, open mobile disclosure, and dark theme. CI runs Chromium; locally all five browser/device projects run.
+- **Unit / component** — Vitest + Testing Library + jsdom in [`tests/unit/`](tests/unit/). An **80% coverage gate** (lines/functions/branches/statements) is enforced and blocks merges.
+- **End-to-end** — Playwright in [`tests/e2e/`](tests/e2e/), covering homepage rendering, navigation, theme toggle, mobile menu, SEO metadata, and WCAG 2.1 A/AA accessibility audits for the default page, open mobile disclosure, and dark theme. CI runs Chromium; locally all five browser/device projects run.
 
 ## Deployment
 

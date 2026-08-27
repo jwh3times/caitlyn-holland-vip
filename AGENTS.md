@@ -20,6 +20,7 @@ npm run lint:fix     # Oxlint safe autofixes
 npx tsc --noEmit     # TypeScript 7 native CLI type-check
 npm run format       # Prettier write
 npm run format:check # Prettier check (the CI "Format Check" job runs this)
+npm run bootstrap:private # Clone the optional private companion into ignored private/
 ```
 
 Lint rules live in [.oxlintrc.json](.oxlintrc.json). Oxlint owns the core, TypeScript, React, React Compiler, and React Hooks checks natively; one unsupported Next.js navigation rule still runs through `@next/eslint-plugin-next` (no native `nextjs/no-location-assign-relative-destination` rule exists yet — see [the Oxlint research](docs/research/oxlint-native-location-assign-rule.md)). ESLint is only a transitive compatibility dependency of that plugin, not the lint runner. Next.js 16.3 defaults production type-checking to the project-local TypeScript 7 CLI; keep `useTypeScriptCli` unset unless a future Next.js upgrade changes that default. See [the compatibility research](docs/research/nextjs-typescript-cli-stability.md).
@@ -36,7 +37,7 @@ There are two test layers: **Vitest + Testing Library** for fast unit/component 
 
 #### Unit tests (Vitest)
 
-Vitest tests live in [test/](test/) (note: singular — `tests/` holds the Playwright specs), mirroring the tested source areas (`test/app/`, `test/components/`, `test/lib/`, `test/scripts/`); a test for a repo-root file such as [next.config.ts](next.config.ts) sits at `test/` root too (e.g. `test/next-config.test.ts`), not in one of those subdirectories. They run in jsdom with [vitest.setup.ts](vitest.setup.ts). Coverage is collected with V8 across `app/`, `components/`, `lib/`, and `scripts/**/*.mjs`, and is **gated at 80%** (statements/branches/functions/lines) in [vitest.config.ts](vitest.config.ts); `app/layout.tsx` and the logic-free `components/sections/index.ts` barrel are excluded.
+Vitest tests live in [tests/unit/](tests/unit/), mirroring the tested source areas (`tests/unit/app/`, `tests/unit/components/`, `tests/unit/lib/`, `tests/unit/scripts/`); a test for a repo-root file such as [next.config.ts](next.config.ts) sits at `tests/unit/` root too (e.g. `tests/unit/next-config.test.ts`), not in one of those subdirectories. They run in jsdom with [vitest.setup.ts](vitest.setup.ts). Coverage is collected with V8 across `app/`, `components/`, `lib/`, and `scripts/**/*.mjs`, and is **gated at 80%** (statements/branches/functions/lines) in [vitest.config.ts](vitest.config.ts); `app/layout.tsx` and the logic-free `components/sections/index.ts` barrel are excluded.
 
 ```bash
 npm run test:unit        # Run unit tests once
@@ -55,11 +56,11 @@ npm run test:headed   # Run tests in headed browser
 npm run test:debug    # Debug Playwright tests
 
 # Run a single file / test / project
-npx playwright test tests/homepage.spec.ts
+npx playwright test tests/e2e/homepage.spec.ts
 npx playwright test --project=chromium
 ```
 
-E2E specs in [tests/](tests/) cover homepage rendering, navigation, theme toggling, the mobile menu, SEO metadata, and WCAG 2.1 A/AA accessibility audits for the default page, open mobile disclosure, and dark theme. Locally all five browser/device projects run; **CI runs Chromium only**.
+E2E specs in [tests/e2e/](tests/e2e/) cover homepage rendering, navigation, theme toggling, the mobile menu, SEO metadata, and WCAG 2.1 A/AA accessibility audits for the default page, open mobile disclosure, and dark theme. Locally all five browser/device projects run; **CI runs Chromium only**.
 
 ## CI/CD
 
@@ -82,7 +83,7 @@ E2E specs in [tests/](tests/) cover homepage rendering, navigation, theme toggli
 - Tailwind's `dark` variant is class-based via `@custom-variant` in `globals.css`, matching the
   `.dark` class managed by `next-themes`; keep theme and utility configuration in CSS.
 - **Tailwind integration changes:** read the compatibility analysis, benchmark method, and recorded
-  results in [docs/research/tailwind-webpack-nextjs-benchmark.md](docs/research/tailwind-webpack-nextjs-benchmark.md), then retain the regression coverage in [test/tailwind-config.test.ts](test/tailwind-config.test.ts).
+  results in [docs/research/tailwind-webpack-nextjs-benchmark.md](docs/research/tailwind-webpack-nextjs-benchmark.md), then retain the regression coverage in [tests/unit/tailwind-config.test.ts](tests/unit/tailwind-config.test.ts).
 - Custom CSS utilities defined in `globals.css` for themed colors, gradients (`.gradient-text`, `.gradient-text-blue`), glassmorphism (`.glass`), section backgrounds (`.section-surface`, `.section-surface-contrast`), and an entrance animation (`.animate-fadeInUp`). A `@media (prefers-reduced-motion: reduce)` block neutralizes animations/transitions.
 - Always compose class names with the `cn()` helper from [lib/utils.ts](lib/utils.ts) (`clsx` + `tailwind-merge`) — no raw string concatenation.
 - Icons: `lucide-react` for UI icons.
@@ -93,8 +94,8 @@ E2E specs in [tests/](tests/) cover homepage rendering, navigation, theme toggli
 - Use [components/ui/button.tsx](components/ui/button.tsx) `CtaLink` for CTA navigation (`tone`: `primary`/`secondary`; `size`: `md`/`lg`) and `Button` for button actions. The variant composer is internal; gradient `Button` variants must be paired with `cta`/`ctaLg` sizes.
 - Use `"use client"` only where client interactivity is needed.
 - Use the semantic CSS-variable classes — never hardcode colors.
-- Unit-test coverage is gated at 80% in CI, so new components generally need a matching test under `test/` (mirroring the source path).
-- Shared profile facts (`name`, `siteUrl`, `description`, `bio`) live in [lib/profile.ts](lib/profile.ts) and feed metadata, the sitemap, and repeated page copy; experience, skills, email, and LinkedIn stay local to their owning sections. [public/manifest.json](public/manifest.json) remains static, with its duplicated profile fields kept aligned by [test/lib/profile.test.ts](test/lib/profile.test.ts).
+- Unit-test coverage is gated at 80% in CI, so new components generally need a matching test under `tests/unit/` (mirroring the source path).
+- Shared profile facts (`name`, `siteUrl`, `description`, `bio`) live in [lib/profile.ts](lib/profile.ts) and feed metadata, the sitemap, and repeated page copy; experience, skills, email, and LinkedIn stay local to their owning sections. [public/manifest.json](public/manifest.json) remains static, with its duplicated profile fields kept aligned by [tests/unit/lib/profile.test.ts](tests/unit/lib/profile.test.ts).
 - Site metadata lives in the [app/layout.tsx](app/layout.tsx) `Metadata` export; the SEO Playwright spec asserts it.
 
 ## Agent configuration & docs automation
@@ -138,7 +139,7 @@ coding agent in the environment. **This repo opts out** with
 [ADR-0008](docs/adr/0008-nextjs-agent-rules-opt-out.md). `AGENTS.md` stays entirely
 hand-authored, so no tool writes into it and no unrelated diff picks up a dirty `AGENTS.md`.
 Do not remove the flag, and do not commit the block if you see it — restore the flag instead.
-[test/next-config.test.ts](test/next-config.test.ts) guards both halves of that.
+[tests/unit/next-config.test.ts](tests/unit/next-config.test.ts) guards both halves of that.
 
 Note what the opt-out does **not** touch: `npm run sync:ai` and the `AI Config Parity` CI job
 only regenerate `.agents/`, `.claude/skills/`, and `.codex/agents/`. Neither reads or writes

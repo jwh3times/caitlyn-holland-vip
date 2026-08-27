@@ -56,15 +56,29 @@ the account being recovered.
    Set-Location "<public-repository>"
    ```
 
-6. Clone the private companion into the ignored root-level directory:
+6. Clone the private companion into the ignored root-level directory. Configure the non-secret
+   1Password reference for the current shell, then run the idempotent bootstrap command:
 
    ```powershell
-   git clone $privateRepositoryUrl private
+   $env:CAITLYN_HOLLAND_PRIVATE_REPOSITORY_REFERENCE = "op://<vault>/<bootstrap-item>/private_repository_url"
+   npm run bootstrap:private
+   Remove-Item Env:CAITLYN_HOLLAND_PRIVATE_REPOSITORY_REFERENCE
    git -C private status --short
    ```
 
-   Before cloning, verify the selected GitHub repository reports `PRIVATE`. Never add `private/`
-   as a submodule or stage its contents in the outer repository.
+   The reference identifies the locator field; it is not a credential. Alternatively, pass a
+   one-time reference with `npm run bootstrap:private -- --op-reference "op://..."`, or an already
+   retrieved credential-free GitHub URL with `npm run bootstrap:private -- --url $privateRepositoryUrl`.
+   Automated sessions that must retrieve the scoped service-account token from an existing
+   1Password identity may set `CAITLYN_HOLLAND_OP_SERVICE_ACCOUNT_REFERENCE` or pass
+   `--service-account-reference`. Do not persist either reference in this public repository.
+
+   The bootstrap refuses to overwrite a non-empty non-Git directory, validates that the clone URL
+   is a credential-free GitHub HTTPS or SSH URL, and verifies that GitHub reports the repository as
+   `PRIVATE` before cloning. It exits successfully without changing an existing `private/.git`
+   checkout, so it is safe to run when creating each new worktree.
+
+   Never add `private/` as a submodule or stage its contents in the outer repository.
 
 7. Recreate generated local state and run the normal checks:
 

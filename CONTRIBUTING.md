@@ -39,7 +39,7 @@ Follow the [Getting started](./README.md#getting-started) section of the README
 - **Formatting** — Prettier owns formatting; run `npm run format` before
   committing. A PR fails CI if formatting drifts.
 - **Tests** — unit coverage is gated at **80%** (statements/branches/functions/
-  lines), so new components generally need a test under `test/` mirroring the
+  lines), so new components generally need a test under `tests/unit/` mirroring the
   source path.
 - **Conventions** — use the CSS-variable utility classes and the `cn()` helper;
   never hardcode colors. The full conventions live in [CLAUDE.md](./CLAUDE.md)

@@ -1,3 +1,7 @@
+---
+status: superseded by ADR-0009
+---
+
 # Unit tests live in test/, end-to-end tests in tests/
 
 Vitest collects `test/**/*.test.{ts,tsx}` (`vitest.config.ts`) and Playwright collects `./tests` (`playwright.config.ts`). The two directory names differ by a single letter. Each follows its own tool's default convention, and renaming either now would churn every path and CI reference for cosmetic gain.
