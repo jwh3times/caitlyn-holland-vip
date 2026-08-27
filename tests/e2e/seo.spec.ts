@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { profile } from "../lib/profile";
+import { profile } from "../../lib/profile";
 
 test.describe("SEO", () => {
   test.beforeEach(async ({ page }) => {

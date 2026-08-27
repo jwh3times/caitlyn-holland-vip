@@ -45,7 +45,7 @@ Pruning remains limited to `.claude/skills/` beneath the supplied root. It remov
 
 ## Testing
 
-`test/scripts/sync-ai.test.ts` will test only the exported `syncAll` interface. Each test creates and removes its own temporary root. The suite will cover:
+`tests/unit/scripts/sync-ai.test.ts` will test only the exported `syncAll` interface. Each test creates and removes its own temporary root. The suite will cover:
 
 - a directory without `SKILL.md` is skipped and not mirrored;
 - auxiliary files such as `agents/openai.yaml` and `scripts/*.sh` mirror alongside `SKILL.md`;
@@ -60,4 +60,4 @@ Existing transformation guarantees remain covered through representative source 
 
 ## Scope
 
-This change is limited to `scripts/sync-ai.mjs`, `test/scripts/sync-ai.test.ts`, and `vitest.config.ts`. It does not alter source-of-truth direction, generated file formats, package scripts, CI workflows, or documentation outside this design and the eventual changelog produced when the branch is shipped.
+This change is limited to `scripts/sync-ai.mjs`, `tests/unit/scripts/sync-ai.test.ts`, and `vitest.config.ts`. It does not alter source-of-truth direction, generated file formats, package scripts, CI workflows, or documentation outside this design and the eventual changelog produced when the branch is shipped.

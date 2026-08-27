@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.6.0] - 2026-08-27
+
+### Added
+
+- Added an idempotent `npm run bootstrap:private` command that retrieves the optional companion repository locator from 1Password or an explicit argument, validates credential-free GitHub URLs, verifies private visibility, and safely clones it into `private/`.
+
+### Changed
+
+- Consolidated automated tests under `tests/unit/` and `tests/e2e/`, with explicit Vitest and Playwright discovery boundaries and updated project guidance.
+
+## [1.5.13] - 2026-08-25
+
+### Changed
+
+- Updated `next` and `@next/eslint-plugin-next` from 16.3.1 to 16.3.2 and `@testing-library/user-event` from 14.6.5 to 14.6.6.
+
 ## [1.5.12] - 2026-08-25
 
 ### Added

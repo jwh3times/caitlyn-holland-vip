@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { syncAll } from "../../scripts/sync-ai.mjs";
+import { syncAll } from "../../../scripts/sync-ai.mjs";
 
 const AGENT_FIXTURE = `---
 name: sample-agent
@@ -154,7 +154,7 @@ body
   });
 
   it("exports syncAll as its only public interface", async () => {
-    const syncModule = await import("../../scripts/sync-ai.mjs");
+    const syncModule = await import("../../../scripts/sync-ai.mjs");
 
     expect(Object.keys(syncModule)).toEqual(["syncAll"]);
   });

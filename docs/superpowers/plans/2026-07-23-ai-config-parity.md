@@ -22,7 +22,7 @@
 
 ## File map
 
-- **Create:** `scripts/sync-ai.mjs` (generator), `test/scripts/sync-ai.test.ts` (unit tests), `.gitattributes` (mark generated files).
+- **Create:** `scripts/sync-ai.mjs` (generator), `tests/unit/scripts/sync-ai.test.ts` (unit tests), `.gitattributes` (mark generated files).
 - **Modify:** `AGENTS.md` (canonical doc), `CLAUDE.md` (import + Claude-only), `.claude/agents/docs-updater.md` (retarget + neutralize), `.claude/skills/ship/SKILL.md` (retarget + neutralize + sync step), `package.json` (add `sync:ai`), `.github/workflows/ci.yml` (add parity job).
 - **Regenerated & committed:** `.codex/agents/docs-updater.toml`, `.agents/skills/ship/SKILL.md`.
 - **Committed as-is (hand-maintained):** `.codex/config.toml`.
@@ -338,7 +338,7 @@ git commit -m "$(printf 'chore: update ship skill for AGENTS.md source + sync:ai
 **Files:**
 
 - Create: `scripts/sync-ai.mjs`
-- Test: `test/scripts/sync-ai.test.ts`
+- Test: `tests/unit/scripts/sync-ai.test.ts`
 
 **Interfaces:**
 
@@ -354,7 +354,7 @@ git commit -m "$(printf 'chore: update ship skill for AGENTS.md source + sync:ai
 
 - [ ] **Step 1: Write the failing test**
 
-Create `test/scripts/sync-ai.test.ts`:
+Create `tests/unit/scripts/sync-ai.test.ts`:
 
 ```ts
 import { describe, it, expect } from "vitest";
@@ -494,7 +494,7 @@ describe("skillTransform", () => {
 Run:
 
 ```bash
-npm run test:unit -- test/scripts/sync-ai.test.ts
+npm run test:unit -- tests/unit/scripts/sync-ai.test.ts
 ```
 
 Expected: FAIL — cannot resolve `../../scripts/sync-ai.mjs` (module does not exist yet).
@@ -668,7 +668,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
 Run:
 
 ```bash
-npm run test:unit -- test/scripts/sync-ai.test.ts
+npm run test:unit -- tests/unit/scripts/sync-ai.test.ts
 ```
 
 Expected: PASS (all tests green).
@@ -676,7 +676,7 @@ Expected: PASS (all tests green).
 - [ ] **Step 5: Commit**
 
 ```bash
-git add scripts/sync-ai.mjs test/scripts/sync-ai.test.ts
+git add scripts/sync-ai.mjs tests/unit/scripts/sync-ai.test.ts
 git commit -m "$(printf 'feat: add scripts/sync-ai.mjs generator with unit tests\n\nCo-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>')"
 ```
 

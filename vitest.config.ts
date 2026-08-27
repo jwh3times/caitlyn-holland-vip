@@ -13,9 +13,9 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
-    // Unit/component tests only. Playwright e2e specs live in tests/ and are
+    // Unit/component tests only. Playwright e2e specs live in tests/e2e/ and are
     // run separately (npm run test:e2e) — keep the two suites disjoint.
-    include: ["test/**/*.test.{ts,tsx}"],
+    include: ["tests/unit/**/*.test.{ts,tsx}"],
     css: false,
     coverage: {
       provider: "v8",

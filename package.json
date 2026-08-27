@@ -1,11 +1,12 @@
 {
   "name": "caitlyn-holland-vip",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Personal website for Caitlyn Holland",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "benchmark:tailwind": "node benchmarks/tailwind-integration.mjs",
+    "bootstrap:private": "node scripts/bootstrap-private.mjs",
     "start": "next start",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",

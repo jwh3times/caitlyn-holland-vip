@@ -243,7 +243,7 @@ stats. Nice-to-have, not required.
 **New:**
 
 - `scripts/sync-ai.mjs` — the generator.
-- `test/scripts/sync-ai.test.ts` — unit tests for the transforms.
+- `tests/unit/scripts/sync-ai.test.ts` — unit tests for the transforms.
 - `docs/superpowers/specs/2026-07-23-ai-config-parity-design.md` — this spec.
 
 **Modified:**
@@ -268,7 +268,7 @@ stats. Nice-to-have, not required.
 
 ## Testing & verification
 
-- **Unit (`test/scripts/sync-ai.test.ts`, Vitest):** cover the pure transforms —
+- **Unit (`tests/unit/scripts/sync-ai.test.ts`, Vitest):** cover the pure transforms —
   - `agentMarkdownToToml`: correct key order + values; `tools`/`model` dropped; body
     embedded in a `'''` literal string; the no-`'''`-in-body guard throws when violated;
     generated header present.
@@ -292,7 +292,7 @@ stats. Nice-to-have, not required.
 2. Neutralize + retarget `.claude/` sources; add the `sync:ai` step to ship.
 3. Write `scripts/sync-ai.mjs` + the `sync:ai` npm script.
 4. Run `npm run sync:ai`; commit the regenerated `.codex/` / `.agents/` files.
-5. Add `test/scripts/sync-ai.test.ts`.
+5. Add `tests/unit/scripts/sync-ai.test.ts`.
 6. Add the `AI Config Parity` CI job (+ optional `.gitattributes`).
 7. Ship: changelog entry; note the manual ruleset addition to make the gate blocking.
 
