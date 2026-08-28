@@ -178,7 +178,7 @@ outer repository's history. The reasoning is [ADR-0010](docs/adr/0010-private-wo
 ### Ending a session
 
 `/end-session` is the close-out counterpart to `/ship`: it flushes what a session learned into
-the per-project memory files, the gitignored `private/` working notes, and GitHub issues, then
+the per-project memory files, the private companion repository at `private/`, and GitHub issues, then
 tidies the local workspace — files and artifacts, and, once the checkout is clean, the branches
 themselves: returning to an up-to-date `main` (a `--ff-only` pull) and deleting local branches
 already merged there, leaving pushed-but-unmerged branches alone. It records and tidies only —
