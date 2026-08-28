@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.6.2] - 2026-08-28
+
+### Changed
+
+- Generalized the owner recovery runbook so it documents restoring the project on Linux, macOS, and Windows rather than Windows alone, pairing POSIX and PowerShell commands only where the shell syntax differs, naming the per-platform 1Password CLI installation paths, recording the GitHub MCP substitute where the `gh` CLI is unavailable, and directing recovery to match the pinned Node version before installing dependencies.
+
+## [1.6.1] - 2026-08-28
+
+### Changed
+
+- Updated `lucide-react` from 1.33.0 to 1.34.0, `@types/node` from 26.2.0 to 26.3.0, and `oxlint` from 1.79.0 to 1.80.0 (dependabot, `npm-minor-and-patch` group).
+
 ## [1.6.0] - 2026-08-27
 
 ### Added
