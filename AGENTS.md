@@ -66,8 +66,10 @@ E2E specs in [tests/e2e/](tests/e2e/) cover homepage rendering, navigation, them
 
 - **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with **six** jobs: `Format Check` (`npm run format:check`), `Coverage` (`npm run coverage` — **fails below the 80% thresholds** and uploads a `coverage-report` artifact), `Build & Lint` (`npm run lint` + `npm run build`, uploads the `static-site` artifact), `Playwright Tests` (needs Build & Lint; installs Chromium and runs `npm run test:e2e -- --project=chromium`), `AI Config Parity` (runs `npm run sync:ai` and fails if `.codex`, `.claude/skills`, or `.agents` is dirty afterwards — it covers the **sources** too, because the sync reformats them, so an unformatted `.agents/` edit fails here rather than in `Format Check`), and `Changelog Version` (PRs only; computes the next version via [scripts/next-version.sh](scripts/next-version.sh) and fails if [CHANGELOG.md](CHANGELOG.md) has no `## [x.y.z]` section for it — dependabot PRs are exempt). **A PR fails CI if formatting drifts — run `npm run format` before committing.**
 - **Dependency review — [.github/workflows/dependency-review.yml](.github/workflows/dependency-review.yml)** — on PRs, fails on vulnerable dependency changes.
+- **Code scanning — CodeQL default setup** — configured repository-side (Settings → Code security), scanning JavaScript/TypeScript and Actions. There is **no `codeql.yml` on purpose**: an advanced-config workflow conflicts with default setup, so do not add one. Its `CodeQL` check is required to merge even though nothing in the repo declares it.
 - **Versioning — [.github/workflows/version.yml](.github/workflows/version.yml)** — on every merge (push) to `main`, tags the merge commit and creates a GitHub Release using standard SemVer `v<major>.<minor>.<build>` (e.g. `v1.2.7`). It computes the build number with [scripts/next-version.sh](scripts/next-version.sh) — the same script the `Changelog Version` guard and the `ship` skill use, so the tag minted always matches the version the changelog was written for. The `package.json` `version` is the major/minor/build floor; for an existing major/minor line the build increments from the highest matching tag, and a new line starts at the floor's own build — bump the floor to `1.2.3` with no `v1.2.*` tags and the first tag on that line is `v1.2.3`, not `v1.2.0`. The floor is a lower bound only, never a record of the current release, so it legitimately sits far behind the latest tag.
-- **Deployment — Cloudflare Pages** — builds directly from the repo on push to `main` (build command `npm run build`, output dir `out`, Node version from [.nvmrc](.nvmrc)). There is no deploy workflow in the repo — CI is a parallel quality gate, not a deploy gate.
+- **Deployment — Cloudflare Pages** — builds directly from the repo on push to `main` (build command `npm run build`, output dir `out`, Node version from [.nvmrc](.nvmrc)). There is no deploy workflow in the repo — CI is a parallel quality gate, not a deploy gate. Its `Cloudflare Pages` check reports on the PR.
+- **Required checks** — the `No Push to Main` ruleset requires seven: the six `ci.yml` jobs above plus `CodeQL`. `main` is protected; never push to it directly.
 
 ## Architecture
 
@@ -169,7 +171,7 @@ mint.
 When handling private working documents, ignored project knowledge, credential recovery, or
 cross-device setup, read [docs/agents/private-workspace.md](docs/agents/private-workspace.md).
 `private/` is a separate private Git repository; keep its contents out of public outputs and the
-outer repository's history.
+outer repository's history. The reasoning is [ADR-0010](docs/adr/0010-private-workspace-is-a-separate-repository.md).
 
 ### Ending a session
 
@@ -184,11 +186,10 @@ a finished branch still goes through `ship`. Source:
 
 ### Issue tracker
 
-Issues live in this repo's GitHub Issues (uses the `gh` CLI). See `docs/agents/issue-tracker.md`.
-
-### Triage labels
-
-Default label vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+Issues live in this repo's GitHub Issues, worked through the `gh` CLI (or the GitHub MCP tools where
+`gh` is unavailable). Conventions, the triage label vocabulary (`needs-triage`, `needs-info`,
+`ready-for-agent`, `ready-for-human`, `wontfix`), and the sub-issue/blocking mechanics are all in
+`docs/agents/issue-tracker.md`.
 
 ### Domain docs
 

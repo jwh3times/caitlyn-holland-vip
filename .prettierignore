@@ -14,7 +14,6 @@ dist/
 *.pem
 
 # Agent scratch (gitignored, never reaches CI)
-.superpowers/
 .claude/settings.local.json
 # Agent worktrees are full repo checkouts. Git skips them via .git/info/exclude,
 # but Prettier does not read that file, so without this line `format:check` walks
