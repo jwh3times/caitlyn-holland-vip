@@ -11,16 +11,28 @@ credential and project repository locators; it is not the document store. Keep 1
 recovery material in a safe location outside the account so recovery does not depend on access to
 the account being recovered.
 
-## Recover on another Windows computer
+## Recover on another computer
+
+The recovery sequence is the same on Linux, macOS, and Windows. Only two things differ by
+platform: how 1Password CLI is installed, and how a shell variable is set. Where the commands
+diverge, a POSIX block (bash or zsh, including git-bash on Windows) is followed by a PowerShell
+block; unmarked blocks are identical in every shell. `npm run bootstrap:private` is plain Node
+with no shell dependency, so it behaves the same everywhere.
 
 1. Confirm that the owner's independently stored 1Password recovery material is available. The
    automated recovery path uses a scoped service account and does not require desktop-app
    interaction.
-2. Install 1Password CLI 2 with `winget install 1password-cli`. For an automated agent session,
-   provision the scoped service-account token through an authorized machine-secret channel as
-   `OP_SERVICE_ACCOUNT_TOKEN`, then run:
+2. Install 1Password CLI 2 using the platform's documented path
+   ([1Password CLI setup](https://www.1password.dev/cli/get-started)):
 
-   ```powershell
+   - **Linux** — install the package for the distribution from the official installation guide.
+   - **macOS** — `brew install 1password-cli`
+   - **Windows** — `winget install 1password-cli`
+
+   For an automated agent session, provision the scoped service-account token through an
+   authorized machine-secret channel as `OP_SERVICE_ACCOUNT_TOKEN`, then run:
+
+   ```bash
    op whoami
    op vault list
    ```
@@ -30,6 +42,10 @@ the account being recovered.
    owner's independent 1Password account-recovery material.
 
 3. Retrieve only the non-secret private-repository locator from the configured 1Password item:
+
+   ```bash
+   private_repository_url="$(op read "op://<vault>/<bootstrap-item>/private_repository_url")"
+   ```
 
    ```powershell
    $privateRepositoryUrl = op read "op://<vault>/<bootstrap-item>/private_repository_url"
@@ -41,23 +57,37 @@ the account being recovered.
 
 4. Authenticate GitHub CLI through the browser over HTTPS and configure its Git credential helper:
 
-   ```powershell
+   ```bash
    gh auth login --web --git-protocol https
    gh auth setup-git
    gh auth status
    ```
 
-   Do not print the GitHub token, copy it into a workspace, or place it in an environment variable.
+   Do not print the GitHub token, copy it into a workspace, or place it in an environment
+   variable. Where `gh` is unavailable — a remote or web agent session, for example — use the
+   GitHub MCP tools for the equivalent repository operations.
 
 5. Clone the public repository using its public URL and enter the checkout:
+
+   ```bash
+   git clone "https://github.com/<owner>/<public-repository>.git"
+   cd "<public-repository>"
+   ```
 
    ```powershell
    git clone "https://github.com/<owner>/<public-repository>.git"
    Set-Location "<public-repository>"
    ```
 
-6. Clone the private companion into the ignored root-level directory. Configure the non-secret
-   1Password reference for the current shell, then run the idempotent bootstrap command:
+6. Clone the private companion into the ignored root-level directory. Point the non-secret
+   1Password reference at the locator field for the single command, then run the idempotent
+   bootstrap:
+
+   ```bash
+   CAITLYN_HOLLAND_PRIVATE_REPOSITORY_REFERENCE="op://<vault>/<bootstrap-item>/private_repository_url" \
+     npm run bootstrap:private
+   git -C private status --short
+   ```
 
    ```powershell
    $env:CAITLYN_HOLLAND_PRIVATE_REPOSITORY_REFERENCE = "op://<vault>/<bootstrap-item>/private_repository_url"
@@ -68,10 +98,11 @@ the account being recovered.
 
    The reference identifies the locator field; it is not a credential. Alternatively, pass a
    one-time reference with `npm run bootstrap:private -- --op-reference "op://..."`, or an already
-   retrieved credential-free GitHub URL with `npm run bootstrap:private -- --url $privateRepositoryUrl`.
-   Automated sessions that must retrieve the scoped service-account token from an existing
-   1Password identity may set `CAITLYN_HOLLAND_OP_SERVICE_ACCOUNT_REFERENCE` or pass
-   `--service-account-reference`. Do not persist either reference in this public repository.
+   retrieved credential-free GitHub URL with
+   `npm run bootstrap:private -- --url "<private-repository-url>"`. Automated sessions that must
+   retrieve the scoped service-account token from an existing 1Password identity may set
+   `CAITLYN_HOLLAND_OP_SERVICE_ACCOUNT_REFERENCE` or pass `--service-account-reference`. Do not
+   persist either reference in this public repository.
 
    The bootstrap refuses to overwrite a non-empty non-Git directory, validates that the clone URL
    is a credential-free GitHub HTTPS or SSH URL, and verifies that GitHub reports the repository as
@@ -80,9 +111,11 @@ the account being recovered.
 
    Never add `private/` as a submodule or stage its contents in the outer repository.
 
-7. Recreate generated local state and run the normal checks:
+7. Match the Node version pinned in [.nvmrc](../../.nvmrc) before installing — `nvm use` on a
+   machine with nvm, or the distribution equivalent. An older npm rewrites `package-lock.json`.
+   Then recreate generated local state and run the normal checks:
 
-   ```powershell
+   ```bash
    npm ci
    npm run format:check
    npm run lint
