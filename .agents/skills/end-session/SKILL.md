@@ -104,9 +104,9 @@ into `private/` because it's the file that doesn't need a PR.
 
 ## 4. Update GitHub issues
 
-Conventions are in [`docs/agents/issue-tracker.md`](../../../docs/agents/issue-tracker.md);
-the label vocabulary is in [`docs/agents/triage-labels.md`](../../../docs/agents/triage-labels.md)
-(`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). Start from
+Conventions and the label vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`,
+`ready-for-human`, `wontfix`) are in
+[`docs/agents/issue-tracker.md`](../../../docs/agents/issue-tracker.md). Start from
 what's open:
 
 ```bash

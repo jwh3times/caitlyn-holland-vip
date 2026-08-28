@@ -42,8 +42,9 @@ Follow the [Getting started](./README.md#getting-started) section of the README
   lines), so new components generally need a test under `tests/unit/` mirroring the
   source path.
 - **Conventions** — use the CSS-variable utility classes and the `cn()` helper;
-  never hardcode colors. The full conventions live in [CLAUDE.md](./CLAUDE.md)
-  (theme/hydration patterns, static-export constraints, styling rules).
+  never hardcode colors. The full conventions live in [AGENTS.md](./AGENTS.md)
+  (theme/hydration patterns, static-export constraints, styling rules); Claude
+  Code reads them through an `@AGENTS.md` import in [CLAUDE.md](./CLAUDE.md).
 
 ## Security issues
 
