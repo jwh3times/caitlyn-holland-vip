@@ -110,15 +110,17 @@ is edited once:
 - **Skills** are authored under **`.agents/skills/<name>/`** and mirrored to
   `.claude/skills/<name>/` by `npm run sync:ai`. The **whole skill directory** is mirrored —
   `SKILL.md` plus every auxiliary file (`agents/openai.yaml`, `scripts/*.sh`, reference
-  docs) — so all of it is covered by drift detection. 15 of the skills originated in
+  docs) — so all of it is covered by drift detection. Of the 16 skills, 14 originated in
   [`mattpocock/skills`](https://github.com/mattpocock/skills) but are now forked and owned
   locally — edited in place rather than tracked upstream — per
   [ADR-0006](docs/adr/0006-vendored-skill-policy.md). [skills-lock.json](skills-lock.json)
   records provenance only (nothing reads it): the `computedHash` per skill is what was
   originally fetched, not current content, and `localized: true` flags skills that have
-  since diverged from that upstream source. Skills written here rather than fetched —
-  currently [`end-session`](.agents/skills/end-session/SKILL.md) — have no lockfile entry;
-  authoring one is just adding the directory under `.agents/skills/` and re-running the sync.
+  since diverged from that upstream source. The two written here rather than fetched —
+  [`ship`](.agents/skills/ship/SKILL.md) and
+  [`end-session`](.agents/skills/end-session/SKILL.md) — have no lockfile entry, which is how
+  you tell them apart; authoring one is just adding the directory under `.agents/skills/` and
+  re-running the sync.
 - **Agents** go the other way: authored under **`.claude/agents/*.md`** and generated into
   `.codex/agents/*.toml` by the same command. This direction is `.claude`-first because it is
   a format conversion (markdown + YAML frontmatter → TOML), not a copy.
@@ -176,7 +178,7 @@ outer repository's history. The reasoning is [ADR-0010](docs/adr/0010-private-wo
 ### Ending a session
 
 `/end-session` is the close-out counterpart to `/ship`: it flushes what a session learned into
-the per-project memory files, the gitignored `private/` working notes, and GitHub issues, then
+the per-project memory files, the private companion repository at `private/`, and GitHub issues, then
 tidies the local workspace — files and artifacts, and, once the checkout is clean, the branches
 themselves: returning to an up-to-date `main` (a `--ff-only` pull) and deleting local branches
 already merged there, leaving pushed-but-unmerged branches alone. It records and tidies only —

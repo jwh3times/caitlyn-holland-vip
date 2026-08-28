@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.6.4] - 2026-08-28
+
+### Fixed
+
+- Corrected the test-driven-development skill, which still described the superseded split test layout and told agents unit tests belong in `test/`; it now documents `tests/unit/` and `tests/e2e/` against the runners' actual discovery configuration, including which misplaced-file mistake fails loudly and which one silently never runs.
+- Corrected the end-of-session skill, which described the private companion directory as untracked notes that never reach a commit and named documents that have since been reorganized; it now describes an independent private repository with its own remote, and routes new follow-ups to an issue instead of a private markdown list.
+- Corrected the skill provenance counts in the agent guidance: sixteen skills, fourteen vendored, and two authored in this repository rather than one.
+
+### Changed
+
+- Replaced the multi-context glossary and decision-record boilerplate in the domain-modeling skill with this repository's actual single-context layout.
+- Added a changelog item to the pull request template, covering the required check most likely to be missed.
+
 ## [1.6.3] - 2026-08-28
 
 ### Added

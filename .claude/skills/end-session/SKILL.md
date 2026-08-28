@@ -73,36 +73,40 @@ index is invisible.
 
 ## 3. Update `private/` docs
 
-`private/` is **gitignored** (see `.gitignore`) — untracked working notes that never reach
-a commit, a PR, or CI. Prettier's default ignore path includes `.gitignore`, so
-`npm run format:check` does not see these files and an edit here cannot break a build.
-Three documents live there today:
+`private/` is not a scratch directory — it is an **independent private Git repository** cloned into
+a path the outer repo ignores ([ADR-0010](../../../docs/adr/0010-private-workspace-is-a-separate-repository.md)).
+Its contents never reach the public repository's commits, PRs, or CI, and Prettier does not see
+them, but they are versioned and pushed on their own remote. An edit here is a real commit that
+belongs to that repository, not a free-floating note. Never stage anything below `private/` with
+the outer repo.
 
-| File                                          | What it holds                                                                               |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| `private/todo.md`                             | Follow-through status on `repo-analysis.md` findings — open / in progress / done / won't do |
-| `private/repo-analysis.md`                    | The dated deep-dive review, with a per-finding status table                                 |
-| `private/dependency-modernization-2026-08.md` | The dated dependency-currency audit and its four follow-ups                                 |
+Its layout is deliberately thin:
 
-Update the one the session touched:
+| Path                | What it holds                                                                                                           |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `private/README.md` | The information boundary and workflow — the only document there describing live practice                                |
+| `private/archive/`  | Dated historical documents (a repository analysis, a dependency audit, the pre-Issues action index), each banner-marked |
 
-- Landed something an entry tracks → flip its status and name the **PR number**, matching
-  the existing legend (`⬜ open · 🔄 in progress · ✅ done (merged)`) and table style.
-- Decided _not_ to do something → move it to the "intentionally not doing" section **with
-  the reason**. That section is the point of the file; a silent deletion loses it.
-- Found a new follow-up too small or too speculative for an issue → add it as an open item.
-- Any file with a "Last updated" line gets today's date when you edit it.
+What that means for a close-out:
 
-Dated audit documents (`repo-analysis.md`, `dependency-modernization-2026-08.md`) are
-snapshots — amend their status sections, don't rewrite their findings as if the original
-review had said something else. A genuinely new audit is a new dated file.
+- **A new durable fact about private practice** → `private/README.md`.
+- **An archived document whose status changed** → amend its status banner or per-item table.
+  These are dated snapshots: never rewrite their findings as if the original review had said
+  something else, and never add a new open item to them. A genuinely new audit is a new dated file
+  under `archive/`.
+- **A new follow-up of any size** → an issue, not a document. Public-safe work goes to this repo's
+  issues; private non-vulnerability work to the companion repository's issues; a genuine
+  unpublished vulnerability to a draft security advisory here. Every live action has exactly one
+  canonical issue, so "park it in a private markdown list" is not an option any more.
+- **Commit and push separately.** `git -C private status --short` must be clean when you finish,
+  and its commits go only to its own remote.
 
-**Know the boundary.** `private/` is for working notes only. If what you learned is a fact
-about the codebase, it belongs in tracked docs instead, and those are edited on a branch:
-`AGENTS.md` / `README.md` (owned by the `docs-updater` subagent, which `/ship` runs), an
-ADR under `docs/adr/` for a decision, `docs/research/` for a sourced investigation, and
-`CHANGELOG.md` only via `/ship`. Say which of those is needed; don't smuggle a repo fact
-into `private/` because it's the file that doesn't need a PR.
+**Know the boundary.** If what you learned is a fact about the public codebase, it belongs in
+tracked public docs, and those are edited on a branch: `AGENTS.md` / `README.md` (owned by the
+`docs-updater` subagent, which `/ship` runs), an ADR under `docs/adr/` for a decision,
+`docs/research/` for a sourced investigation, and `CHANGELOG.md` only via `/ship`. Say which of
+those is needed; don't smuggle a repo fact into `private/` because it is the file that doesn't need
+a PR.
 
 ## 4. Update GitHub issues
 
@@ -126,8 +130,8 @@ For each issue this session touched:
   and always with `--comment` explaining why.
 - **Triage state moved** → adjust labels with `gh issue edit <n> --add-label / --remove-label`.
 - **Found a new, self-contained follow-up** → `gh issue create` with a heredoc body, and
-  label it `needs-triage`. One issue per follow-up. Speculation stays in `private/todo.md`
-  instead.
+  label it `needs-triage`. One issue per follow-up. If it is too speculative to specify, say so in
+  the close-out summary rather than parking it in a document.
 
 Remember GitHub shares one number space across issues and PRs, so resolve a bare `#42`
 with `gh pr view 42` before falling back to `gh issue view 42`.
