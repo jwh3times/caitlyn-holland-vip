@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.6.3] - 2026-08-28
+
+### Added
+
+- Added ADR-0010 recording the two-repository private-workspace architecture — the public repository, its independent private companion, and 1Password as the credential manager and bootstrap index — which previously existed only as an implementation plan and a research note.
+- Documented CodeQL default setup and the seven checks the `No Push to Main` ruleset requires, including why no `codeql.yml` belongs in the repository.
+
+### Changed
+
+- Consolidated the agent documentation: the triage-label vocabulary and the sub-issue/blocking mechanics now live in one issue-tracker reference that also names the GitHub MCP fallback where the `gh` CLI is unavailable, and the domain-docs guide describes this repository's single-context layout instead of a multi-context one it never had.
+- Pointed the contributing guide's conventions at `AGENTS.md`, where they are authored, rather than at the `CLAUDE.md` import wrapper.
+
+### Removed
+
+- Removed the completed implementation plans and design specs under `docs/superpowers/`, the derived backlog in `docs/IMPLEMENTATION_PLAN.md`, and the research note ADR-0010 supersedes. The backlog's live proposals became issues #148–#153 so that every open action has exactly one canonical tracker.
+
 ## [1.6.2] - 2026-08-28
 
 ### Changed
