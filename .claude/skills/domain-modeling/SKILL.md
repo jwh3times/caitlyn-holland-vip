@@ -11,33 +11,24 @@ Actively build and sharpen the project's domain model as you design. This is the
 
 ## File structure
 
-Most repos have a single context:
+This repo is single-context — one glossary at the root, one ADR directory:
 
 ```
 /
 ├── CONTEXT.md
 ├── docs/
 │   └── adr/
-│       ├── 0001-event-sourced-orders.md
-│       └── 0002-postgres-for-write-model.md
-└── src/
+│       ├── 0001-static-export-cloudflare-pages.md
+│       └── …                        ← one decision per file, newest number last
+├── app/
+├── components/
+└── lib/
 ```
 
-If a `CONTEXT-MAP.md` exists at the root, the repo has multiple contexts. The map points to where each one lives:
-
-```
-/
-├── CONTEXT-MAP.md
-├── docs/
-│   └── adr/                          ← system-wide decisions
-├── src/
-│   ├── ordering/
-│   │   ├── CONTEXT.md
-│   │   └── docs/adr/                 ← context-specific decisions
-│   └── billing/
-│       ├── CONTEXT.md
-│       └── docs/adr/
-```
+There is no `CONTEXT-MAP.md` and no per-directory glossary, so every term resolves in that one
+file. A superseded ADR stays in place with a `status:` note pointing at its replacement (see
+[ADR-0004](../../../docs/adr/0004-test-split-vitest-playwright.md)) — write the new one and mark
+the old rather than deleting it.
 
 Create files lazily — only when you have something to write. If no `CONTEXT.md` exists, create one when the first term is resolved. If no `docs/adr/` exists, create it when the first ADR is needed.
 

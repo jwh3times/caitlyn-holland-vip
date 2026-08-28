@@ -13,20 +13,22 @@ When exploring the codebase, read `CONTEXT.md` so test names and interface vocab
 
 ## Where tests go in this repo
 
-Two directories, one letter apart, and putting a file in the wrong one fails in two different ways. See [ADR-0004](../../../docs/adr/0004-test-split-vitest-playwright.md).
+Both suites live under `tests/`, in sibling directories the two runners discover explicitly. See [ADR-0009](../../../docs/adr/0009-test-suites-share-tests-root.md).
 
-| Layer          | Directory | Pattern                        | Command             |
-| -------------- | --------- | ------------------------------ | ------------------- |
-| Unit/component | `test/`   | `**/*.test.{ts,tsx}`           | `npm run test:unit` |
-| End-to-end     | `tests/`  | Playwright default `testMatch` | `npm test`          |
+| Layer          | Directory     | Discovery                                           | Command             |
+| -------------- | ------------- | --------------------------------------------------- | ------------------- |
+| Unit/component | `tests/unit/` | Vitest `include: tests/unit/**/*.test.{ts,tsx}`     | `npm run test:unit` |
+| End-to-end     | `tests/e2e/`  | Playwright `testDir: ./tests/e2e`, `*.spec.ts` here | `npm test`          |
 
-- A Vitest-style test placed in `tests/` is collected by Playwright and fails against a browser runner — noisy, but at least it fails.
-- A `.spec.ts` placed in `test/` matches **neither** config and silently never runs. This is the one to watch for: nothing goes red, and it reads as passing coverage.
-- `test/` mirrors the source path — a component at `components/ui/button.tsx` is tested at `test/components/ui/button.test.tsx`.
+The directory is what separates the runners; the suffix is what decides whether a file runs at all. Both failure modes are still live, in opposite directions:
+
+- A `.spec.ts` under `tests/unit/` misses Vitest's `include` and is outside Playwright's `testDir`, so it is collected by **neither** and **silently never runs**. Nothing goes red and it reads as passing coverage — this is the one to watch for.
+- A Vitest-style `.test.ts` under `tests/e2e/` **is** picked up, because Playwright's default `testMatch` accepts `.test.` as well as `.spec.`, and then fails against a browser runner. Noisy, but at least it fails.
+- `tests/unit/` mirrors the source path — a component at `components/ui/button.tsx` is tested at `tests/unit/components/ui/button.test.tsx`. A test for a repo-root file such as `next.config.ts` sits at `tests/unit/` root, not in a subdirectory.
 
 **Gates this repo enforces**, so a red-green loop that ignores them produces a branch CI will reject:
 
-- Unit coverage is gated at **80%** (statements, branches, functions, lines) across `app/`, `components/`, `lib/`, and `scripts/**/*.mjs`. A new component generally needs a matching file under `test/`.
+- Unit coverage is gated at **80%** (statements, branches, functions, lines) across `app/`, `components/`, `lib/`, and `scripts/**/*.mjs`. A new component generally needs a matching file under `tests/unit/`.
 - Typechecking is `npx tsc --noEmit` — there is no `typecheck` script.
 - `npm test` is the **Playwright** suite: it boots a dev server and runs five browser projects locally. Don't reach for it as the quick inner-loop command; `npm run test:unit` is that.
 
