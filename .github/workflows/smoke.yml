@@ -1,0 +1,83 @@
+name: Post-deploy Smoke
+
+on:
+  schedule:
+    # Avoid the top of the hour, when scheduled Actions runs are most likely to be delayed.
+    # GitHub may disable this schedule after 60 days without repository activity.
+    - cron: "17 10 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Live-site Smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Verify deployed site
+        shell: bash
+        env:
+          SITE_URL: https://caitlyn.holland.vip
+        run: |
+          set -euo pipefail
+
+          response_dir="$(mktemp -d)"
+          trap 'rm -rf "$response_dir"' EXIT
+
+          curl_options=(
+            --silent
+            --show-error
+            --retry 3
+            --retry-all-errors
+            --retry-delay 2
+          )
+
+          homepage_status="$(curl "${curl_options[@]}" \
+            --dump-header "$response_dir/headers" \
+            --output "$response_dir/body" \
+            --write-out "%{http_code}" \
+            "$SITE_URL/")"
+
+          if [[ "$homepage_status" != "200" ]]; then
+            echo "::error::Homepage returned HTTP $homepage_status instead of 200."
+            exit 1
+          fi
+
+          if ! grep --fixed-strings --quiet "Caitlyn Holland" "$response_dir/body"; then
+            echo "::error::Homepage is missing the expected Caitlyn Holland content marker."
+            exit 1
+          fi
+
+          security_headers=(
+            strict-transport-security
+            content-security-policy
+            x-content-type-options
+            x-frame-options
+            referrer-policy
+            permissions-policy
+          )
+
+          for header in "${security_headers[@]}"; do
+            if ! grep --extended-regexp --ignore-case --quiet \
+              "^${header}[[:space:]]*:" "$response_dir/headers"; then
+              echo "::error::Homepage response is missing the $header header."
+              exit 1
+            fi
+          done
+
+          for path in /sitemap.xml /robots.txt; do
+            status="$(curl "${curl_options[@]}" \
+              --output /dev/null \
+              --write-out "%{http_code}" \
+              "$SITE_URL$path")"
+
+            if [[ "$status" != "200" ]]; then
+              echo "::error::$path returned HTTP $status instead of 200."
+              exit 1
+            fi
+          done
+
+          echo "Live-site smoke checks passed."
