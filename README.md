@@ -72,7 +72,7 @@ Two disjoint suites:
 
 ## Deployment
 
-Cloudflare Pages builds from the repo on every push to `main` (build command `npm run build`, output dir `out`, Node version from `.nvmrc`). Security headers are served from [`public/_headers`](public/_headers). CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validates format, coverage, build/lint, e2e, and AI-tool config parity on every PR, plus (PR-only) that [`CHANGELOG.md`](CHANGELOG.md) names the version the merge will mint. CodeQL scans JavaScript/TypeScript and Actions through GitHub's default setup, which is why there is no `codeql.yml` in the repo.
+Cloudflare Pages builds from the repo on every push to `main` (build command `npm run build`, output dir `out`, Node version from `.nvmrc`). Security headers are served from [`public/_headers`](public/_headers). CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validates format, coverage, build/lint, e2e, and AI-tool config parity on every PR, plus (PR-only) that [`CHANGELOG.md`](CHANGELOG.md) names the version the merge will mint. CodeQL scans JavaScript/TypeScript and Actions through GitHub's default setup, which is why there is no `codeql.yml` in the repo. A separate [post-deploy smoke workflow](.github/workflows/smoke.yml) checks the live homepage, security headers, sitemap, and robots file daily and on manual dispatch.
 
 Every merge to `main` is also tagged and published as a GitHub Release by
 [`version.yml`](.github/workflows/version.yml) using `v<major>.<minor>.<build>`
