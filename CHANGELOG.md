@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.7.0] - 2026-08-30
+
+### Added
+
+- Added daily and on-demand post-deployment smoke checks for the live homepage, expected content, security headers, sitemap, and robots file so delivery failures surface independently of build-time CI.
+
 ## [1.6.4] - 2026-08-28
 
 ### Fixed
