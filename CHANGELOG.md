@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.7.5] - 2026-09-02
+
+### Changed
+
+- Documented why the static export's CSP permits inline scripts for the `next-themes` pre-paint script and cannot use a per-request nonce, without changing the deployed security-header policy.
+
 ## [1.7.4] - 2026-09-02
 
 ### Added

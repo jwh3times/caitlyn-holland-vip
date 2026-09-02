@@ -1,5 +1,7 @@
 # Security headers, served by Cloudflare Pages (single source of truth).
 # Lives in public/ so Next's static export copies it to the build root (out/_headers).
+# next-themes needs script-src 'unsafe-inline' for its pre-paint theme script.
+# A per-request nonce is unavailable because this site is a static export.
 /*
   X-DNS-Prefetch-Control: on
   X-Frame-Options: SAMEORIGIN
