@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.7.7] - 2026-09-02
+
+### Changed
+
+- Expanded CI browser coverage from desktop Chromium to both desktop Chromium and Mobile Chrome (Pixel 5), exercising the full Playwright suite with mobile user-agent, touch, and viewport emulation on every change.
+
 ## [1.7.6] - 2026-09-02
 
 ### Changed
