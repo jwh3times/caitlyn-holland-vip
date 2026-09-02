@@ -64,7 +64,7 @@ app/          App Router: layout, page, globals.css, error / loading / not-found
 components/   Navigation, Footer, mode-toggle, theme-provider
   sections/   HeroSection, AboutSection, ContactSection
   ui/         button and CTA link primitives
-lib/          shared profile facts, utils (cn helper)
+lib/          shared profile facts, Person structured data, utils (cn helper)
 public/       _headers, manifest, robots, icons
 tests/        Test suites
   unit/       Vitest unit/component tests (mirrors the source tree)
@@ -76,7 +76,7 @@ tests/        Test suites
 Two disjoint suites:
 
 - **Unit / component** — Vitest + Testing Library + jsdom in [`tests/unit/`](tests/unit/). An **80% coverage gate** (lines/functions/branches/statements) is enforced and blocks merges.
-- **End-to-end** — Playwright in [`tests/e2e/`](tests/e2e/), covering homepage rendering, navigation, theme toggle and persistence across reloads, mobile menu, SEO metadata, and WCAG 2.1 A/AA accessibility audits for the default page, open mobile disclosure, and dark theme. Theme tests use a deterministic light system color scheme and verify the restored theme and accessible toggle state. CI runs the desktop Chromium and Mobile Chrome (Pixel 5) projects with one worker; locally all five browser/device projects run.
+- **End-to-end** — Playwright in [`tests/e2e/`](tests/e2e/), covering homepage rendering, navigation, theme toggle and persistence across reloads, mobile menu, SEO metadata and Person JSON-LD, and WCAG 2.1 A/AA accessibility audits for the default page, open mobile disclosure, and dark theme. Theme tests use a deterministic light system color scheme and verify the restored theme and accessible toggle state. CI runs the desktop Chromium and Mobile Chrome (Pixel 5) projects with one worker; locally all five browser/device projects run.
 
 ## Deployment
 

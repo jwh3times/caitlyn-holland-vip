@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Theme } from "@/components/theme-provider";
 import { profile } from "@/lib/profile";
+import { personJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   metadataBase: new URL(profile.siteUrl),
@@ -10,7 +11,15 @@ export const metadata: Metadata = {
     template: `%s | ${profile.name}`,
   },
   description: profile.description,
-  keywords: [profile.name],
+  keywords: [
+    profile.name,
+    "Software Engineering Manager",
+    "SAS",
+    "DevOps",
+    "Integrated Quality",
+    "Automated Testing",
+    "CI/CD",
+  ],
   authors: [{ name: profile.name, url: profile.siteUrl }],
   creator: profile.name,
   openGraph: {
@@ -77,6 +86,7 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personJsonLd() }} />
         <Theme>{children}</Theme>
       </body>
     </html>
