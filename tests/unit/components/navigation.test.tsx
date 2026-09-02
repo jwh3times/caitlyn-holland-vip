@@ -13,6 +13,8 @@ describe("Navigation", () => {
     render(<Navigation />);
     expect(screen.getByText(profile.name)).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "About" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "Skills" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "Experience" }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole("link", { name: "Contact" }).length).toBeGreaterThan(0);
   });
 

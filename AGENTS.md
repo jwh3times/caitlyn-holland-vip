@@ -84,7 +84,7 @@ E2E specs in [tests/e2e/](tests/e2e/) cover homepage rendering, navigation, them
 
 ## Architecture
 
-**Single-page layout:** `app/page.tsx` composes the full page from three sections (`HeroSection` → `AboutSection` → `ContactSection`) wrapped by `Navigation` and `Footer`. All sections are in [components/sections/](components/sections/) and exported via [components/sections/index.ts](components/sections/index.ts). Sections use `id` anchors (`#about`, `#contact`) that match the navigation links in [components/navigation.tsx](components/navigation.tsx).
+**Single-page layout:** `app/page.tsx` composes the full page from five sections (`HeroSection` → `AboutSection` → `SkillsSection` → `ExperienceSection` → `ContactSection`) wrapped by `Navigation` and `Footer`. All sections are in [components/sections/](components/sections/) and exported via [components/sections/index.ts](components/sections/index.ts). The About section owns the biography, education, and certifications; skills and work history have dedicated server components. Sections use `id` anchors (`#about`, `#skills`, `#experience`, `#contact`) that match the navigation links in [components/navigation.tsx](components/navigation.tsx).
 
 **Static-export constraints:** no API routes or `getServerSideProps`; images are `unoptimized` ([next.config.ts](next.config.ts)); all routes must be known at build time; no runtime environment variables. Security headers live only in [public/\_headers](public/_headers) — `next.config.ts` has no `headers()` block (ignored by static export anyway). The CSP intentionally permits inline scripts because `next-themes` injects a pre-paint theme script; this static deployment cannot provide a per-request nonce.
 
