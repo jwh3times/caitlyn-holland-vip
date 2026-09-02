@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.11.0] - 2026-09-02
+
+### Added
+
+- Added `npm run sync:main` to switch both the public repository and optional private companion
+  to `main` and fast-forward them from `origin/main` in one command, while refusing dirty or
+  diverged worktrees rather than stashing changes or creating merge commits.
+
 ## [1.10.0] - 2026-09-02
 
 ### Added

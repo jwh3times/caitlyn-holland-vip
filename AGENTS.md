@@ -22,6 +22,7 @@ npx tsc --noEmit     # TypeScript 7 native CLI type-check
 npm run format       # Prettier write
 npm run format:check # Prettier check (the CI "Format Check" job runs this)
 npm run bootstrap:private # Clone the optional private companion into ignored private/
+npm run sync:main    # Update clean public/private checkouts to origin/main (missing private is skipped)
 ```
 
 Run `npm run build` before `npm run preview`; the preview command serves the completed static
