@@ -33,6 +33,7 @@ npm run dev      # start the dev server at http://localhost:3000
 | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `npm run dev`                                     | Start the dev server at <http://localhost:3000>                                                                                   |
 | `npm run build`                                   | Production build → static export in `./out`                                                                                       |
+| `npm run preview`                                 | Serve a completed `./out` export locally (run `npm run build` first)                                                              |
 | `npm run benchmark:tailwind -- --variant=<label>` | Measure Tailwind build/dev performance; see the [method and recorded results](docs/research/tailwind-webpack-nextjs-benchmark.md) |
 | `npm run lint`                                    | Oxlint                                                                                                                            |
 | `npm run lint:fix`                                | Oxlint with safe autofixes                                                                                                        |
@@ -51,6 +52,10 @@ Run a single e2e file or a single browser project:
 npx playwright test tests/e2e/homepage.spec.ts
 npx playwright test --project=chromium
 ```
+
+To inspect the production export locally, run `npm run build` and then `npm run preview`. The
+preview server serves static content only; it does not apply Cloudflare's [`public/_headers`](public/_headers).
+The post-deploy smoke workflow remains the source of truth for deployed-header validation.
 
 ## Project structure
 
