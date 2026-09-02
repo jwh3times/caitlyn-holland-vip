@@ -69,7 +69,7 @@ npx playwright test tests/e2e/homepage.spec.ts
 npx playwright test --project=chromium
 ```
 
-E2E specs in [tests/e2e/](tests/e2e/) cover homepage rendering, navigation, theme toggling and persistence across reloads, the mobile menu, SEO metadata, and WCAG 2.1 A/AA accessibility audits for the default page, open mobile disclosure, and dark theme. Theme tests emulate a light system color scheme so stored user choices and accessible toggle state are deterministic. Locally all five browser/device projects run; **CI runs the desktop Chromium and Mobile Chrome (Pixel 5) projects with one worker**.
+E2E specs in [tests/e2e/](tests/e2e/) cover homepage rendering, navigation, theme toggling and persistence across reloads, the mobile menu, SEO metadata and Person JSON-LD, and WCAG 2.1 A/AA accessibility audits for the default page, open mobile disclosure, and dark theme. Theme tests emulate a light system color scheme so stored user choices and accessible toggle state are deterministic. Locally all five browser/device projects run; **CI runs the desktop Chromium and Mobile Chrome (Pixel 5) projects with one worker**.
 
 ## CI/CD
 
@@ -109,7 +109,11 @@ E2E specs in [tests/e2e/](tests/e2e/) cover homepage rendering, navigation, them
 - Use the semantic CSS-variable classes — never hardcode colors.
 - Unit-test coverage is gated at 80% in CI, so new components generally need a matching test under `tests/unit/` (mirroring the source path).
 - Shared profile facts (`name`, `siteUrl`, `description`, `bio`) live in [lib/profile.ts](lib/profile.ts) and feed metadata, the sitemap, and repeated page copy; experience, skills, email, and LinkedIn stay local to their owning sections. [public/manifest.json](public/manifest.json) remains static, with its duplicated profile fields kept aligned by [tests/unit/lib/profile.test.ts](tests/unit/lib/profile.test.ts).
-- Site metadata lives in the [app/layout.tsx](app/layout.tsx) `Metadata` export; the SEO Playwright spec asserts it.
+- Site metadata lives in the [app/layout.tsx](app/layout.tsx) `Metadata` export. The layout also
+  embeds the static, script-safe Person JSON-LD serialized by
+  [lib/structured-data.ts](lib/structured-data.ts); its professional facts must stay aligned with
+  the published page copy. Unit tests cover the serializer, and the SEO Playwright spec asserts
+  the rendered metadata and structured-data script.
 
 ## Agent configuration & docs automation
 
