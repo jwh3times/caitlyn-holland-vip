@@ -13,6 +13,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "sync:ai": "prettier --write \".agents/**/*.md\" && node scripts/sync-ai.mjs && prettier --write \".claude/skills/**/*.md\"",
+    "sync:main": "node scripts/sync-main.mjs",
     "test": "playwright test",
     "test:e2e": "playwright test",
     "test:unit": "vitest run",
