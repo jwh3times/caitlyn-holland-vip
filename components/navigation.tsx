@@ -53,7 +53,7 @@ export function Navigation() {
   }, [isMenuOpen]);
 
   return (
-    <nav className="sticky top-0 z-50 glass border-b border-gray-200/50 dark:border-gray-800/50">
+    <nav className="sticky top-0 z-50 glass border-b border-subtle-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
@@ -66,7 +66,7 @@ export function Navigation() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-label hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:scale-105"
+                className="text-label hover:text-accent px-3 py-2 rounded-md text-sm font-medium transition-all hover:scale-105"
               >
                 {link.label}
               </a>
@@ -80,7 +80,7 @@ export function Navigation() {
             <button
               ref={menuButtonRef}
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-label hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="inline-flex items-center justify-center p-2 rounded-md text-label hover:text-accent hover:bg-surface-hover transition-colors"
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -92,18 +92,14 @@ export function Navigation() {
 
         {/* Mobile Navigation Menu */}
         {isMenuOpen && (
-          <div
-            id="mobile-menu"
-            ref={menuRef}
-            className="md:hidden border-t border-gray-200/50 dark:border-gray-800/50"
-          >
+          <div id="mobile-menu" ref={menuRef} className="md:hidden border-t border-subtle-50">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
                   onClick={closeMenu}
-                  className="block text-label hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-3 rounded-md text-base font-medium transition-colors"
+                  className="block text-label hover:text-accent hover:bg-surface-hover px-3 py-3 rounded-md text-base font-medium transition-colors"
                 >
                   {link.label}
                 </a>

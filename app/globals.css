@@ -13,6 +13,13 @@
     --subheading-text: 222 47% 11%;
     --label-text: 222 47% 11%;
     --muted-text: 220 9% 44%;
+    --accent: var(--color-blue-600);
+    --accent-background: var(--color-blue-600);
+    --accent-border: var(--color-blue-500);
+    --accent-ring: var(--color-blue-400);
+    --badge-blue-text: var(--color-blue-700);
+    --border-subtle: var(--color-gray-200);
+    --surface-hover: var(--color-gray-100);
   }
 
   .dark {
@@ -25,6 +32,11 @@
     --subheading-text: 210 40% 98%;
     --label-text: 215 20% 65%;
     --muted-text: 218 11% 65%;
+    --accent: var(--color-blue-400);
+    --accent-border: var(--color-blue-400);
+    --badge-blue-text: var(--color-blue-300);
+    --border-subtle: var(--color-gray-800);
+    --surface-hover: var(--color-gray-800);
   }
 
   body {
@@ -37,6 +49,38 @@
       background-color 0.3s ease,
       color 0.3s ease;
   }
+}
+
+@utility text-accent {
+  color: var(--accent);
+}
+
+@utility bg-accent {
+  background-color: var(--accent-background);
+}
+
+@utility border-accent {
+  border-color: var(--accent-border);
+}
+
+@utility ring-accent {
+  --tw-ring-color: var(--accent-ring);
+}
+
+@utility text-badge-blue {
+  color: var(--badge-blue-text);
+}
+
+@utility border-subtle {
+  border-color: var(--border-subtle);
+}
+
+@utility border-subtle-50 {
+  border-color: color-mix(in oklab, var(--border-subtle) 50%, transparent);
+}
+
+@utility bg-surface-hover {
+  background-color: var(--surface-hover);
 }
 
 .hero-section {

@@ -28,4 +28,45 @@ describe("Tailwind webpack integration", () => {
   it("uses the class-based dark variant required by next-themes", () => {
     expect(read("app/globals.css")).toContain("@custom-variant dark (&:where(.dark, .dark *));");
   });
+
+  it("defines variant-compatible semantic accent and surface utilities", () => {
+    const css = read("app/globals.css");
+
+    for (const utility of [
+      "text-accent",
+      "bg-accent",
+      "border-accent",
+      "ring-accent",
+      "text-badge-blue",
+      "border-subtle",
+      "border-subtle-50",
+      "bg-surface-hover",
+    ]) {
+      expect(css).toContain(`@utility ${utility}`);
+    }
+
+    expect(css).toContain("--accent: var(--color-blue-600)");
+    expect(css).toContain("--accent: var(--color-blue-400)");
+    expect(css).toContain("--accent-background: var(--color-blue-600)");
+    expect(css).toContain("--accent-border: var(--color-blue-500)");
+    expect(css).toContain("--accent-border: var(--color-blue-400)");
+    expect(css).toContain("--accent-ring: var(--color-blue-400)");
+    expect(css).toContain("--border-subtle: var(--color-gray-200)");
+    expect(css).toContain("--border-subtle: var(--color-gray-800)");
+  });
+
+  it("keeps migrated call sites free of raw accent and border palette classes", () => {
+    const migratedSources = [
+      "app/layout.tsx",
+      "components/footer.tsx",
+      "components/navigation.tsx",
+      "components/sections/AboutSection.tsx",
+    ]
+      .map(read)
+      .join("\n");
+
+    expect(migratedSources).not.toMatch(
+      /(?:text|bg|border|ring)-(?:blue-(?:300|400|500|600|700)|gray-(?:100|200|800))/
+    );
+  });
 });
