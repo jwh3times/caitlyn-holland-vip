@@ -71,7 +71,7 @@ tests/        Test suites
 Two disjoint suites:
 
 - **Unit / component** — Vitest + Testing Library + jsdom in [`tests/unit/`](tests/unit/). An **80% coverage gate** (lines/functions/branches/statements) is enforced and blocks merges.
-- **End-to-end** — Playwright in [`tests/e2e/`](tests/e2e/), covering homepage rendering, navigation, theme toggle, mobile menu, SEO metadata, and WCAG 2.1 A/AA accessibility audits for the default page, open mobile disclosure, and dark theme. CI runs Chromium; locally all five browser/device projects run.
+- **End-to-end** — Playwright in [`tests/e2e/`](tests/e2e/), covering homepage rendering, navigation, theme toggle and persistence across reloads, mobile menu, SEO metadata, and WCAG 2.1 A/AA accessibility audits for the default page, open mobile disclosure, and dark theme. Theme tests use a deterministic light system color scheme and verify the restored theme and accessible toggle state. CI runs Chromium; locally all five browser/device projects run.
 
 ## Deployment
 

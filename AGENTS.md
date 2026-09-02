@@ -63,7 +63,7 @@ npx playwright test tests/e2e/homepage.spec.ts
 npx playwright test --project=chromium
 ```
 
-E2E specs in [tests/e2e/](tests/e2e/) cover homepage rendering, navigation, theme toggling, the mobile menu, SEO metadata, and WCAG 2.1 A/AA accessibility audits for the default page, open mobile disclosure, and dark theme. Locally all five browser/device projects run; **CI runs Chromium only**.
+E2E specs in [tests/e2e/](tests/e2e/) cover homepage rendering, navigation, theme toggling and persistence across reloads, the mobile menu, SEO metadata, and WCAG 2.1 A/AA accessibility audits for the default page, open mobile disclosure, and dark theme. Theme tests emulate a light system color scheme so stored user choices and accessible toggle state are deterministic. Locally all five browser/device projects run; **CI runs Chromium only**.
 
 ## CI/CD
 

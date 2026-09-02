@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.7.4] - 2026-09-02
+
+### Added
+
+- Added deterministic cross-browser end-to-end coverage proving that a user-selected theme and its accessible toggle state survive a page reload.
+
 ## [1.7.3] - 2026-09-02
 
 ### Added
