@@ -30,6 +30,18 @@
   ],
   "author": "Caitlyn Holland",
   "license": "MIT",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "26.x",
+      "onFail": "error"
+    },
+    "packageManager": {
+      "name": "npm",
+      "version": "11.x",
+      "onFail": "error"
+    }
+  },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

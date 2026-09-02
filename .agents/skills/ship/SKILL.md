@@ -25,8 +25,10 @@ ahead of yours. If that happens your entry is numbered for a version someone els
 and the guard may still be showing green from its earlier run. Re-run ship to renumber
 (step 6).
 
-All git / gh / script commands in this skill run in a bash/POSIX shell (git-bash on
-this Windows machine), not PowerShell.
+All git, GitHub CLI, and script commands in this skill run in a bash/POSIX shell,
+including git-bash on Windows. Where `gh` is unavailable, use the equivalent GitHub
+MCP operation; a missing CLI changes the interface, not the step or its completion
+criterion.
 
 ## Steps
 
@@ -37,7 +39,8 @@ this Windows machine), not PowerShell.
 - **Clean working tree.** Run `git status --porcelain`. If anything is uncommitted, stop
   and ask the user whether to commit it — do not commit silently. Once they answer, act
   on it and restart from this step, so the rest of the skill runs against a clean tree.
-- **`gh` authenticated.** `gh auth status` must succeed.
+- **GitHub authenticated.** If `gh` is installed, `gh auth status` must succeed. Otherwise,
+  verify GitHub MCP access to this repository. Stop only when neither interface is usable.
 
 ### 2. Backfill any undocumented released versions
 
@@ -262,6 +265,9 @@ staged was created during this ship run. If you skipped or overrode step 1, stag
 explicitly instead.
 
 ### 9. Push and open or update the PR
+
+The commands below are the primary `gh` form. Where `gh` is unavailable, use the
+equivalent GitHub MCP operations to find, create, or update the pull request.
 
 ```bash
 git push -u origin "$(git branch --show-current)"
