@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.10.0] - 2026-09-02
+
+### Added
+
+- Added dedicated Skills and Experience sections with desktop and mobile navigation anchors, improving the page's content hierarchy and scanability while preserving existing deep links.
+
 ## [1.9.0] - 2026-09-02
 
 ### Added

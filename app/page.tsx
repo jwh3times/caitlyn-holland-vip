@@ -1,6 +1,12 @@
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
-import { HeroSection, AboutSection, ContactSection } from "@/components/sections";
+import {
+  HeroSection,
+  AboutSection,
+  SkillsSection,
+  ExperienceSection,
+  ContactSection,
+} from "@/components/sections";
 
 export default function Home() {
   return (
@@ -10,6 +16,8 @@ export default function Home() {
       <main id="main-content" className="flex-grow" tabIndex={-1}>
         <HeroSection />
         <AboutSection />
+        <SkillsSection />
+        <ExperienceSection />
         <ContactSection />
       </main>
 

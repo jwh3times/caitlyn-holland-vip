@@ -2,7 +2,7 @@
 
 Personal website for Caitlyn Holland, live at **[caitlyn.holland.vip](https://caitlyn.holland.vip)**.
 
-A single-page site (Hero → About → Contact) built as a fully static export — no backend, no API routes, no server components at runtime. Everything is pre-rendered to HTML and served from the edge.
+A single-page site (Hero → About → Skills → Experience → Contact) built as a fully static export — no backend, no API routes, no server components at runtime. Everything is pre-rendered to HTML and served from the edge.
 
 ## Tech stack
 
@@ -62,7 +62,7 @@ The post-deploy smoke workflow remains the source of truth for deployed-header v
 ```text
 app/          App Router: layout, page, globals.css, error / loading / not-found
 components/   Navigation, Footer, mode-toggle, theme-provider
-  sections/   HeroSection, AboutSection, ContactSection
+  sections/   HeroSection, AboutSection, SkillsSection, ExperienceSection, ContactSection
   ui/         button and CTA link primitives
 lib/          shared profile facts, Person structured data, utils (cn helper)
 public/       _headers, manifest, robots, icons
