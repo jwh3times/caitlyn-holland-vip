@@ -28,6 +28,9 @@ Lint rules live in [.oxlintrc.json](.oxlintrc.json). Oxlint owns the core, TypeS
 Node version is pinned in [.nvmrc](.nvmrc) — run `nvm use` to match CI and Cloudflare. The pin
 is **Node 26**, currently a _Current_ (pre-LTS) release rather than Active LTS; `@types/node` is
 held on the matching `26.x` typings line so the compiler cannot promise APIs the runtime lacks.
+The `devEngines` policy in [package.json](package.json) rejects `npm install`, `npm ci`, and
+`npm run` before they start when the active Node/npm major does not match the pinned Node 26/npm
+11 toolchain; switch runtimes before dependency work rather than accepting lockfile churn.
 See [ADR-0007](docs/adr/0007-node-runtime-pin-tracks-types-node.md) — the pin and the typings move
 together, in either direction.
 
@@ -70,7 +73,8 @@ E2E specs in [tests/e2e/](tests/e2e/) cover homepage rendering, navigation, them
 - **Versioning — [.github/workflows/version.yml](.github/workflows/version.yml)** — on every merge (push) to `main`, tags the merge commit and creates a GitHub Release using standard SemVer `v<major>.<minor>.<build>` (e.g. `v1.2.7`). It computes the build number with [scripts/next-version.sh](scripts/next-version.sh) — the same script the `Changelog Version` guard and the `ship` skill use, so the tag minted always matches the version the changelog was written for. The `package.json` `version` is the major/minor/build floor; for an existing major/minor line the build increments from the highest matching tag, and a new line starts at the floor's own build — bump the floor to `1.2.3` with no `v1.2.*` tags and the first tag on that line is `v1.2.3`, not `v1.2.0`. The floor is a lower bound only, never a record of the current release, so it legitimately sits far behind the latest tag.
 - **Deployment — Cloudflare Pages** — builds directly from the repo on push to `main` (build command `npm run build`, output dir `out`, Node version from [.nvmrc](.nvmrc)). There is no deploy workflow in the repo — CI is a parallel quality gate, not a deploy gate. Its `Cloudflare Pages` check reports on the PR.
 - **Post-deploy smoke — [.github/workflows/smoke.yml](.github/workflows/smoke.yml)** — runs daily and on manual dispatch with no checkout or dependency install. It verifies the live homepage and content marker, the presence of six security headers, and HTTP 200 responses from the deployed sitemap and robots file.
-- **Required checks** — the `No Push to Main` ruleset requires seven: the six `ci.yml` jobs above plus `CodeQL`. `main` is protected; never push to it directly.
+- **Required checks** — the `No Push to Main` ruleset requires eight: the six `ci.yml` jobs above,
+  `CodeQL`, and `Dependency Review`. `main` is protected; never push to it directly.
 
 ## Architecture
 
@@ -165,7 +169,8 @@ computing the exact version via [scripts/next-version.sh](scripts/next-version.s
 [CHANGELOG.md](CHANGELOG.md) entry for it, running `npm run sync:ai`, running the fast checks
 (`format:check`, `lint`, `tsc --noEmit`), and pushing. Say "ship it" when a branch is ready for review. The
 `Changelog Version` CI job then verifies the changelog names the version the merge will actually
-mint.
+mint. Both `ship` and `end-session` use GitHub MCP operations when `gh` is unavailable, so remote
+agents follow the same workflow and completion criteria rather than skipping GitHub work.
 
 ## Agent skills
 

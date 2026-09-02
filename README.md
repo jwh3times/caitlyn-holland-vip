@@ -16,10 +16,13 @@ A single-page site (Hero → About → Contact) built as a fully static export �
 
 ## Getting started
 
-Requires **Node 26** (see [`.nvmrc`](.nvmrc)).
+Requires **Node 26** and **npm 11**. The repository's `devEngines` policy rejects npm commands
+under a different major-version toolchain so an older npm cannot silently rewrite lockfile
+metadata; see [`.nvmrc`](.nvmrc) and
+[`package.json`](package.json).
 
 ```bash
-nvm use          # or install Node 26
+nvm use          # or install Node 26 with npm 11
 npm ci           # install exact dependencies
 npm run dev      # start the dev server at http://localhost:3000
 ```

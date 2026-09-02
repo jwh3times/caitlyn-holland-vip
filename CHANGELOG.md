@@ -9,6 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.7.3] - 2026-09-02
+
+### Added
+
+- Added a public-safe repository-state assessment that reconciles the public and private companion documentation, Issues, milestones, and project-board state into an ordered backlog.
+
+### Fixed
+
+- Made the shipping and session-close workflows portable to remote environments by using GitHub MCP operations when the `gh` CLI is unavailable and removing machine-specific shell assumptions.
+- Prevented older remote Node/npm toolchains from silently rewriting lockfile metadata by enforcing Node 26/npm 11 before npm commands, with regression coverage binding the runtime, typings, and package-manager policy.
+- Added `AI Config Parity` to the active main-branch ruleset while preserving its seven existing required checks, and corrected the documented inventory.
+
+## [1.7.2] - 2026-09-01
+
+### Changed
+
+- Updated `lucide-react` from 1.35.0 to 1.37.0 (dependabot, `npm-minor-and-patch` group).
+
+## [1.7.1] - 2026-08-31
+
+### Changed
+
+- Updated `lucide-react` from 1.34.0 to 1.35.0, `next` and `@next/eslint-plugin-next` from 16.3.2 to 16.3.3, `@testing-library/react` from 16.3.2 to 16.3.3, `@types/node` from 26.3.0 to 26.4.0, and `@vitejs/plugin-react` from 6.1.0 to 6.1.1 (dependabot, `npm-minor-and-patch` group).
+
 ## [1.7.0] - 2026-08-30
 
 ### Added

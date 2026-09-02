@@ -22,8 +22,9 @@ This skill is the flush. Work steps 1–5 in order; each has a **"nothing to do"
 say so and move on rather than inventing work. It is a **read-and-record pass, not a
 refactor**: do not start new code changes here.
 
-Git / `gh` commands run in a bash/POSIX shell (git-bash on this Windows machine), not
-PowerShell.
+Git, GitHub CLI, and script commands run in a bash/POSIX shell, including git-bash on
+Windows. Where `gh` is unavailable, use the equivalent GitHub MCP operation; a missing
+CLI changes the interface, not the step or its completion criterion.
 
 ## 1. Take stock of the session
 
@@ -111,7 +112,9 @@ a PR.
 Conventions and the label vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`,
 `ready-for-human`, `wontfix`) are in
 [`docs/agents/issue-tracker.md`](../../../docs/agents/issue-tracker.md). Start from
-what's open:
+what's open. The commands below are the primary `gh` form; where `gh` is unavailable,
+use the equivalent GitHub MCP operations for listing, commenting, editing, and creating
+issues:
 
 ```bash
 gh issue list --state open --json number,title,labels \
@@ -215,7 +218,7 @@ and a branch `-d` refuses is telling you it still holds work.
 That list misses **squash- or rebase-merged branches**: their commits were rewritten on the way
 in, so git still calls them unmerged even though the change is on `main`. This repo merges PRs
 with merge commits today, so the case is rare — check the PR state before assuming a leftover
-branch is live:
+branch is live. Use the equivalent GitHub MCP pull-request lookup when `gh` is unavailable:
 
 ```bash
 for b in $(git branch --format='%(refname:short)' | grep -vx main); do
