@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.8.0] - 2026-09-02
+
+### Added
+
+- Added `npm run preview` for serving and inspecting the completed static export locally, with documentation distinguishing content preview from deployed Cloudflare-header verification.
+
+### Removed
+
+- Removed the misleading `npm start` command because `next start` cannot serve this project's static-export output.
+
 ## [1.7.7] - 2026-09-02
 
 ### Changed

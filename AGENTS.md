@@ -15,6 +15,7 @@ Tailwind v4 is loaded via `@import "tailwindcss"` in [app/globals.css](app/globa
 ```bash
 npm run dev          # Start dev server at http://localhost:3000
 npm run build        # Build for production (outputs to ./out as static export)
+npm run preview      # Serve a completed ./out export locally
 npm run lint         # Oxlint
 npm run lint:fix     # Oxlint safe autofixes
 npx tsc --noEmit     # TypeScript 7 native CLI type-check
@@ -22,6 +23,11 @@ npm run format       # Prettier write
 npm run format:check # Prettier check (the CI "Format Check" job runs this)
 npm run bootstrap:private # Clone the optional private companion into ignored private/
 ```
+
+Run `npm run build` before `npm run preview`; the preview command serves the completed static
+export rather than building it. It serves content only and does not apply Cloudflare's
+`public/_headers`; deployed-header validation remains the responsibility of the post-deploy smoke
+workflow.
 
 Lint rules live in [.oxlintrc.json](.oxlintrc.json). Oxlint owns the core, TypeScript, React, React Compiler, and React Hooks checks natively; one unsupported Next.js navigation rule still runs through `@next/eslint-plugin-next` (no native `nextjs/no-location-assign-relative-destination` rule exists yet — see [the Oxlint research](docs/research/oxlint-native-location-assign-rule.md)). ESLint is only a transitive compatibility dependency of that plugin, not the lint runner. Next.js 16.3 defaults production type-checking to the project-local TypeScript 7 CLI; keep `useTypeScriptCli` unset unless a future Next.js upgrade changes that default. See [the compatibility research](docs/research/nextjs-typescript-cli-stability.md).
 
