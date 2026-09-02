@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.7.6] - 2026-09-02
+
+### Changed
+
+- Centralized navigation, timeline, badge, skip-link, and footer accent styling behind variant-compatible semantic theme utilities while preserving the established light and dark palette values.
+
 ## [1.7.5] - 2026-09-02
 
 ### Changed

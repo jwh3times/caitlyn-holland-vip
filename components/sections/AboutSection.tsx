@@ -63,10 +63,7 @@ export function AboutSection() {
             </h3>
             <div className="space-y-6">
               {experience.map((role) => (
-                <div
-                  key={role.title}
-                  className="border-l-2 border-blue-500 dark:border-blue-400 pl-4"
-                >
+                <div key={role.title} className="border-l-2 border-accent pl-4">
                   <p className="font-semibold text-heading leading-snug">{role.title}</p>
                   <p className="text-sm text-label mb-1">{role.period}</p>
                   <p className="text-sm text-muted leading-relaxed">{role.description}</p>
@@ -79,7 +76,7 @@ export function AboutSection() {
           <div className="space-y-10">
             <div>
               <h3 className="text-xl font-bold text-heading mb-4">Education</h3>
-              <div className="border-l-2 border-blue-500 dark:border-blue-400 pl-4">
+              <div className="border-l-2 border-accent pl-4">
                 <p className="font-semibold text-heading">Meredith College</p>
                 <p className="text-sm text-muted">
                   B.S. in Mathematics &amp; B.A. in Computer Science
@@ -90,7 +87,7 @@ export function AboutSection() {
 
             <div>
               <h3 className="text-xl font-bold text-heading mb-4">Certifications</h3>
-              <div className="border-l-2 border-blue-500 dark:border-blue-400 pl-4">
+              <div className="border-l-2 border-accent pl-4">
                 <p className="font-semibold text-heading">Leadership Essentials</p>
                 <p className="text-sm text-muted">Cornell University</p>
               </div>
@@ -102,7 +99,7 @@ export function AboutSection() {
                 {skills.map((skill) => (
                   <span
                     key={skill}
-                    className="card-bg-blue text-blue-700 dark:text-blue-300 text-sm px-3 py-1 rounded-full"
+                    className="card-bg-blue text-badge-blue text-sm px-3 py-1 rounded-full"
                   >
                     {skill}
                   </span>

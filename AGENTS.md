@@ -91,7 +91,7 @@ E2E specs in [tests/e2e/](tests/e2e/) cover homepage rendering, navigation, them
   `.dark` class managed by `next-themes`; keep theme and utility configuration in CSS.
 - **Tailwind integration changes:** read the compatibility analysis, benchmark method, and recorded
   results in [docs/research/tailwind-webpack-nextjs-benchmark.md](docs/research/tailwind-webpack-nextjs-benchmark.md), then retain the regression coverage in [tests/unit/tailwind-config.test.ts](tests/unit/tailwind-config.test.ts).
-- Custom CSS utilities defined in `globals.css` for themed colors, gradients (`.gradient-text`, `.gradient-text-blue`), glassmorphism (`.glass`), section backgrounds (`.section-surface`, `.section-surface-contrast`), and an entrance animation (`.animate-fadeInUp`). A `@media (prefers-reduced-motion: reduce)` block neutralizes animations/transitions.
+- Custom CSS utilities defined in `globals.css` for semantic accents, borders, rings, badges, and hover surfaces (`text-accent`, `bg-accent`, `border-accent`, `ring-accent`, `text-badge-blue`, `border-subtle`, `border-subtle-50`, `bg-surface-hover`); themed colors; gradients (`.gradient-text`, `.gradient-text-blue`); glassmorphism (`.glass`); section backgrounds (`.section-surface`, `.section-surface-contrast`); and an entrance animation (`.animate-fadeInUp`). The semantic utilities retain the established Tailwind palette values across light and dark themes, so use them instead of raw palette classes. A `@media (prefers-reduced-motion: reduce)` block neutralizes animations/transitions.
 - Always compose class names with the `cn()` helper from [lib/utils.ts](lib/utils.ts) (`clsx` + `tailwind-merge`) — no raw string concatenation.
 - Icons: `lucide-react` for UI icons.
 

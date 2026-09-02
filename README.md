@@ -8,7 +8,7 @@ A single-page site (Hero → About → Contact) built as a fully static export �
 
 - **[Next.js 16](https://nextjs.org/)** (App Router, `output: "export"` static export)
 - **[React 19](https://react.dev/)** + **TypeScript 7** (`strict`)
-- **[Tailwind CSS v4](https://tailwindcss.com/)** with CSS custom-property theme tokens, compiled through Next.js/Turbopack by `@tailwindcss/webpack`
+- **[Tailwind CSS v4](https://tailwindcss.com/)** with semantic CSS custom-property theme tokens and utilities, compiled through Next.js/Turbopack by `@tailwindcss/webpack`
 - **[next-themes](https://github.com/pacocoursey/next-themes)** for dark/light mode (system default)
 - **[lucide-react](https://lucide.dev/)** icons
 - Tooling: **Oxlint** (native React/TypeScript rules plus one Next.js compatibility bridge) · **Prettier** · **Vitest** (unit) · **Playwright** (e2e)
