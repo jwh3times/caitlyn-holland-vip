@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.11.1] - 2026-09-02
+
+### Added
+
+- Added a public-safe assessment of the public and private repositories, their documentation,
+  GitHub issues, and project boards that confirms portability work is complete and prioritizes the
+  next available work.
+
 ## [1.11.0] - 2026-09-02
 
 ### Added
