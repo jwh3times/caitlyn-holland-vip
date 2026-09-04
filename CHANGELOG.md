@@ -9,6 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.11.4] - 2026-09-04
+
+### Changed
+
+- Made GitHub the single tracker for every work item across the public repository and its private
+  companion: issues carry the record, a private project board views them with Status, Gate, and
+  Area fields, and draft security advisories carry unpublished vulnerabilities. No Markdown file in
+  either repository is a backlog, a roadmap, or a status report any more, and `docs/research/` is
+  now explicitly for standing research that backs a live decision rather than assessments of what
+  work remains.
+
+### Removed
+
+- Removed the two superseded repository assessment reports from `docs/research/`. Both described
+  closed issues as open work, and the newer one duplicated the tracker it was assessing.
+
+## [1.11.3] - 2026-09-04
+
+### Changed
+
+- Bumped `next` and `@next/eslint-plugin-next` from 16.3.3 to 16.3.4 in the grouped minor/patch
+  dependabot update.
+
+## [1.11.2] - 2026-09-03
+
+### Changed
+
+- Bumped `lucide-react` from 1.37.0 to 1.38.0 in the grouped minor/patch dependabot update.
+
 ## [1.11.1] - 2026-09-02
 
 ### Added

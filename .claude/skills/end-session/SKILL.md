@@ -81,24 +81,19 @@ them, but they are versioned and pushed on their own remote. An edit here is a r
 belongs to that repository, not a free-floating note. Never stage anything below `private/` with
 the outer repo.
 
-Its layout is deliberately thin:
-
-| Path                | What it holds                                                                                                           |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `private/README.md` | The information boundary and workflow — the only document there describing live practice                                |
-| `private/archive/`  | Dated historical documents (a repository analysis, a dependency audit, the pre-Issues action index), each banner-marked |
+Its layout is deliberately thin — `private/README.md` holds the information boundary and the
+workflow, and it is the only document there. The repository carries no backlog, no audit, and no
+notes directory; its historical documents were deleted on 2026-09-04 when GitHub became the single
+tracker.
 
 What that means for a close-out:
 
 - **A new durable fact about private practice** → `private/README.md`.
-- **An archived document whose status changed** → amend its status banner or per-item table.
-  These are dated snapshots: never rewrite their findings as if the original review had said
-  something else, and never add a new open item to them. A genuinely new audit is a new dated file
-  under `archive/`.
 - **A new follow-up of any size** → an issue, not a document. Public-safe work goes to this repo's
   issues; private non-vulnerability work to the companion repository's issues; a genuine
   unpublished vulnerability to a draft security advisory here. Every live action has exactly one
-  canonical issue, so "park it in a private markdown list" is not an option any more.
+  canonical issue, so "park it in a private markdown list" is not an option, and neither is
+  starting a new document that would need editing to stay true.
 - **Commit and push separately.** `git -C private status --short` must be clean when you finish,
   and its commits go only to its own remote.
 
@@ -135,6 +130,9 @@ For each issue this session touched:
 - **Found a new, self-contained follow-up** → `gh issue create` with a heredoc body, and
   label it `needs-triage`. One issue per follow-up. If it is too speculative to specify, say so in
   the close-out summary rather than parking it in a document.
+- **Created an issue** → add it to the board and set Status, Gate, and Area
+  (`gh project item-add 9 --owner jwh3times --url <issue-url>`; the field mechanics are in the
+  issue-tracker doc). An issue that is not on the board is invisible to the next session.
 
 Remember GitHub shares one number space across issues and PRs, so resolve a bare `#42`
 with `gh pr view 42` before falling back to `gh issue view 42`.
