@@ -205,10 +205,18 @@ a finished branch still goes through `ship`. Source:
 
 ### Issue tracker
 
-Issues live in this repo's GitHub Issues, worked through the `gh` CLI (or the GitHub MCP tools where
-`gh` is unavailable). Conventions, the triage label vocabulary (`needs-triage`, `needs-info`,
-`ready-for-agent`, `ready-for-human`, `wontfix`), and the sub-issue/blocking mechanics are all in
-`docs/agents/issue-tracker.md`.
+GitHub is the only tracker: this repo's Issues, the private
+[project board](https://github.com/users/jwh3times/projects/9) that views them and the private
+companion's issues together, and draft security advisories for unpublished vulnerabilities. Each
+live action has exactly one canonical issue, and **no Markdown file in either repository is a
+backlog, a roadmap, or a status report** — anything that would need editing to stay true as work
+progresses belongs on an issue. `docs/research/` is for standing research that backs a live
+decision, never an assessment of what work remains.
+
+Work them through the `gh` CLI (or the GitHub MCP tools where `gh` is unavailable). The
+destination table, the board's Status/Gate/Area fields, the conventions, the triage label vocabulary
+(`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`), and the
+sub-issue/blocking mechanics are all in `docs/agents/issue-tracker.md`.
 
 ### Domain docs
 
