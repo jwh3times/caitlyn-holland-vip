@@ -25,6 +25,12 @@ No unreleased changes.
 - Removed the two superseded repository assessment reports from `docs/research/`. Both described
   closed issues as open work, and the newer one duplicated the tracker it was assessing.
 
+## [1.11.2] - 2026-09-03
+
+### Changed
+
+- Bumped `lucide-react` from 1.37.0 to 1.38.0 in the grouped minor/patch dependabot update.
+
 ## [1.11.1] - 2026-09-02
 
 ### Added
