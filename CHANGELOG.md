@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.11.8] - 2026-09-06
+
+### Security
+
+- Strengthened deployed-site smoke checks to validate security-header values on the homepage
+  and missing-page response, alongside their status/content and sitemap/robots availability.
+- Run smoke checks after the official Cloudflare Pages check succeeds for each pushed `main`
+  commit, retaining daily and manual checks and failing on deployment failure or timeout.
+- Added regression coverage for weak policies, response failures, bounded retries, and deployment
+  check identity so header presence alone cannot pass the monitor.
+
 ## [1.11.7] - 2026-09-06
 
 ### Added
