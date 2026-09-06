@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.11.5] - 2026-09-05
+
+### Security
+
+- Pinned external GitHub Actions to verified full commit SHAs, retaining readable version
+  comments and existing Dependabot updates so CI and release jobs use reviewed revisions.
+- Locked the local preview server to `serve` 14.2.6 and invoke its installed executable, so
+  `npm run preview` no longer resolves and installs an unlocked package through `npx`.
+
 ## [1.11.4] - 2026-09-04
 
 ### Changed

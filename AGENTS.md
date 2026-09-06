@@ -26,9 +26,9 @@ npm run sync:main    # Update clean public/private checkouts to origin/main (mis
 ```
 
 Run `npm run build` before `npm run preview`; the preview command serves the completed static
-export rather than building it. It serves content only and does not apply Cloudflare's
-`public/_headers`; deployed-header validation remains the responsibility of the post-deploy smoke
-workflow.
+export using the local `serve` dependency installed by `npm ci` from the lockfile. It serves
+content only and does not apply Cloudflare's `public/_headers`; deployed-header validation
+remains the responsibility of the post-deploy smoke workflow.
 
 Lint rules live in [.oxlintrc.json](.oxlintrc.json). Oxlint owns the core, TypeScript, React, React Compiler, and React Hooks checks natively; one unsupported Next.js navigation rule still runs through `@next/eslint-plugin-next` (no native `nextjs/no-location-assign-relative-destination` rule exists yet — see [the Oxlint research](docs/research/oxlint-native-location-assign-rule.md)). ESLint is only a transitive compatibility dependency of that plugin, not the lint runner. Next.js 16.3 defaults production type-checking to the project-local TypeScript 7 CLI; keep `useTypeScriptCli` unset unless a future Next.js upgrade changes that default. See [the compatibility research](docs/research/nextjs-typescript-cli-stability.md).
 
@@ -73,6 +73,9 @@ npx playwright test --project=chromium
 E2E specs in [tests/e2e/](tests/e2e/) cover homepage rendering, navigation, theme toggling and persistence across reloads, the mobile menu, SEO metadata and Person JSON-LD, and WCAG 2.1 A/AA accessibility audits for the default page, open mobile disclosure, and dark theme. Theme tests emulate a light system color scheme so stored user choices and accessible toggle state are deterministic. Locally all five browser/device projects run; **CI runs the desktop Chromium and Mobile Chrome (Pixel 5) projects with one worker**.
 
 ## CI/CD
+
+Keep workflow actions pinned to full commit SHAs with version comments. The GitHub Actions
+entry in [.github/dependabot.yml](.github/dependabot.yml) maintains their updates.
 
 - **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with **six** jobs: `Format Check` (`npm run format:check`), `Coverage` (`npm run coverage` — **fails below the 80% thresholds** and uploads a `coverage-report` artifact), `Build & Lint` (`npm run lint` + `npm run build`, uploads the `static-site` artifact), `Playwright Tests` (needs Build & Lint; installs Chromium and runs the desktop Chromium and Mobile Chrome projects with one CI worker), `AI Config Parity` (runs `npm run sync:ai` and fails if `.codex`, `.claude/skills`, or `.agents` is dirty afterwards — it covers the **sources** too, because the sync reformats them, so an unformatted `.agents/` edit fails here rather than in `Format Check`), and `Changelog Version` (PRs only; computes the next version via [scripts/next-version.sh](scripts/next-version.sh) and fails if [CHANGELOG.md](CHANGELOG.md) has no `## [x.y.z]` section for it — dependabot PRs are exempt). **A PR fails CI if formatting drifts — run `npm run format` before committing.**
 - **Dependency review — [.github/workflows/dependency-review.yml](.github/workflows/dependency-review.yml)** — on PRs, fails on vulnerable dependency changes.

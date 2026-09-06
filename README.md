@@ -54,7 +54,8 @@ npx playwright test tests/e2e/homepage.spec.ts
 npx playwright test --project=chromium
 ```
 
-To inspect the production export locally, run `npm run build` and then `npm run preview`. The
+To inspect the production export locally, run `npm run build` and then `npm run preview`.
+Preview uses the local `serve` dependency installed by `npm ci` from the lockfile. The
 preview server serves static content only; it does not apply Cloudflare's [`public/_headers`](public/_headers).
 The post-deploy smoke workflow remains the source of truth for deployed-header validation.
 
