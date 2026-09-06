@@ -106,8 +106,23 @@ with no shell dependency, so it behaves the same everywhere.
 
    The bootstrap refuses to overwrite a non-empty non-Git directory, validates that the clone URL
    is a credential-free GitHub HTTPS or SSH URL, and verifies that GitHub reports the repository as
-   `PRIVATE` before cloning. It exits successfully without changing an existing `private/.git`
-   checkout, so it is safe to run when creating each new worktree.
+   `PRIVATE` before cloning. Its ordinary mode leaves an existing `private/.git` checkout alone
+   without verifying it. During recovery, verify an existing companion explicitly:
+
+   ```bash
+   npm run bootstrap:private -- --verify --op-reference "op://<vault>/<bootstrap-item>/private_repository_url"
+   ```
+
+   This command also works in PowerShell. Alternatively, supply `--verify --url
+"<private-repository-url>"` using the independently retrieved locator. Do not use the existing
+   checkout's own remote as the expected identity; that would only compare it with itself.
+
+   Verification checks a real worktree rooted at `private/`, exactly one safe fetch and push URL
+   for `origin` matching the intended GitHub repository, and current `PRIVATE` visibility. Linked
+   worktrees with a `.git` file are supported. The command does not clone, repair remotes, change
+   branches, or modify files/index content; dirty worktrees can be verified too. Unexpected
+   contents, missing access, or mismatched identity/visibility fail verification. Investigate the
+   mismatch using the trusted locator before making any repair.
 
    Never add `private/` as a submodule or stage its contents in the outer repository.
 

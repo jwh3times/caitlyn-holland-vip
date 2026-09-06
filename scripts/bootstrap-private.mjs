@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, realpathSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
@@ -9,12 +9,17 @@ const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 function parseArguments(args, env) {
   const options = {
     explicitUrl: null,
+    verify: false,
     reference: env.CAITLYN_HOLLAND_PRIVATE_REPOSITORY_REFERENCE ?? null,
     serviceAccountReference: env.CAITLYN_HOLLAND_OP_SERVICE_ACCOUNT_REFERENCE ?? null,
   };
 
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
+    if (argument === "--verify") {
+      options.verify = true;
+      continue;
+    }
     if (!["--url", "--op-reference", "--service-account-reference"].includes(argument)) {
       throw new Error(`Unknown argument: ${argument}`);
     }
@@ -72,7 +77,7 @@ function commandSucceeded(result) {
  */
 
 /**
- * Install the private companion checkout beneath a repository root.
+ * Install the private companion checkout, or explicitly verify it without modification.
  *
  * @param {object} [options]
  * @param {string} [options.root]
@@ -89,17 +94,38 @@ export function bootstrapPrivate({
   log = console.log,
 } = {}) {
   const privateRoot = join(root, "private");
-  if (existsSync(join(privateRoot, ".git"))) {
-    log("The optional private companion is already installed.");
+  const { explicitUrl, reference, serviceAccountReference, verify } = parseArguments(args, env);
+  if (!verify && existsSync(join(privateRoot, ".git"))) {
+    log(
+      "The optional private companion already exists; use --verify to check its identity and visibility."
+    );
     return { status: "already-installed", privateRoot };
   }
-  if (existsSync(privateRoot) && readdirSync(privateRoot).length > 0) {
+  if (verify) {
+    if (!existsSync(join(privateRoot, ".git"))) {
+      throw new Error(
+        "Verification requires an existing private/.git worktree; nothing was changed."
+      );
+    }
+    const top = run("git", ["-C", privateRoot, "rev-parse", "--show-toplevel"], {
+      encoding: "utf8",
+      windowsHide: true,
+    });
+    if (
+      !commandSucceeded(top) ||
+      !existsSync(top.stdout.trim()) ||
+      realpathSync(top.stdout.trim()) !== realpathSync(privateRoot)
+    ) {
+      throw new Error(
+        "The private directory is not the root of a valid Git worktree; nothing was changed."
+      );
+    }
+  } else if (existsSync(privateRoot) && readdirSync(privateRoot).length > 0) {
     throw new Error(
       "Refusing to overwrite the non-empty private directory because it is not a Git worktree."
     );
   }
 
-  const { explicitUrl, reference, serviceAccountReference } = parseArguments(args, env);
   let cloneUrl = explicitUrl;
   if (!cloneUrl) {
     if (!reference) {
@@ -131,13 +157,47 @@ export function bootstrapPrivate({
   }
 
   const repository = githubRepository(cloneUrl);
+  if (verify) {
+    for (const direction of [[], ["--push"]]) {
+      const remote = run(
+        "git",
+        ["-C", privateRoot, "remote", "get-url", ...direction, "--all", "origin"],
+        {
+          encoding: "utf8",
+          windowsHide: true,
+        }
+      );
+      let matches = false;
+      try {
+        matches =
+          Boolean(commandSucceeded(remote)) &&
+          githubRepository(remote.stdout.trim()).toLowerCase() === repository.toLowerCase();
+      } catch {
+        // Never echo a remote: malformed URLs can contain credentials.
+      }
+      if (!matches) {
+        throw new Error(
+          "The companion origin must have exactly one safe fetch and push URL matching the intended repository; nothing was changed."
+        );
+      }
+    }
+  }
   const visibility = run(
     "gh",
     ["repo", "view", repository, "--json", "visibility", "--jq", ".visibility"],
     { encoding: "utf8", windowsHide: true }
   );
   if (!commandSucceeded(visibility) || visibility.stdout.trim() !== "PRIVATE") {
-    throw new Error("Refusing to clone because GitHub did not report the companion as PRIVATE.");
+    throw new Error(
+      "GitHub did not report the intended companion as PRIVATE; nothing was changed."
+    );
+  }
+
+  if (verify) {
+    log(
+      "Verified the existing companion worktree, origin, and PRIVATE visibility; nothing was changed."
+    );
+    return { status: "verified", privateRoot };
   }
 
   const clone = run("git", ["clone", cloneUrl, privateRoot], {

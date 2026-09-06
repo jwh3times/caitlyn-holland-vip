@@ -111,6 +111,10 @@ Authorized maintainers setting up another computer should follow the public-safe
 [private workspace recovery runbook](docs/agents/private-workspace.md). Repository locators and
 credentials are retrieved from 1Password and are not recorded here.
 
+During recovery, use `npm run bootstrap:private -- --verify` with the trusted URL or 1Password
+locator described in the runbook to check an existing companion without changing it. Ordinary
+bootstrap leaves existing checkouts alone without verifying their identity or visibility.
+
 ## License
 
 [MIT](LICENSE) © Caitlyn Holland
