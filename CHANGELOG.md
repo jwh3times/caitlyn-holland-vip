@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.11.6] - 2026-09-06
+
+### Security
+
+- Ignore environment files and common credential exports at root and nested paths, with explicit
+  exceptions for sanitized environment templates and regression tests for the ignore behavior.
+- Document local secret scanning before publication, including staged changes, repository history,
+  and separate wiki checkouts, with clear limits on manual scanning and ignore-rule protection.
+
 ## [1.11.5] - 2026-09-05
 
 ### Security
