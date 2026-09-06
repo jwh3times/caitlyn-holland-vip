@@ -7,7 +7,7 @@
     "build": "next build",
     "benchmark:tailwind": "node benchmarks/tailwind-integration.mjs",
     "bootstrap:private": "node scripts/bootstrap-private.mjs",
-    "preview": "npx serve out",
+    "preview": "serve out",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",
     "format": "prettier --write .",
@@ -69,6 +69,7 @@
     "jsdom": "^30.0.1",
     "oxlint": "^1.80.0",
     "prettier": "^3.9.6",
+    "serve": "14.2.6",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
     "vitest": "^4.1.9"
