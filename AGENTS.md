@@ -202,6 +202,8 @@ sanitized template exceptions, manual local scanning, and the limits of ignore r
 
 When handling private working documents, ignored project knowledge, credential recovery, or
 cross-device setup, read [docs/agents/private-workspace.md](docs/agents/private-workspace.md).
+For recovery verification, use `npm run bootstrap:private -- --verify` with an independently
+retrieved locator as described there; ordinary bootstrap leaves existing checkouts unverified.
 `private/` is a separate private Git repository; keep its contents out of public outputs and the
 outer repository's history. The reasoning is [ADR-0010](docs/adr/0010-private-workspace-is-a-separate-repository.md).
 

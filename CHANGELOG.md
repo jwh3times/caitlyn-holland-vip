@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.0] - 2026-09-06
+
+### Added
+
+- Added `bootstrap:private -- --verify` to check an existing companion's worktree root, fetch
+  and push destinations, and current PRIVATE visibility against an independently supplied locator.
+  Verification leaves files, staged content, branches, and remotes untouched, including linked
+  and dirty worktrees, and refuses missing, unsafe, or mismatched repositories.
+
+### Changed
+
+- Clarified that ordinary bootstrap leaves existing checkouts unverified, and documented the
+  explicit verification path for cross-device recovery.
+
 ## [1.11.8] - 2026-09-06
 
 ### Security
