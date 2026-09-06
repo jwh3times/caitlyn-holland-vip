@@ -86,7 +86,12 @@ Two disjoint suites:
 
 ## Deployment
 
-Cloudflare Pages builds from the repo on every push to `main` (build command `npm run build`, output dir `out`, Node version from `.nvmrc`). Security headers are served from [`public/_headers`](public/_headers); its CSP intentionally allows inline scripts for `next-themes`' pre-paint theme script because a static export cannot issue per-request nonces. CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validates format, coverage, build/lint, e2e, and AI-tool config parity on every PR, plus (PR-only) that [`CHANGELOG.md`](CHANGELOG.md) names the version the merge will mint. CodeQL scans JavaScript/TypeScript and Actions through GitHub's default setup, which is why there is no `codeql.yml` in the repo. A separate [post-deploy smoke workflow](.github/workflows/smoke.yml) checks the live homepage, the presence of six security headers, and HTTP 200 responses from the sitemap and robots file daily and on manual dispatch.
+Cloudflare Pages builds from the repo on every push to `main` (build command `npm run build`, output dir `out`, Node version from `.nvmrc`). Security headers are served from [`public/_headers`](public/_headers); its CSP intentionally allows inline scripts for `next-themes`' pre-paint theme script because a static export cannot issue per-request nonces. CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validates format, coverage, build/lint, e2e, and AI-tool config parity on every PR, plus (PR-only) that [`CHANGELOG.md`](CHANGELOG.md) names the version the merge will mint. CodeQL scans JavaScript/TypeScript and Actions through GitHub's default setup, which is why there is no `codeql.yml` in the repo. A separate [post-deploy smoke workflow](.github/workflows/smoke.yml) validates the live homepage and a missing-page response, significant security-header values on both, and HTTP 200 responses from sitemap and robots. It runs daily and manually, and on pushes to `main` after the official Cloudflare Pages check succeeds for that commit. This monitors a completed deployment; it does not gate deployment.
+
+The deployed-site checker can also be run directly with `node scripts/smoke.mjs`; it uses only
+Node built-ins and requires no dependency install. When changing header policy or deployment
+monitoring, keep the acceptance rules and fixtures in
+[`tests/unit/scripts/smoke.test.ts`](tests/unit/scripts/smoke.test.ts) aligned.
 
 Every merge to `main` is also tagged and published as a GitHub Release by
 [`version.yml`](.github/workflows/version.yml) using `v<major>.<minor>.<build>`
