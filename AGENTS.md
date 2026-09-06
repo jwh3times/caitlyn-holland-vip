@@ -188,6 +188,12 @@ agents follow the same workflow and completion criteria rather than skipping Git
 
 ## Agent skills
 
+### Secret-file prevention
+
+Before publishing changes, adding environment templates, or reviewing repositories for
+credentials, follow [docs/agents/secret-prevention.md](docs/agents/secret-prevention.md). It covers
+sanitized template exceptions, manual local scanning, and the limits of ignore rules.
+
 ### Private workspace and cross-device recovery
 
 When handling private working documents, ignored project knowledge, credential recovery, or
