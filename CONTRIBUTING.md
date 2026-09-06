@@ -48,5 +48,9 @@ Follow the [Getting started](./README.md#getting-started) section of the README
 
 ## Security issues
 
+Before publishing, review staged files for credentials and run the
+[local secret-scanning checks](docs/agents/secret-prevention.md). Environment templates must use
+sanitized placeholders; ignore rules do not protect secrets copied into tracked files.
+
 Do not report vulnerabilities in public issues — see [SECURITY.md](./SECURITY.md)
 for the private disclosure process.
