@@ -59,6 +59,10 @@ Preview uses the local `serve` dependency installed by `npm ci` from the lockfil
 preview server serves static content only; it does not apply Cloudflare's [`public/_headers`](public/_headers).
 The post-deploy smoke workflow remains the source of truth for deployed-header validation.
 
+To evaluate a hash-based script policy against a completed export, run `npm run benchmark:csp`
+after building. It tests Chromium, Firefox, and WebKit with candidate HTTP headers without changing
+production policy; see the [CSP measurements and hosting constraints](docs/research/static-export-hash-csp.md).
+
 ## Project structure
 
 ```text

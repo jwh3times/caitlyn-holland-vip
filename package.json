@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "benchmark:tailwind": "node benchmarks/tailwind-integration.mjs",
+    "benchmark:csp": "node benchmarks/hash-csp.mjs",
     "bootstrap:private": "node scripts/bootstrap-private.mjs",
     "preview": "serve out",
     "lint": "oxlint .",

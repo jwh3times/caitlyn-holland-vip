@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.11.7] - 2026-09-06
+
+### Added
+
+- Added `npm run benchmark:csp` to evaluate build-generated script hashes against the static
+  export in browsers, checking hydration, themes, mobile navigation, fallback pages, and blocked
+  unapproved scripts without changing production headers.
+- Recorded CSP platform constraints and local browser measurements, including the remaining
+  WebKit and hosted-preview validation needed before adopting the candidate policy.
+
 ## [1.11.6] - 2026-09-06
 
 ### Security

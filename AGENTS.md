@@ -92,6 +92,10 @@ entry in [.github/dependabot.yml](.github/dependabot.yml) maintains their update
 
 **Static-export constraints:** no API routes or `getServerSideProps`; images are `unoptimized` ([next.config.ts](next.config.ts)); all routes must be known at build time; no runtime environment variables. Security headers live only in [public/\_headers](public/_headers) — `next.config.ts` has no `headers()` block (ignored by static export anyway). The CSP intentionally permits inline scripts because `next-themes` injects a pre-paint theme script; this static deployment cannot provide a per-request nonce.
 
+Before changing the script CSP, read the [hash-policy evaluation](docs/research/static-export-hash-csp.md)
+for measured browser compatibility and Cloudflare acceptance criteria. `npm run benchmark:csp`
+evaluates a completed export locally with candidate HTTP headers; it does not change production policy.
+
 **Theme system:** `next-themes` drives dark/light mode behind the public interface in [components/theme-provider.tsx](components/theme-provider.tsx). Its children-only `Theme` provider owns the fixed `next-themes` configuration and wraps the app in [app/layout.tsx](app/layout.tsx) (with `suppressHydrationWarning` on `<html>`); theme-aware controls consume `useThemeToggle()` instead of importing `next-themes` directly. The hook centralizes the `useSyncExternalStore` mounted guard and returns `{ mounted, isDark, toggle }` — consumers must render server-matching fallback UI until `mounted` is true because `next-themes` reads `localStorage` client-side only. CSS variables in [app/globals.css](app/globals.css) define all color tokens for both themes — use the utility classes (`text-heading`, `text-muted`, `text-label`, `card-bg-blue`, etc.) rather than raw Tailwind color classes so dark mode works automatically.
 
 **Styling conventions:**
