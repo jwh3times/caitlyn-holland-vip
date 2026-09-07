@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.1] - 2026-09-07
+
+### Changed
+
+- Required agent completion, shipping, session close-out, and handoff workflows to record
+  remaining human actions as private follow-up issues on the shared board, with linked,
+  step-by-step private wiki instructions and verified publication. Updated docs-updater and
+  ticket-writing guidance to reuse existing records and apply the standing authorization.
+- Clarified the private wiki exception to the issue-only tracking policy and session close-out
+  commit/push restrictions, while keeping issue status canonical and credentials out of Git.
+
 ## [1.12.0] - 2026-09-06
 
 ### Added

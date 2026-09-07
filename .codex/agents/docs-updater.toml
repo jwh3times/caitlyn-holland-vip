@@ -63,8 +63,22 @@ Verify against the actual code by searching the repo (grep/glob):
 - Do not add aspirational features to `AGENTS.md` — it describes what is implemented.
 - Do not restate code that is self-evident; document constraints and conventions only.
 
+## Human follow-ups
+
+For the completed work in the assigned diff, check for required human actions and follow
+`docs/agents/issue-tracker.md#required-human-follow-ups-from-completed-agent-work`. Ensure each has
+a canonical private issue labelled `ready-for-human` on the shared private board and linked,
+published step-by-step instructions in the private wiki `human-todo` page. This task includes
+those private records as well as the public docs you maintain. Coordinate ownership with the
+parent agent so only one agent publishes each follow-up; if the parent owns publication, return
+the prepared steps and missing records explicitly. The parent must verify publication before
+reporting completion. Keep private details out of public AGENTS.md and README.md.
+
 ## Output
 
 When done, report which files you changed (one line each), which you checked and found
 current, and any drift you couldn't resolve from code alone.
+
+Report the human follow-up issue/wiki links and any publication blocker, or state that no required
+human actions remain in the reviewed scope.
 '''

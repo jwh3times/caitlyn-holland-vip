@@ -213,9 +213,9 @@ outer repository's history. The reasoning is [ADR-0010](docs/adr/0010-private-wo
 the per-project memory files, the private companion repository at `private/`, and GitHub issues, then
 tidies the local workspace — files and artifacts, and, once the checkout is clean, the branches
 themselves: returning to an up-to-date `main` (a `--ff-only` pull) and deleting local branches
-already merged there, leaving pushed-but-unmerged branches alone. It records and tidies only —
-it never commits, pushes, or opens a PR, and that fast-forward is the only history it moves, so
-a finished branch still goes through `ship`. Source:
+already merged there, leaving pushed-but-unmerged branches alone. It records and tidies only: ordinary repository commits and PRs still go through `ship`.
+Publishing required human follow-up instructions to the separate private wiki is its explicit
+commit/push exception, alongside the local `main` fast-forward. Source:
 [.agents/skills/end-session/SKILL.md](.agents/skills/end-session/SKILL.md).
 
 ### Issue tracker
@@ -225,13 +225,21 @@ GitHub is the only tracker: this repo's Issues, the private
 companion's issues together, and draft security advisories for unpublished vulnerabilities. Each
 live action has exactly one canonical issue, and **no Markdown file in either repository is a
 backlog, a roadmap, or a status report** — anything that would need editing to stay true as work
-progresses belongs on an issue. `docs/research/` is for standing research that backs a live
+progresses belongs on an issue. The private wiki `human-todo` page is the required exception for linked
+human follow-up instructions; issue status remains canonical. `docs/research/` is for standing research that backs a live
 decision, never an assessment of what work remains.
 
 Work them through the `gh` CLI (or the GitHub MCP tools where `gh` is unavailable). The
 destination table, the board's Status/Gate/Area fields, the conventions, the triage label vocabulary
 (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`), and the
 sub-issue/blocking mechanics are all in `docs/agents/issue-tracker.md`.
+
+**Required human follow-ups:** Before reporting completed work, shipping, or ending a session,
+record every remaining required human action as a private companion follow-up issue, label it
+`ready-for-human`, add it to the shared private board, and publish linked step-by-step instructions
+in the private wiki `human-todo` page. Follow the creation, deduplication, confidentiality, and
+publication criteria in [the human follow-up procedure](docs/agents/issue-tracker.md#required-human-follow-ups-from-completed-agent-work).
+This is standing authorization to record and publish those follow-ups without another confirmation.
 
 ### Domain docs
 

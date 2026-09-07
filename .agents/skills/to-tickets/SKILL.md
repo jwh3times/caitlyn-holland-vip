@@ -10,6 +10,11 @@ Break a plan, spec, or conversation into a set of **tickets** — tracer-bullet 
 
 The issue tracker conventions and the triage label vocabulary are configured in `docs/agents/issue-tracker.md`. Read it if it was not provided to you.
 
+For required human actions arising from already completed agent work, use the human follow-up
+procedure in `docs/agents/issue-tracker.md#required-human-follow-ups-from-completed-agent-work`
+instead of the new-work quiz and `ready-for-agent` default below. Those private follow-up issues,
+board entries, and step-by-step wiki instructions have standing publication authorization.
+
 ## Process
 
 ### 1. Gather context
