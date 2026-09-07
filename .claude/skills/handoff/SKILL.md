@@ -16,3 +16,9 @@ Do not duplicate content already captured in other artifacts (specs, plans, ADRs
 Redact any sensitive information, such as API keys, passwords, or personally identifiable information.
 
 If the user passed arguments, treat them as a description of what the next session will focus on and tailor the doc accordingly.
+
+Before handing off completed work, apply the required human follow-up procedure in
+`docs/agents/issue-tracker.md#required-human-follow-ups-from-completed-agent-work`.
+Publish or reuse the private issue, board entry, and step-by-step private wiki instructions;
+carry their links and any publication blocker into the handoff. A temporary handoff document
+alone does not record a required human action.
