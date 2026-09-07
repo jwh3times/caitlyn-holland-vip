@@ -34,6 +34,7 @@ Before writing anything, list — for yourself — what this session actually pr
   were not already written down (candidates for memory or `private/`).
 - **Decisions the user made**, and the reasoning (candidates for memory or an ADR).
 - **Work completed or abandoned** that an issue is tracking (candidates for issue updates).
+- **Required human actions** left by completed work, including existing follow-up issue/wiki links.
 - **Loose ends** — anything found but deliberately not fixed.
 - **Files created** that were never meant to be permanent.
 
@@ -79,21 +80,21 @@ them, but they are versioned and pushed on their own remote. An edit here is a r
 belongs to that repository, not a free-floating note. Never stage anything below `private/` with
 the outer repo.
 
-Its layout is deliberately thin — `private/README.md` holds the information boundary and the
-workflow, and it is the only document there. The repository carries no backlog, no audit, and no
-notes directory; its historical documents were deleted on 2026-09-04 when GitHub became the single
-tracker.
+Inspect the current private repository and wiki layout rather than assuming README.md is the
+only document. Durable private procedures belong there; live action status belongs in issues.
+The private wiki `human-todo` page supplies the required linked instructions for human follow-ups.
 
 What that means for a close-out:
 
 - **A new durable fact about private practice** → `private/README.md`.
-- **A new follow-up of any size** → an issue, not a document. Public-safe work goes to this repo's
+- **A required human follow-up** → apply the procedure in step 4, including private issue and wiki publication.
+- **Other new follow-ups of any size** → an issue, not a document. Public-safe work goes to this repo's
   issues; private non-vulnerability work to the companion repository's issues; a genuine
   unpublished vulnerability to a draft security advisory here. Every live action has exactly one
   canonical issue, so "park it in a private markdown list" is not an option, and neither is
   starting a new document that would need editing to stay true.
-- **Commit and push separately.** `git -C private status --short` must be clean when you finish,
-  and its commits go only to its own remote.
+- **Ordinary private repository edits** → leave them for `/ship` and report any uncommitted work.
+  Wiki publication for required human follow-ups is the specific commit/push exception in step 4.
 
 **Know the boundary.** If what you learned is a fact about the public codebase, it belongs in
 tracked public docs, and those are edited on a branch: `AGENTS.md` / `README.md` (owned by the
@@ -116,6 +117,13 @@ gh issue list --state open --json number,title,labels \
   --jq '.[] | "\(.number) \(.title) [\([.labels[].name] | join(","))]"'
 ```
 
+First apply the [required human follow-up procedure](../../../docs/agents/issue-tracker.md#required-human-follow-ups-from-completed-agent-work)
+to all completed session work. Create or reuse private follow-up issues, label them
+`ready-for-human`, put them on the shared private board, and publish reciprocal links and numbered
+instructions in the private wiki `human-todo` page. Verify publication before treating this step
+as complete; report access blockers and keep prepared private text safe. This standing
+authorization needs no additional confirmation and permits committing/pushing the wiki changes.
+
 For each issue this session touched:
 
 - **Learned something material** → `gh issue comment <n> --body "..."`. Comment when the
@@ -126,7 +134,7 @@ For each issue this session touched:
   and always with `--comment` explaining why.
 - **Triage state moved** → adjust labels with `gh issue edit <n> --add-label / --remove-label`.
 - **Found a new, self-contained follow-up** → `gh issue create` with a heredoc body, and
-  label it `needs-triage`. One issue per follow-up. If it is too speculative to specify, say so in
+  label it `needs-triage` unless the required human follow-up procedure applies. One issue per follow-up. If it is too speculative to specify, say so in
   the close-out summary rather than parking it in a document.
 - **Created an issue** → add it to the board and set Status, Gate, and Area
   (`gh project item-add 9 --owner jwh3times --url <issue-url>`; the field mechanics are in the
@@ -135,8 +143,9 @@ For each issue this session touched:
 Remember GitHub shares one number space across issues and PRs, so resolve a bare `#42`
 with `gh pr view 42` before falling back to `gh issue view 42`.
 
-**Ask before creating or closing anything.** Comments and labels are cheap and reversible;
-new issues and closures are the user's call — list what you propose and wait for a yes.
+**Use existing authorization.** Required human follow-up creation and wiki publication are
+pre-authorized above. For other issue creation or closure, ask only when the session has not
+already authorized it.
 
 ## 5. Clean the local workspace
 
@@ -234,7 +243,7 @@ deleting it strands the review. Only a branch whose work is on `main` goes.
 ## 6. Report
 
 Give the user a short close-out: memories written or updated, `private/` edits, issues
-commented / labelled / proposed, files deleted, branches deleted, and which branch the
+commented / labelled / created, human follow-up issue/wiki links (or that none remain), files deleted, branches deleted, and which branch the
 checkout is sitting on. Note anything left dirty on purpose. If a branch is still unshipped,
 say so and name `/ship` as the next step. State plainly what you deliberately left alone.
 
@@ -243,8 +252,10 @@ say so and name `/ship` as the next step. State plainly what you deliberately le
 - Write code, fix bugs, or refactor. This skill records and tidies; new work is a new session.
 - Delete, revert, or stash uncommitted work — ask instead.
 - Run `git clean -x` or any bulk delete of ignored files.
-- Commit, push, or merge. Fast-forwarding local `main` onto `origin/main` in step 5 is the
-  one exception; anything needing a PR goes through `/ship`.
+- Commit, push, or merge ordinary repository changes. Publishing required human follow-up wiki
+  documentation in step 4 and fast-forwarding local `main` in step 5 are the exceptions;
+  anything needing a PR goes through `/ship`.
 - Force-delete a branch (`git branch -D`), or delete one whose PR has not merged.
-- Close issues or open new ones without the user's go-ahead.
+- Create or close issues without session or standing authorization; required human follow-ups
+  have standing authorization under step 4.
 - Record in memory or `private/` what `AGENTS.md`, the ADRs, or git history already say.

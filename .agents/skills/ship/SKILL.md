@@ -180,6 +180,13 @@ skill edit under `.agents/skills/` or agent edit under `.claude/agents/` on this
 run `npm run sync:ai` and commit the regenerated files in step 8 so the
 `AI Config Parity` gate stays green.
 
+Before continuing, apply the [required human follow-up procedure](../../../docs/agents/issue-tracker.md#required-human-follow-ups-from-completed-agent-work)
+to the completed branch work. Coordinate publication ownership with `docs-updater`; verify every
+required human action has a private issue on the board and published step-by-step wiki
+instructions. Reuse existing records on re-ship. Include their private links only in the user
+report or private records, keeping public PRs free of private details. Report access failures
+explicitly instead of treating documentation as complete.
+
 ### 6. Write the CHANGELOG entry
 
 Insert a section for the target version immediately below `## [Unreleased]`:
@@ -290,7 +297,7 @@ gh pr list --head "$(git branch --show-current)" --state open --json number -q '
 
 ### 10. Report
 
-Give the user: the PR URL; the major/minor/build evaluation and its rationale; the
+Give the user: the human follow-up issue/wiki links (or that none remain); the PR URL; the major/minor/build evaluation and its rationale; the
 version this merge will mint; and anything the fast checks or backfill surfaced. State
 plainly that the build, coverage (80% gate), and Playwright suites run in CI, not locally
 — do not imply the branch is verified beyond the fast checks.
