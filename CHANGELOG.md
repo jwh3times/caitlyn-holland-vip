@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.10] - 2026-09-09
+
+### Changed
+
+- Classify research findings before publishing them. The research skill previously saved every
+  output to the public `docs/research/` directory and left confidentiality to whatever
+  surrounding guidance the caller had read. It now routes by content: public-safe findings to
+  `docs/research/`, findings that would leak private material to the companion repository,
+  unpublished vulnerability details to a draft security advisory rather than any research file,
+  and credentials to neither repository. The step links the canonical destination policy and the
+  secret-prevention scan instead of restating them.
+
 ## [1.12.9] - 2026-09-09
 
 ### Changed
