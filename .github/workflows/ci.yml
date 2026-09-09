@@ -88,11 +88,11 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Install Chromium for generated CSP validation
+      - name: Install Chromium for compatibility CSP validation
         run: npx playwright install --with-deps chromium
 
-      - name: Validate the generated export CSP in Chromium
-        run: npm run benchmark:csp -- --browsers=chromium
+      - name: Validate the accepted compatibility CSP in Chromium
+        run: npm run benchmark:csp -- --policy=compatibility --browsers=chromium
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

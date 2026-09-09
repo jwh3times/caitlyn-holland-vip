@@ -14,6 +14,13 @@ export function validateSecurityHeaders(headers) {
     if (!valid) errors.push(message);
   };
   check(
+    !(headers.get("cache-control") ?? "")
+      .toLowerCase()
+      .split(",")
+      .some((part) => part.trim() === "no-transform"),
+    "Cache-Control must not suppress Cloudflare transformations"
+  );
+  check(
     headers.get("x-content-type-options")?.trim().toLowerCase() === "nosniff",
     "X-Content-Type-Options must be nosniff"
   );
@@ -59,10 +66,11 @@ export function validateSecurityHeaders(headers) {
   }
   const expected = {
     "default-src": ["'self'"],
+    "script-src": ["'self'", "'unsafe-inline'", "https://static.cloudflareinsights.com"],
     "style-src": ["'self'", "'unsafe-inline'"],
     "img-src": ["'self'", "data:"],
     "font-src": ["'self'"],
-    "connect-src": ["'self'"],
+    "connect-src": ["'self'", "https://cloudflareinsights.com"],
     "frame-ancestors": ["'self'"],
     "base-uri": ["'self'"],
     "form-action": ["'self'"],
@@ -71,27 +79,13 @@ export function validateSecurityHeaders(headers) {
   for (const [name, allowed] of Object.entries(expected)) {
     const sources = directives.get(name);
     check(
-      sources?.length > 0 && sources.every((value) => allowed.includes(value)),
+      sources?.length === allowed.length && allowed.every((value) => sources.includes(value)),
       `CSP ${name} is missing or exceeds the allowed sources`
     );
   }
-  for (const name of ["script-src", "script-src-elem", "script-src-attr"]) {
-    if (name !== "script-src" && !directives.has(name)) continue;
-    const sources = directives.get(name);
-    check(
-      sources?.length > 0 &&
-        sources.every(
-          (value) =>
-            ["'self'", "'none'"].includes(value) ||
-            /^'sha(256|384|512)-[A-Za-z0-9+/]+=*'$/.test(value)
-        ),
-      `CSP ${name} contains missing or unapproved script sources`
-    );
+  for (const name of ["script-src-elem", "script-src-attr"]) {
+    check(!directives.has(name), `CSP ${name} overrides the accepted compatibility policy`);
   }
-  check(
-    directives.get("script-src")?.some((value) => /^'sha256-[A-Za-z0-9+/]{43}='$/.test(value)),
-    "CSP script-src must contain generated SHA-256 hashes"
-  );
   for (const name of ["style-src-elem", "style-src-attr"]) {
     if (!directives.has(name)) continue;
     check(

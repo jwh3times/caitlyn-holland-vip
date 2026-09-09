@@ -56,14 +56,15 @@ npx playwright test --project=chromium
 
 To inspect the production export locally, run `npm run build` and then `npm run preview`.
 Preview uses the local `serve` dependency installed by `npm ci` from the lockfile. The
-preview server serves static content only; it does not apply Cloudflare's generated `out/_headers`.
+preview server serves static content only; it does not apply Cloudflare's `out/_headers`.
 The post-deploy smoke workflow remains the source of truth for deployed-header validation.
 
-To validate the generated script policy, run `npm run benchmark:csp` after building. It independently
-checks the generated headers against the finished HTML and tests Chromium, Firefox, and WebKit.
-Use `-- --url=<url>` to test a hosted deployment of the same routes; expected hashes are recomputed
-from hosted HTML to account for Cloudflare's independent build. Use `-- --preview-output=<directory>`
-to prepare a separate preview export. See the [CSP measurements and hosting constraints](docs/research/static-export-hash-csp.md).
+To validate the accepted script policy, run `npm run benchmark:csp -- --policy=compatibility`
+after building. It checks the policy and exercises Chromium, Firefox, and WebKit, including
+the React error boundary and recovery. Add `--url=<url>` to test a hosted deployment of the same
+routes. Without `--policy=compatibility`, the benchmark evaluates the experimental hash policy;
+`--preview-output=<directory>` prepares a separate hash-policy preview export. See the
+[CSP measurements and hosting constraints](docs/research/static-export-hash-csp.md).
 
 ## Project structure
 
@@ -88,9 +89,18 @@ Two disjoint suites:
 
 ## Deployment
 
-Cloudflare Pages builds from the repo on every push to `main` (build command `npm run build`, output dir `out`, Node version from `.nvmrc`). After Next.js exports the site, [`scripts/generate-csp.mjs`](scripts/generate-csp.mjs) hashes inline scripts across all exported HTML, including 404 pages, and completes `out/_headers` from the [`public/_headers`](public/_headers) template. The CSP allows those scripts by SHA-256 hash; inline styles remain allowed for theme transitions. The build fails if any header-file line exceeds Cloudflare's 2,000-character limit. Deploy the completed `out` directory, since the source template alone blocks inline scripts.
+Cloudflare Pages builds from the repo on every push to `main` (build command `npm run build`, output dir `out`, Node version from `.nvmrc`). Next.js copies [`public/_headers`](public/_headers) unchanged into the export. [`scripts/validate-export-headers.mjs`](scripts/validate-export-headers.mjs) then checks the exact copy, homepage and 404 exports, security baseline, and Cloudflare's 2,000-character header-line limit without rewriting headers.
 
-CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validates format, coverage, build/lint, the generated CSP in Chromium, e2e, and AI-tool config parity on every PR, plus (PR-only) that [`CHANGELOG.md`](CHANGELOG.md) names the version the merge will mint. CodeQL scans JavaScript/TypeScript and Actions through GitHub's default setup, which is why there is no `codeql.yml` in the repo. A separate [post-deploy smoke workflow](.github/workflows/smoke.yml) validates the live homepage and a missing-page response, significant security-header values on both (including required script hashes and rejection of script `unsafe-inline`), and HTTP 200 responses from sitemap and robots. It runs daily and manually, and on pushes to `main` after the official Cloudflare Pages check succeeds for that commit. This monitors a completed deployment; it does not gate deployment.
+The script CSP accepts `unsafe-inline` as a documented compatibility tradeoff for Next.js
+bootstrap/hydration, the next-themes pre-paint initializer, and Cloudflare JavaScript Detections,
+aligned with holland.vip's accepted policy. Cloudflare Analytics script and connection origins
+are explicitly allowed. This does not prevent arbitrary inline-script execution; static export
+does not make the exception inevitable. Hashes remain a researched alternative, but changing
+edge scripts conflict with them. Stronger script policy should be revisited for both sites
+together. The policy retains base-URI, object, form, and framing restrictions; inline styles
+remain allowed for theme transitions.
+
+CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validates format, coverage, build/lint, the accepted compatibility CSP in Chromium, e2e, and AI-tool config parity on every PR, plus (PR-only) that [`CHANGELOG.md`](CHANGELOG.md) names the version the merge will mint. CodeQL scans JavaScript/TypeScript and Actions through GitHub's default setup, which is why there is no `codeql.yml` in the repo. A separate [post-deploy smoke workflow](.github/workflows/smoke.yml) validates the live homepage and a missing-page response, significant security-header values on both (including the accepted compatibility policy), and HTTP 200 responses from sitemap and robots. Its dependent browser job installs dependencies, builds the route inventory, and checks the hosted policy and error recovery in Chromium. It runs daily and manually, and on pushes to `main` after the official Cloudflare Pages check succeeds for that commit. This monitors a completed deployment; it does not gate deployment.
 
 The deployed-site checker can also be run directly with `node scripts/smoke.mjs`; it uses only
 Node built-ins and requires no dependency install. When changing header policy or deployment

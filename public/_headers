@@ -1,6 +1,11 @@
-# Security header template for Cloudflare Pages.
-# npm run build hashes all exported inline scripts and completes out/_headers.
-# Do not deploy the template alone: it intentionally blocks inline scripts.
+# Security headers for Cloudflare Pages; copied unchanged into the static export.
+# script-src 'unsafe-inline' is an accepted CSP limitation: it permits Next.js
+# bootstrap/hydration, the next-themes pre-paint initializer, and Cloudflare JSD.
+# This compatibility tradeoff matches holland.vip's accepted static-site policy.
+# No exploitable XSS was found in the review; this is not injection prevention.
+# Build-generated hashes are feasible, but conflict with changing edge scripts.
+# Revisit both sites together if a stronger script policy is desired; a runtime
+# server or per-request nonce is not justified solely by generic CSP advice.
 # Inline styles remain allowed for next-themes transition handling.
 /*
   X-DNS-Prefetch-Control: on
@@ -9,4 +14,4 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://cloudflareinsights.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'

@@ -41,3 +41,25 @@ jobs:
         env:
           SITE_URL: https://caitlyn.holland.vip
         run: node scripts/smoke.mjs
+
+  browser:
+    name: Live-site CSP Browser
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: ".nvmrc"
+          cache: npm
+
+      - run: npm ci
+      # Supplies the route inventory; the accepted policy comes from public/_headers.
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Verify custom-domain CSP and error recovery
+        run: npm run benchmark:csp -- --policy=compatibility --browsers=chromium --url=https://caitlyn.holland.vip
