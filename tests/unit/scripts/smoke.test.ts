@@ -10,21 +10,23 @@ const headerEntries = readFileSync("public/_headers", "utf8")
     const colon = line.indexOf(":");
     return [line.slice(0, colon).trim(), line.slice(colon + 1).trim()];
   });
-const policy = () => {
-  const headers = new Headers(headerEntries);
-  headers.set(
-    "content-security-policy",
-    headers
-      .get("content-security-policy")!
-      .replace("script-src 'self'", `script-src 'self' 'sha256-${"a".repeat(43)}='`)
-  );
-  return headers;
-};
+const policy = () => new Headers(headerEntries);
 
 describe("deployed security policy", () => {
   it("accepts the production baseline", () => {
     expect(validateSecurityHeaders(policy())).toEqual([]);
   });
+
+  it.each(["no-transform", "public, max-age=0, no-transform", "no-store, NO-TRANSFORM"])(
+    "rejects HTML that suppresses edge transformations: %s",
+    (value) => {
+      const headers = policy();
+      headers.set("cache-control", value);
+      expect(validateSecurityHeaders(headers)).toContain(
+        "Cache-Control must not suppress Cloudflare transformations"
+      );
+    }
+  );
 
   it.each([
     ["x-content-type-options", ""],
@@ -89,15 +91,10 @@ describe("deployed security policy", () => {
     expect(validateSecurityHeaders(headers).length).toBeGreaterThan(0);
   });
 
-  it("accepts reordered directives and stricter script/permission controls", () => {
+  it("accepts reordered directives and stricter framing/permission controls", () => {
     const headers = policy();
-    const csp = headers
-      .get("content-security-policy")!
-      .replace("script-src 'self' 'unsafe-inline'", `script-src 'self' 'sha256-${"a".repeat(43)}='`)
-      .split(";")
-      .reverse()
-      .join(";");
-    headers.set("content-security-policy", `${csp}; script-src-attr 'none'; style-src-attr 'none'`);
+    const csp = headers.get("content-security-policy")!.split(";").reverse().join(";");
+    headers.set("content-security-policy", `${csp}; style-src-attr 'none'`);
     headers.set("x-frame-options", "DENY");
     headers.set("referrer-policy", "no-referrer");
     headers.set("permissions-policy", "geolocation=(), microphone = (), camera = ()");
@@ -107,16 +104,30 @@ describe("deployed security policy", () => {
   it("rejects missing headers", () => {
     expect(validateSecurityHeaders(new Headers()).length).toBeGreaterThan(6);
   });
-  it("rejects the unhashed template and the old inline policy", () => {
-    const headers = new Headers(headerEntries);
-    expect(validateSecurityHeaders(headers)).toContain(
-      "CSP script-src must contain generated SHA-256 hashes"
+  it.each([
+    "'unsafe-inline'",
+    "https://static.cloudflareinsights.com",
+    "https://cloudflareinsights.com",
+  ])("requires compatibility source %s", (source) => {
+    const headers = policy();
+    headers.set(
+      "content-security-policy",
+      headers.get("content-security-policy")!.replace(source, "")
     );
+    expect(validateSecurityHeaders(headers).length).toBeGreaterThan(0);
+  });
+  it.each([
+    `'sha256-${"a".repeat(43)}='`,
+    "'nonce-test'",
+    "'unsafe-eval'",
+    "https://unapproved.example",
+  ])("rejects script source %s, including hashes/nonces that disable unsafe-inline", (source) => {
+    const headers = policy();
     headers.set(
       "content-security-policy",
       headers
         .get("content-security-policy")!
-        .replace("script-src 'self'", "script-src 'self' 'unsafe-inline'")
+        .replace("script-src 'self'", `script-src 'self' ${source}`)
     );
     expect(validateSecurityHeaders(headers).length).toBeGreaterThan(0);
   });

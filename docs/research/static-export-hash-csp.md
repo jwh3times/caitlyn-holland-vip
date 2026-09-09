@@ -162,12 +162,52 @@ not evidence that the candidate requires a broader script policy.
 
 ## Deployment decision
 
+### Accepted compatibility policy (2026-09-09)
+
+The owner selected the documented compatibility exception rather than hash-policy
+adoption or suppression of Cloudflare features. This aligns with the owner-supplied
+2026-09-05 holland.vip review guidance: describe inline allowance as an accepted
+limitation with its actual rationale; retain browser-validated `base-uri`,
+`object-src 'none'`, and `form-action`; evaluate generated hashes if stronger script
+restrictions are desired; do not add a runtime server or per-request nonces solely
+to satisfy generic CSP advice. Caitlyn's H-03 finding was Low; no exploitable XSS
+was found in that review. That finding is not a guarantee against future XSS.
+Decision and implementation evidence belong on
+[issue #175](https://github.com/jwh3times/caitlyn-holland-vip/issues/175).
+
+The accepted shape matches the [root site's script and connection allowlists](https://github.com/jwh3times/holland-vip/blob/main/public/_headers):
+`script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com` and
+`connect-src 'self' https://cloudflareinsights.com`. The same-origin connection
+source covers `/cdn-cgi/rum`. Other Caitlyn directives remain unchanged, including
+`base-uri 'self'`, `object-src 'none'`, `form-action 'self'`, and framing controls.
+The rationale is compatibility with Next.js bootstrap/hydration, the pre-paint
+theme initializer, Cloudflare JSD, and Analytics. Static export does not force
+this exception: the hash experiments establish feasibility and its tradeoffs.
+Unapproved inline scripts can execute under this accepted policy.
+
+Production builds copy `public/_headers` unchanged and run the read-only
+[export validator](../../scripts/validate-export-headers.mjs). CI and smoke verify
+the explicit compatibility policy, reject stale hashes/nonces and script overrides,
+and retain the non-conflicting hardening checks. The browser evaluator's
+`--policy=compatibility` mode checks this policy and explicitly demonstrates the
+inline-execution limitation. Its default remains a research-only hash candidate,
+computed from completed HTML without changing the production export.
+
+The [Cache Response Rule experiment](cloudflare-hostname-script-exclusion.md#cache-response-rule-measured-outcome-2026-09-09)
+passed but was declined for production because it suppresses JSD/Analytics and
+potentially other transformations. It remains durable research. No Cloudflare
+zone, DNS, WAF, bot, or Analytics configuration change is part of this policy
+decision. A future Analytics opt-out is a separate Web Analytics decision, not a
+CSP block. Revisit hash-based CSP for both sites together if the root adopts it.
+
+### Historical hash integration (PR #190)
+
 A global hash union is locally feasible for this export and avoids route-specific
 header matching. This evaluation supports a post-export generation design with a
 hard failure if the final line exceeds 2,000 characters. Hashes must be regenerated
 from every final build rather than copied from this measurement.
 
-`npm run build` now runs [scripts/generate-csp.mjs](../../scripts/generate-csp.mjs)
+PR #190 made `npm run build` run [scripts/generate-csp.mjs at that release](https://github.com/jwh3times/caitlyn-holland-vip/blob/e13b4fb82e087cd98d57c35b70123f2748a9cfdb/scripts/generate-csp.mjs)
 after Next.js finishes. It hashes browser-visible inline script text across all HTML
 documents, requires the homepage and 404 export, and writes a global union into
 `out/_headers`. The source `public/_headers` is a restrictive template with only
@@ -176,9 +216,9 @@ including a complete header line longer than 2,000 characters, fail the build be
 the generated header is written. Unit tests cover exact hashing, deduplication,
 nested/error pages, changed content, invalid templates, and oversized policies.
 
-CI independently recomputes the expected hashes in the browser evaluator and compares
-them with `out/_headers` before exercising Chromium. The deployed smoke checker rejects
-the old broad inline-script policy and requires SHA-256 sources. The integrated build
+That integration's CI independently recomputed hashes in the browser evaluator and compared
+them with `out/_headers` before exercising Chromium. Its smoke checker rejected
+the broad inline-script policy and required SHA-256 sources. The integrated build
 was uploaded to [preview befd705a](https://befd705a.caitlyn-holland-vip.pages.dev) for
 the three-browser acceptance run. Revert the integration and template changes together
 through a reviewed PR if a future deployment requires restoring the compatibility policy;
@@ -188,3 +228,59 @@ only for the production custom domain. These checks are deployment acceptance
 conditions, not evidence of an existing exploitable vulnerability. The canonical action remains
 [issue #175](https://github.com/jwh3times/caitlyn-holland-vip/issues/175); this document
 records the design evidence rather than maintaining a parallel task list.
+
+## Response-transformation isolation experiment (2026-09-08)
+
+Cloudflare documents that an origin `Cache-Control: no-transform` directive prevents
+[JavaScript Detections injection](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/javascript-detections/)
+and [automatic Web Analytics injection](https://developers.cloudflare.com/web-analytics/faq/).
+It also [disables edge compression of uncompressed origin responses](https://developers.cloudflare.com/cache/concepts/cache-control/).
+This is a per-response alternative to changing the zone-wide bot setting, not proof
+that every Pages response preserves the directive.
+
+The Pages preview experiment retained `public, max-age=0, must-revalidate` and added
+`no-transform`. The homepage had no analytics injection. Applying it to every resource
+increased measured homepage-plus-referenced-script/style transfer from 210,748 bytes
+(Brotli control) to 697,098 bytes (uncompressed candidate). These are cold HTTP payload
+measurements, not Core Web Vitals or identical-build benchmarks.
+
+Generating exact exceptions for emitted `/_next/static/` JavaScript, CSS, and fonts
+restored asset compression: the refined preview transferred 243,748 bytes in that
+measurement. HTML remained uncompressed. Each exception detaches Cache-Control and
+restores `public, max-age=0, must-revalidate`; it does not change CSP. Exact exported
+paths avoid exempting unknown asset-like paths that serve fallback HTML. The generator
+checks the 100-rule limit as well as every 2,000-character line limit.
+
+The refined [preview 6b7ede93](https://6b7ede93.caitlyn-holland-vip.pages.dev) **failed
+fallback-header acceptance**: `/missing-csp-fixture` and missing paths under
+`/_next/static/` returned HTTP 404 with `Cache-Control: no-store`, without
+`no-transform`. Direct `/404` returned HTTP 200 with the directive. An additional
+[explicit-detachment/path-override probe](https://5e4873f0.caitlyn-holland-vip.pages.dev)
+still returned only `no-store` on unknown-path 404s. The browser evaluator and smoke
+checker rejected that missing protection. A passing pages.dev browser check cannot
+establish whether custom-domain JSD is injected before or after that header replacement.
+Do not infer that this experiment is production-ready or that a live rollout fixes 404s.
+
+The evaluator now also exercises the actual `app/error.tsx` boundary and its reset
+button by fault-injecting the external navigation chunk inside an isolated browser
+context. It leaves HTML, CSP, inline scripts, and the error component unchanged; no
+crash route or test switch is shipped. The probe requires the error heading, clears
+the render fault, clicks Try Again, and checks recovered theme controls and CSP
+violations. Chromium, Firefox, and WebKit passed in both themes on the initial
+[preview 9b4a4f83](https://9b4a4f83.caitlyn-holland-vip.pages.dev), before the stronger
+fallback-header assertions exposed the limitation above. That result demonstrates
+error-boundary compatibility, not completed transformation-isolation acceptance.
+
+A custom-domain preview can distinguish the remaining serving-layer behavior without
+moving production traffic. Cloudflare documents the required project binding and
+proxied branch CNAME in its [custom branch alias guide](https://developers.cloudflare.com/pages/how-to/custom-branch-aliases/).
+Any such test must verify injection on a control deployment first: a hostname without
+the production feature configuration cannot establish compatibility.
+
+The subsequent owner-provisioned custom-domain test directly reproduced the failure
+on the candidate: Chromium, Firefox, and WebKit had no unexpected CSP violations on
+the homepage, but `/missing-csp-fixture` returned 404 with `Cache-Control: no-store`
+and blocked both injected JSD inline code and the analytics beacon. A missing asset-like
+URL also blocked the beacon. This disproves candidate compatibility; a separate control
+rollout is unnecessary to reject a candidate already exhibiting the actual failure.
+The no-transform-only Pages approach is not an accepted remediation for this deployment.

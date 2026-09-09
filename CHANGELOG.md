@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.7] - 2026-09-09
+
+### Security
+
+- Restore the accepted inline-script compatibility policy and Cloudflare Analytics allowlist,
+  preserving the other CSP hardening directives. Document the limitation and its rationale;
+  no Cloudflare configuration changes are included.
+- Validate unchanged exported headers instead of generating production script hashes. Align
+  smoke checks and CI with the compatibility policy while retaining the experimental hash
+  benchmark and hostname-isolation research.
+
+### Added
+
+- Hosted Chromium CSP monitoring and real React error-boundary recovery checks.
+
+## [1.12.6] - 2026-09-09
+
+### Changed
+
+- Updated the transitive baseline-browser-mapping dependency from 2.10.43 to 2.11.21
+  through Dependabot.
+
 ## [1.12.5] - 2026-09-08
 
 ### Security

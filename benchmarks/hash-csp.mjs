@@ -5,6 +5,8 @@ import { createServer } from "node:http";
 import { extname, join, resolve } from "node:path";
 import { chromium, firefox, webkit, expect } from "@playwright/test";
 import { JSDOM } from "jsdom";
+import { checkErrorBoundary } from "./csp-error-boundary.mjs";
+import { validateExportHeaders } from "../scripts/validate-export-headers.mjs";
 
 // Evaluation only: production headers are never modified.
 const root = resolve(import.meta.dirname, "..");
@@ -53,46 +55,54 @@ const sourceHeaders = await readFile(join(root, "public/_headers"), "utf8");
 const original = sourceHeaders
   .split(/\r?\n/)
   .find((line) => line.includes("Content-Security-Policy:"));
-assert(original?.includes("script-src 'self';"), "Unexpected source policy");
+await validateExportHeaders(exportRoot);
+const scriptDirective = "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com";
+assert(original?.includes(scriptDirective), "Unexpected source policy");
 let candidate = original.replace(
-  "script-src 'self'",
+  scriptDirective,
   `script-src 'self' ${[...hashes].sort().join(" ")}`
 );
-assert(candidate.length <= 2000, `Candidate header exceeds Pages limit: ${candidate.length}`);
 const compatibility = option("policy") === "compatibility";
-assert.equal(
-  files.get("/_headers")?.toString("utf8"),
-  sourceHeaders.replace(original, candidate),
-  "Exported CSP does not match the finished HTML; run npm run build"
-);
+if (!compatibility) {
+  assert(candidate.length <= 2000, `Candidate header exceeds Pages limit: ${candidate.length}`);
+}
 if (remoteURL) {
   assert(!previewOutput, "Hosted validation cannot prepare a local preview");
-  // Cloudflare builds the commit independently, so emitted script hashes can
-  // differ from a local build. Derive the hosted expectation from its HTML;
-  // never trust the response's allowlist as the source of expected hashes.
-  hashes.clear();
-  for (const { route } of inventory) {
-    const response = await fetch(`${remoteURL}${route}`);
-    assert.equal(response.status, 200, `Cannot inventory hosted document ${route}`);
-    const dom = new JSDOM(await response.text());
-    for (const script of dom.window.document.querySelectorAll("script:not([src])")) {
-      hashes.add(`'sha256-${createHash("sha256").update(script.textContent).digest("base64")}'`);
+  if (!compatibility) {
+    // Cloudflare builds the commit independently, so emitted script hashes can
+    // differ from a local build. Derive the hosted expectation from its HTML;
+    // never trust the response's allowlist as the source of expected hashes.
+    hashes.clear();
+    for (const { route } of inventory) {
+      const response = await fetch(`${remoteURL}${route}`);
+      assert.equal(response.status, 200, `Cannot inventory hosted document ${route}`);
+      const dom = new JSDOM(await response.text());
+      for (const script of dom.window.document.querySelectorAll("script:not([src])")) {
+        hashes.add(`'sha256-${createHash("sha256").update(script.textContent).digest("base64")}'`);
+      }
+      dom.window.close();
     }
-    dom.window.close();
+    candidate = original.replace(
+      scriptDirective,
+      `script-src 'self' ${[...hashes].sort().join(" ")}`
+    );
+    assert(candidate.length <= 2000, `Hosted header exceeds Pages limit: ${candidate.length}`);
   }
-  candidate = original.replace(
-    "script-src 'self'",
-    `script-src 'self' ${[...hashes].sort().join(" ")}`
-  );
-  assert(candidate.length <= 2000, `Hosted header exceeds Pages limit: ${candidate.length}`);
+  for (const path of [
+    "/missing-csp-fixture",
+    "/_next/static/missing-csp-fixture.js",
+    "/nested/missing-csp-fixture.html",
+  ]) {
+    const response = await fetch(new URL(path, remoteURL));
+    assert.equal(response.status, 404, `Missing path ${path}`);
+    assert.equal(
+      response.headers.get("content-security-policy"),
+      (compatibility ? original : candidate).split("Content-Security-Policy:")[1].trim()
+    );
+    assert.match(await response.text(), /Page Not Found/);
+  }
 }
-const policy = (
-  compatibility
-    ? original.replace("script-src 'self'", "script-src 'self' 'unsafe-inline'")
-    : candidate
-)
-  .split("Content-Security-Policy:")[1]
-  .trim();
+const policy = (compatibility ? original : candidate).split("Content-Security-Policy:")[1].trim();
 if (previewOutput) {
   const destination = resolve(previewOutput);
   assert(
@@ -163,9 +173,10 @@ try {
             const html = new JSDOM(await hostedResponse.text());
             for (const script of html.window.document.querySelectorAll("script:not([src])")) {
               assert(
-                hashes.has(
-                  `'sha256-${createHash("sha256").update(script.textContent).digest("base64")}'`
-                ),
+                compatibility ||
+                  hashes.has(
+                    `'sha256-${createHash("sha256").update(script.textContent).digest("base64")}'`
+                  ),
                 `Unexpected hosted inline script on ${route}`
               );
             }
@@ -181,14 +192,14 @@ try {
               })
             ).toBeVisible();
           }
+          // Let route prefetches finish before replacing the document. WebKit can
+          // report canceled fetches as access-control page errors on hosted runs.
+          await page.waitForLoadState("networkidle");
           assert.deepEqual(
             await page.evaluate(() => window.cspViolations),
             [],
             `${browserType.name()} ${route}`
           );
-          // Let route prefetches finish before replacing the document. WebKit can
-          // report canceled fetches as access-control page errors on hosted runs.
-          await page.waitForLoadState("networkidle");
         }
         await page.goto(baseURL);
         const target = colorScheme === "light" ? "dark" : "light";
@@ -236,6 +247,8 @@ try {
         results.push({ browser: browserType.name(), systemTheme: colorScheme, passed: true });
         console.log(`${browserType.name()} / ${colorScheme}: passed`);
         await context.close();
+        await checkErrorBoundary(browser, baseURL, colorScheme);
+        console.log(`${browserType.name()} / ${colorScheme}: error boundary and recovery passed`);
       }
     } finally {
       await browser.close();
