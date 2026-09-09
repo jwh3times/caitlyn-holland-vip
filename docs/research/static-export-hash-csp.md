@@ -135,6 +135,10 @@ candidate header. The evaluator supports `--preview-output=<fresh-directory>` to
 the completed export and replace only that copy's CSP, and `--url=<preview-url>` to
 run its checks against hosted responses. Never upload a parent directory containing
 private working documents. The original `out/` and `public/_headers` remain unchanged.
+Hosted mode derives the expected allowlist from the deployed HTML at the export's
+document paths, because an independent Cloudflare build can emit different script
+contents from a local build of the same commit. It then compares that expectation
+with the actual response policy; it does not assume the returned policy is correct.
 
 The candidate preview is
 [0fe35ff4](https://0fe35ff4.caitlyn-holland-vip.pages.dev).

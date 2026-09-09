@@ -61,7 +61,8 @@ The post-deploy smoke workflow remains the source of truth for deployed-header v
 
 To validate the generated script policy, run `npm run benchmark:csp` after building. It independently
 checks the generated headers against the finished HTML and tests Chromium, Firefox, and WebKit.
-Use `-- --url=<url>` to test a hosted copy of the same build, or `-- --preview-output=<directory>`
+Use `-- --url=<url>` to test a hosted deployment of the same routes; expected hashes are recomputed
+from hosted HTML to account for Cloudflare's independent build. Use `-- --preview-output=<directory>`
 to prepare a separate preview export. See the [CSP measurements and hosting constraints](docs/research/static-export-hash-csp.md).
 
 ## Project structure

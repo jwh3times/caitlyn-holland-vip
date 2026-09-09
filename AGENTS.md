@@ -104,8 +104,9 @@ hash rather than script `unsafe-inline`; inline styles remain allowed for theme 
 Before changing the script CSP, read the [hash-policy evaluation](docs/research/static-export-hash-csp.md)
 for measured browser compatibility and Cloudflare acceptance criteria. `npm run benchmark:csp`
 independently compares generated headers with the finished HTML and tests the policy in Chromium,
-Firefox, and WebKit. Use `-- --url=<url>` to check a hosted copy of the same build,
-`-- --preview-output=<directory>` to prepare a separate preview export, or
+Firefox, and WebKit. Use `-- --url=<url>` to check a hosted deployment of the same routes;
+remote validation derives expected hashes from hosted HTML because Cloudflare rebuilds independently.
+Use `-- --preview-output=<directory>` to prepare a separate preview export, or
 `-- --policy=compatibility` for the former inline-script policy as an evaluation control.
 
 **Theme system:** `next-themes` drives dark/light mode behind the public interface in [components/theme-provider.tsx](components/theme-provider.tsx). Its children-only `Theme` provider owns the fixed `next-themes` configuration and wraps the app in [app/layout.tsx](app/layout.tsx) (with `suppressHydrationWarning` on `<html>`); theme-aware controls consume `useThemeToggle()` instead of importing `next-themes` directly. The hook centralizes the `useSyncExternalStore` mounted guard and returns `{ mounted, isDark, toggle }` — consumers must render server-matching fallback UI until `mounted` is true because `next-themes` reads `localStorage` client-side only. CSS variables in [app/globals.css](app/globals.css) define all color tokens for both themes — use the utility classes (`text-heading`, `text-muted`, `text-label`, `card-bg-blue`, etc.) rather than raw Tailwind color classes so dark mode works automatically.
