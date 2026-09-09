@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.8] - 2026-09-09
+
+### Changed
+
+- Correct ADR-0010's account of the public/private repository split. The separation keeps the
+  histories independent and prevents an accidental gitlink, but it is not a containment
+  guarantee: a forced add, a copied excerpt, or a paste into a public issue still publishes
+  private prose.
+- State that a private GitHub repository provides access control and issues but not security
+  advisories, which GitHub offers on public repositories only. This resolves a contradiction
+  with the existing consequence that unpublished vulnerabilities belong in this public
+  repository's draft advisories.
+- Qualify the companion visibility check to match the bootstrap script: it runs when the script
+  clones and under `--verify`, while an ordinary run leaves an existing checkout unverified.
+
 ## [1.12.7] - 2026-09-09
 
 ### Security
