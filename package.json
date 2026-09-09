@@ -4,7 +4,7 @@
   "description": "Personal website for Caitlyn Holland",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/generate-csp.mjs",
     "benchmark:tailwind": "node benchmarks/tailwind-integration.mjs",
     "benchmark:csp": "node benchmarks/hash-csp.mjs",
     "bootstrap:private": "node scripts/bootstrap-private.mjs",
