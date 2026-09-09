@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.9] - 2026-09-09
+
+### Changed
+
+- Correct the supported-versions policy. Every merge to `main` is tagged and published as a
+  GitHub Release, so the policy no longer claims that no released versions exist; it states that
+  the supported version is the commit currently deployed and that no earlier tag receives
+  backports.
+- Describe the dependency-review job by what it enforces. It fails on known vulnerabilities of
+  high or critical severity and reviews no licenses, because no license policy is configured.
+- Name all eight checks required to merge in the contributor guide, including the previously
+  omitted `AI Config Parity` and `CodeQL`, and note that the Cloudflare Pages check reports
+  without blocking. The end-to-end description now matches the desktop Chromium and Mobile Chrome
+  projects that CI actually runs.
+
+### Added
+
+- A `npm run sync:ai` item in the pull-request checklist, matching the `AI Config Parity` check.
+
 ## [1.12.8] - 2026-09-09
 
 ### Changed
