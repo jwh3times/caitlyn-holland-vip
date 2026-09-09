@@ -3,8 +3,13 @@
 ## Supported versions
 
 This is a single, continuously deployed static website. Only the version
-currently live at **caitlyn.holland.vip** (the latest commit on `main`) is
-supported. There are no released versions or backports.
+currently live at **caitlyn.holland.vip** is supported — the most recent commit
+on `main` that Cloudflare Pages has built and deployed.
+
+Every merge to `main` is tagged `v<major>.<minor>.<build>` and published as a
+GitHub Release automatically. Those releases mark what was deployed; they are
+not separately maintained lines. Fixes ship forward to the live site, and no
+earlier tag receives backports.
 
 ## Reporting a vulnerability
 
