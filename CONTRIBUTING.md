@@ -21,11 +21,15 @@ Follow the [Getting started](./README.md#getting-started) section of the README
    npm run format:check   # Format Check job
    npm run coverage       # Coverage job (80% gate)
    npm run lint && npm run build   # Build & Lint job
-   npm test               # Playwright Tests job (CI runs Chromium only)
+   npm test               # Playwright Tests job (CI runs the desktop Chromium
+                          # and Mobile Chrome projects)
    ```
 
-4. Open a Pull Request and fill in the template. CI (format, coverage, build &
-   lint, Playwright, changelog) and the dependency-review check must pass.
+4. Open a Pull Request and fill in the template. Eight checks are required to
+   merge: the six CI jobs (`Format Check`, `Coverage`, `Build & Lint`,
+   `Playwright Tests`, `AI Config Parity`, `Changelog Version`), plus `CodeQL`
+   and `Dependency Review`. The `Cloudflare Pages` check reports the deployment
+   build but does not block the merge.
 
    The `Changelog Version` check requires [`CHANGELOG.md`](CHANGELOG.md) to have
    a `## [x.y.z]` section for the version your merge will mint — every merge to

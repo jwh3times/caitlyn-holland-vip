@@ -20,6 +20,8 @@ jobs:
       - name: Review dependencies
         uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
-          # Block PRs that introduce dependencies with known high/critical
-          # vulnerabilities or incompatible licenses.
+          # Block PRs that introduce dependencies with known vulnerabilities of
+          # high or critical severity. No license policy is configured, so this
+          # job does not review licenses; add allow-licenses or deny-licenses to
+          # enforce one.
           fail-on-severity: high
