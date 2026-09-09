@@ -9,6 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.5] - 2026-09-08
+
+### Security
+
+- Generate script CSP hashes from every completed static export, including fallback pages,
+  replacing broad inline script permission while preserving theme initialization and navigation.
+  Builds fail if the complete header line exceeds Cloudflare Pages' 2,000-character limit.
+- Validate generated headers in Chromium during CI and require script hashes in deployed smoke
+  checks. Add regression coverage and hosted Chromium, Firefox, and WebKit validation.
+
+## [1.12.4] - 2026-09-08
+
+### Changed
+
+- Updated lucide-react to 1.41.0 and Playwright to 1.63.0.
+
+## [1.12.3] - 2026-09-07
+
+### Changed
+
+- Updated lucide-react to 1.40.0, Testing Library user-event to 14.6.7, Node typings to
+  26.4.1, and Oxlint to 1.81.0.
+
+## [1.12.2] - 2026-09-07
+
+### Changed
+
+- Updated Vitest and its V8 coverage provider to 5.0.0.
+
 ## [1.12.1] - 2026-09-07
 
 ### Changed

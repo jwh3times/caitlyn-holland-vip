@@ -56,12 +56,13 @@ npx playwright test --project=chromium
 
 To inspect the production export locally, run `npm run build` and then `npm run preview`.
 Preview uses the local `serve` dependency installed by `npm ci` from the lockfile. The
-preview server serves static content only; it does not apply Cloudflare's [`public/_headers`](public/_headers).
+preview server serves static content only; it does not apply Cloudflare's generated `out/_headers`.
 The post-deploy smoke workflow remains the source of truth for deployed-header validation.
 
-To evaluate a hash-based script policy against a completed export, run `npm run benchmark:csp`
-after building. It tests Chromium, Firefox, and WebKit with candidate HTTP headers without changing
-production policy; see the [CSP measurements and hosting constraints](docs/research/static-export-hash-csp.md).
+To validate the generated script policy, run `npm run benchmark:csp` after building. It independently
+checks the generated headers against the finished HTML and tests Chromium, Firefox, and WebKit.
+Use `-- --url=<url>` to test a hosted copy of the same build, or `-- --preview-output=<directory>`
+to prepare a separate preview export. See the [CSP measurements and hosting constraints](docs/research/static-export-hash-csp.md).
 
 ## Project structure
 
@@ -86,7 +87,9 @@ Two disjoint suites:
 
 ## Deployment
 
-Cloudflare Pages builds from the repo on every push to `main` (build command `npm run build`, output dir `out`, Node version from `.nvmrc`). Security headers are served from [`public/_headers`](public/_headers); its CSP intentionally allows inline scripts for `next-themes`' pre-paint theme script because a static export cannot issue per-request nonces. CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validates format, coverage, build/lint, e2e, and AI-tool config parity on every PR, plus (PR-only) that [`CHANGELOG.md`](CHANGELOG.md) names the version the merge will mint. CodeQL scans JavaScript/TypeScript and Actions through GitHub's default setup, which is why there is no `codeql.yml` in the repo. A separate [post-deploy smoke workflow](.github/workflows/smoke.yml) validates the live homepage and a missing-page response, significant security-header values on both, and HTTP 200 responses from sitemap and robots. It runs daily and manually, and on pushes to `main` after the official Cloudflare Pages check succeeds for that commit. This monitors a completed deployment; it does not gate deployment.
+Cloudflare Pages builds from the repo on every push to `main` (build command `npm run build`, output dir `out`, Node version from `.nvmrc`). After Next.js exports the site, [`scripts/generate-csp.mjs`](scripts/generate-csp.mjs) hashes inline scripts across all exported HTML, including 404 pages, and completes `out/_headers` from the [`public/_headers`](public/_headers) template. The CSP allows those scripts by SHA-256 hash; inline styles remain allowed for theme transitions. The build fails if any header-file line exceeds Cloudflare's 2,000-character limit. Deploy the completed `out` directory, since the source template alone blocks inline scripts.
+
+CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validates format, coverage, build/lint, the generated CSP in Chromium, e2e, and AI-tool config parity on every PR, plus (PR-only) that [`CHANGELOG.md`](CHANGELOG.md) names the version the merge will mint. CodeQL scans JavaScript/TypeScript and Actions through GitHub's default setup, which is why there is no `codeql.yml` in the repo. A separate [post-deploy smoke workflow](.github/workflows/smoke.yml) validates the live homepage and a missing-page response, significant security-header values on both (including required script hashes and rejection of script `unsafe-inline`), and HTTP 200 responses from sitemap and robots. It runs daily and manually, and on pushes to `main` after the official Cloudflare Pages check succeeds for that commit. This monitors a completed deployment; it does not gate deployment.
 
 The deployed-site checker can also be run directly with `node scripts/smoke.mjs`; it uses only
 Node built-ins and requires no dependency install. When changing header policy or deployment

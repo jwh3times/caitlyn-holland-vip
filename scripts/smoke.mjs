@@ -82,12 +82,16 @@ export function validateSecurityHeaders(headers) {
       sources?.length > 0 &&
         sources.every(
           (value) =>
-            ["'self'", "'unsafe-inline'", "'none'"].includes(value) ||
+            ["'self'", "'none'"].includes(value) ||
             /^'sha(256|384|512)-[A-Za-z0-9+/]+=*'$/.test(value)
         ),
       `CSP ${name} contains missing or unapproved script sources`
     );
   }
+  check(
+    directives.get("script-src")?.some((value) => /^'sha256-[A-Za-z0-9+/]{43}='$/.test(value)),
+    "CSP script-src must contain generated SHA-256 hashes"
+  );
   for (const name of ["style-src-elem", "style-src-attr"]) {
     if (!directives.has(name)) continue;
     check(

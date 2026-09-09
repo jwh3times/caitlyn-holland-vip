@@ -10,7 +10,16 @@ const headerEntries = readFileSync("public/_headers", "utf8")
     const colon = line.indexOf(":");
     return [line.slice(0, colon).trim(), line.slice(colon + 1).trim()];
   });
-const policy = () => new Headers(headerEntries);
+const policy = () => {
+  const headers = new Headers(headerEntries);
+  headers.set(
+    "content-security-policy",
+    headers
+      .get("content-security-policy")!
+      .replace("script-src 'self'", `script-src 'self' 'sha256-${"a".repeat(43)}='`)
+  );
+  return headers;
+};
 
 describe("deployed security policy", () => {
   it("accepts the production baseline", () => {
@@ -63,6 +72,8 @@ describe("deployed security policy", () => {
 
   it.each([
     "script-src 'unsafe-eval'",
+    "script-src-elem 'unsafe-inline'",
+    "script-src-attr 'unsafe-inline'",
     "script-src-elem https:",
     "script-src-attr *",
     "style-src-elem *",
@@ -95,6 +106,19 @@ describe("deployed security policy", () => {
 
   it("rejects missing headers", () => {
     expect(validateSecurityHeaders(new Headers()).length).toBeGreaterThan(6);
+  });
+  it("rejects the unhashed template and the old inline policy", () => {
+    const headers = new Headers(headerEntries);
+    expect(validateSecurityHeaders(headers)).toContain(
+      "CSP script-src must contain generated SHA-256 hashes"
+    );
+    headers.set(
+      "content-security-policy",
+      headers
+        .get("content-security-policy")!
+        .replace("script-src 'self'", "script-src 'self' 'unsafe-inline'")
+    );
+    expect(validateSecurityHeaders(headers).length).toBeGreaterThan(0);
   });
 });
 

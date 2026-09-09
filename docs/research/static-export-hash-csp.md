@@ -123,6 +123,39 @@ not a successful WebKit result. The evaluator fails on missing browsers rather t
 silently skipping them. The application error boundary was not artificially
 triggered; the error documents examined were the exported 404 documents.
 
+## Hosted verification on 2026-09-08
+
+A fresh export on Windows with Node 26.4.0, Next.js 16.3.4, and Playwright 1.63.0
+retained the 23-hash union and 1,479-character header line. Chromium, Firefox, and
+WebKit passed locally in both system themes. Installing the Windows WebKit runtime
+resolved the earlier host dependency limitation without an administrator action.
+
+The same export was directly uploaded to a Cloudflare Pages preview with its generated
+candidate header. The evaluator supports `--preview-output=<fresh-directory>` to copy
+the completed export and replace only that copy's CSP, and `--url=<preview-url>` to
+run its checks against hosted responses. Never upload a parent directory containing
+private working documents. The original `out/` and `public/_headers` remain unchanged.
+
+The candidate preview is
+[0fe35ff4](https://0fe35ff4.caitlyn-holland-vip.pages.dev).
+A control preview of the identical export with the original policy is
+[9f24c9a5](https://9f24c9a5.caitlyn-holland-vip.pages.dev).
+Use `--policy=compatibility` only for the control: its negative probe must execute,
+whereas the candidate must block that probe.
+
+The full hosted run passed Chromium, Firefox, and WebKit in both themes. It checked
+the exact candidate response header and hashes of hosted inline script text across
+HTML aliases and extensionless paths, plus hydration, navigation, stored-theme
+persistence, fallback 404 behavior, and rejection of the unapproved inline probe.
+No unexpected CSP violations or runtime errors remained in that completed run.
+
+Initial hosted WebKit runs reported intermittent access-control page errors for
+Next.js route-data fetches. The identical compatibility-policy control reproduced
+the error. Waiting for prefetch traffic to settle before replacing documents in
+the evaluator eliminated the observed failure without suppressing page errors or
+CSP violations. This is evidence of a navigation-timing artifact in the evaluator,
+not evidence that the candidate requires a broader script policy.
+
 ## Deployment decision
 
 A global hash union is locally feasible for this export and avoids route-specific
@@ -130,12 +163,24 @@ header matching. This evaluation supports a post-export generation design with a
 hard failure if the final line exceeds 2,000 characters. Hashes must be regenerated
 from every final build rather than copied from this measurement.
 
-Production retains its existing compatibility policy. Local success does not
-establish Pages redirect semantics, response headers on hosted fallback paths, or
-whether a CDN injects or transforms scripts. Adopting the candidate requires a
-successful WebKit run on a supported host and a Cloudflare preview check of the
-actual generated policy, hydration, themes, aliases, and missing-path responses.
-Those checks are a deployment acceptance condition, not evidence of an existing
-exploitable vulnerability. The canonical action remains
+`npm run build` now runs [scripts/generate-csp.mjs](../../scripts/generate-csp.mjs)
+after Next.js finishes. It hashes browser-visible inline script text across all HTML
+documents, requires the homepage and 404 export, and writes a global union into
+`out/_headers`. The source `public/_headers` is a restrictive template with only
+`script-src 'self'`; generation leaves that template unchanged. Validation errors,
+including a complete header line longer than 2,000 characters, fail the build before
+the generated header is written. Unit tests cover exact hashing, deduplication,
+nested/error pages, changed content, invalid templates, and oversized policies.
+
+CI independently recomputes the expected hashes in the browser evaluator and compares
+them with `out/_headers` before exercising Chromium. The deployed smoke checker rejects
+the old broad inline-script policy and requires SHA-256 sources. The integrated build
+was uploaded to [preview befd705a](https://befd705a.caitlyn-holland-vip.pages.dev) for
+the three-browser acceptance run. Revert the integration and template changes together
+through a reviewed PR if a future deployment requires restoring the compatibility policy;
+do not copy old build hashes into a new export.
+The preview does not establish the behavior of additional transformations configured
+only for the production custom domain. These checks are deployment acceptance
+conditions, not evidence of an existing exploitable vulnerability. The canonical action remains
 [issue #175](https://github.com/jwh3times/caitlyn-holland-vip/issues/175); this document
 records the design evidence rather than maintaining a parallel task list.
