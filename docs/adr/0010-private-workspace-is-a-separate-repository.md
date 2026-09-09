@@ -15,18 +15,24 @@ provides, and not discoverable from another machine. Meanwhile the reproducible 
 "back up everything ignored" was not the answer either. The split is between _durable_ and
 _reproducible_, not between tracked and ignored.
 
-Making it a separate repository rather than a submodule keeps the two histories genuinely
-independent: the outer repository can never stage, push, or leak the inner one, and a public clone
-does not require access to the private one. `npm run bootstrap:private` is idempotent and refuses
-to clone anything GitHub does not report as `PRIVATE`.
+Making it a separate repository rather than a submodule keeps the two histories independent: no
+gitlink records a private commit in a public one, and a public clone does not require access to the
+private one. That is a structural default rather than a containment guarantee. `/private/` is
+excluded by repository-owned ignore rules, so a forced `git add -f`, a copied excerpt, or a paste
+into a public issue still publishes private prose; the separation keeps accidents out, and keeping
+deliberate or careless disclosure out remains a matter of convention. `npm run bootstrap:private`
+is idempotent and refuses to clone anything GitHub does not report as `PRIVATE`, but that check
+runs when it clones and under `--verify` — an ordinary run leaves an existing `private/.git`
+checkout unverified, which is why the runbook verifies an existing companion explicitly during
+recovery.
 
 ## Considered options
 
 Committing the private documents into this repository, encrypted, was the alternative — it needs no
 second remote and no 1Password dependency. It was rejected because an encrypted blob in a public
 repository is a permanent artifact: a key compromise is retroactive across the whole history, and
-the material cannot be selectively shared. A private GitHub repository gets access control, issues,
-and draft security advisories for free.
+the material cannot be selectively shared. A private GitHub repository gets access control and
+issues for free — but not advisories, which GitHub offers on public repositories only.
 
 Storing the documents in 1Password itself was also considered and rejected. 1Password is built for
 secrets, not for versioned Markdown — no diffs, no history, no review. Keeping it as the index
