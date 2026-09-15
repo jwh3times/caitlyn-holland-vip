@@ -151,15 +151,16 @@ is edited once:
 - **Skills** are authored under **`.agents/skills/<name>/`** and mirrored to
   `.claude/skills/<name>/` by `npm run sync:ai`. The **whole skill directory** is mirrored —
   `SKILL.md` plus every auxiliary file (`agents/openai.yaml`, `scripts/*.sh`, reference
-  docs) — so all of it is covered by drift detection. Of the 16 skills, 14 originated in
+  docs) — so all of it is covered by drift detection. Of the 17 skills, 14 originated in
   [`mattpocock/skills`](https://github.com/mattpocock/skills) but are now forked and owned
   locally — edited in place rather than tracked upstream — per
   [ADR-0006](docs/adr/0006-vendored-skill-policy.md). [skills-lock.json](skills-lock.json)
   records provenance only (nothing reads it): the `computedHash` per skill is what was
   originally fetched, not current content, and `localized: true` flags skills that have
-  since diverged from that upstream source. The two written here rather than fetched —
-  [`ship`](.agents/skills/ship/SKILL.md) and
-  [`end-session`](.agents/skills/end-session/SKILL.md) — have no lockfile entry, which is how
+  since diverged from that upstream source. The three written here rather than fetched —
+  [`ship`](.agents/skills/ship/SKILL.md),
+  [`end-session`](.agents/skills/end-session/SKILL.md), and
+  [`lets-go`](.agents/skills/lets-go/SKILL.md) — have no lockfile entry, which is how
   you tell them apart; authoring one is just adding the directory under `.agents/skills/` and
   re-running the sync.
 - **Agents** go the other way: authored under **`.claude/agents/*.md`** and generated into
@@ -234,7 +235,17 @@ themselves: returning to an up-to-date `main` (a `--ff-only` pull) and deleting 
 already merged there, leaving pushed-but-unmerged branches alone. It records and tidies only: ordinary repository commits and PRs still go through `ship`.
 Publishing required human follow-up instructions to the separate private wiki is its explicit
 commit/push exception, alongside the local `main` fast-forward. Source:
-[.agents/skills/end-session/SKILL.md](.agents/skills/end-session/SKILL.md).
+[.agents/skills/end-session/SKILL.md](.agents/skills/end-session/SKILL.md). It is
+model-invocable so `/handoff` can run it as its final step.
+
+### Cross-device handoffs
+
+`/handoff` parks a session for the owner's other machine. It alerts on work not merged to
+`main`, writes the handoff document to Proton Drive, registers it in the shared
+`handoff_map.json`, and then runs `/end-session`. `/lets-go` claims this repository's active
+handoff from the map, sets its entry back to `null`, updates the checkout, and continues the
+work. Both skills follow [docs/agents/handoffs.md](docs/agents/handoffs.md) for the folder paths
+and the map editing rules.
 
 ### Issue tracker
 

@@ -9,6 +9,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.13] - 2026-09-15
+
+### Added
+
+- A `/lets-go` agent skill that resumes work handed off from the owner's other machine. It looks
+  up this repository's active handoff in the shared Proton Drive `handoff_map.json`, reads the
+  document, and sets the map entry back to `null` before any work starts, so the same handoff
+  cannot be picked up twice. It then updates the checkout to the handoff's branch and continues
+  from the recorded next action. If that branch was never pushed from the other machine, it stops
+  and says so.
+- A `docs/agents/handoffs.md` reference shared by both handoff skills, covering the Handoffs
+  folder path on Windows and Fedora, document naming, the map format, and narrow map-editing
+  rules that leave other repositories' entries untouched.
+
+### Changed
+
+- `/handoff` now parks a session for the other machine rather than leaving a document in the
+  local temp directory. It first alerts on any work not merged to `main` and separates local-only
+  work, which the other machine cannot see, from pushed but unmerged branches and open PRs. It
+  then writes the handoff document to Proton Drive, registers it in the handoff map, and closes
+  out with `/end-session`. When Proton Drive is unavailable, it keeps the document in the temp
+  directory, warns, and stops before touching the map.
+- `/end-session` can now be invoked by an agent, so `/handoff` can run it as its final step. A
+  handoff no longer counts as the user continuing on the current branch, so the close-out can
+  return this checkout to `main`.
+
+## [1.12.12] - 2026-09-14
+
+### Changed
+
+- Bumped `react` and `react-dom` from 19.2.8 to 19.3.0, `@types/react` from 19.2.18 to 19.3.0,
+  `lucide-react` from 1.42.0 to 1.44.0, and `@types/node` from 26.5.0 to 26.5.1 in the grouped
+  minor/patch dependabot update.
+
+## [1.12.11] - 2026-09-11
+
+### Changed
+
+- Bumped `lucide-react` from 1.41.0 to 1.42.0, `@types/node` from 26.4.1 to 26.5.0, and `oxlint`
+  from 1.81.0 to 1.82.0 in the grouped minor/patch dependabot update.
+
 ## [1.12.10] - 2026-09-09
 
 ### Changed
