@@ -1,0 +1,5 @@
+interface:
+  display_name: "Let's Go"
+  short_description: "Resume this repo's Proton Drive handoff"
+policy:
+  allow_implicit_invocation: false

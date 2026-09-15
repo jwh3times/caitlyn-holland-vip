@@ -1,7 +1,6 @@
 ---
 name: end-session
-description: End the work session cleanly — flush what you learned into memory, private/ docs, and GitHub issues, then tidy the local workspace.
-disable-model-invocation: true
+description: End the work session cleanly — flush what you learned into memory, private/ docs, and GitHub issues, then tidy the local workspace. Use when the user says they are done for the session, or when another skill (such as handoff) calls for a close-out.
 ---
 
 <!-- AUTO-GENERATED from .agents/skills/end-session/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
@@ -195,7 +194,8 @@ Two things stop the switch. Neither is a failure; report it and leave the checko
 - **Uncommitted tracked changes.** Switching would carry them onto `main` or fail outright, and
   step 5's first bullet already rules out discarding or stashing them. Stay on the branch.
 - **The user said they are continuing on this branch.** Ending the session is not ending their
-  work; don't move the checkout out from under them.
+  work; don't move the checkout out from under them. A `/handoff` to the other machine does not
+  count: that work continues from GitHub, not from this checkout.
 
 Unpushed commits are not a stop — they ride along on the branch — but they do mean the branch is
 unfinished. Return to `main`, keep that branch, and name `/ship` in the report.
