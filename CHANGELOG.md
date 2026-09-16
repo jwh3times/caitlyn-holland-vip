@@ -7,7 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-No unreleased changes.
+### Added
+
+- `scripts/handoff-map.mjs`, ported from ApexRacers, reads and writes this repository's entry in
+  the shared `handoff_map.json`. It finds the Handoffs folder from `--dir`, `HANDOFFS_DIR`, or the
+  Proton Drive desktop client's folder, matches map keys case- and punctuation-insensitively, and
+  changes only this repository's entry.
+
+### Changed
+
+- `/handoff` and `/lets-go` now work without the Proton Drive desktop client. On Fedora, where
+  Proton ships no sync client, `HANDOFFS_DIR` is a local mirror that both skills pull from and
+  push to `/my-files/Documents/Handoffs` through the `proton-drive` CLI, at exactly the points
+  where the map or a document is read or written. Both skills now edit the map only through the
+  script instead of by hand.
+- `docs/agents/handoffs.md` no longer lists a wrong Fedora folder path. It describes the
+  desktop-client and CLI-mirror transports and how to choose between them.
 
 ## [1.12.13] - 2026-09-15
 

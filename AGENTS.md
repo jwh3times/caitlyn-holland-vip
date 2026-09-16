@@ -242,10 +242,13 @@ model-invocable so `/handoff` can run it as its final step.
 
 `/handoff` parks a session for the owner's other machine. It alerts on work not merged to
 `main`, writes the handoff document to Proton Drive, registers it in the shared
-`handoff_map.json`, and then runs `/end-session`. `/lets-go` claims this repository's active
-handoff from the map, sets its entry back to `null`, updates the checkout, and continues the
-work. Both skills follow [docs/agents/handoffs.md](docs/agents/handoffs.md) for the folder paths
-and the map editing rules.
+`handoff_map.json` through [scripts/handoff-map.mjs](scripts/handoff-map.mjs), and then runs
+`/end-session`. `/lets-go` claims this repository's active handoff from the map, sets its entry
+back to `null`, updates the checkout, and continues the work. On a machine with no Proton Drive
+desktop client, `HANDOFFS_DIR` is a local mirror and both skills pull and push it through the
+`proton-drive` CLI against `/my-files/Documents/Handoffs`. Both skills follow
+[docs/agents/handoffs.md](docs/agents/handoffs.md) for the transports, the map script, and the
+map format.
 
 ### Issue tracker
 
