@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+No unreleased changes.
+
+## [1.12.16] - 2026-09-16
+
 ### Added
 
 - `scripts/handoff-map.mjs`, ported from ApexRacers, reads and writes this repository's entry in
@@ -23,6 +27,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   script instead of by hand.
 - `docs/agents/handoffs.md` no longer lists a wrong Fedora folder path. It describes the
   desktop-client and CLI-mirror transports and how to choose between them.
+
+## [1.12.15] - 2026-09-16
+
+### Changed
+
+- Bumped `tailwind-merge` from 3.6.0 to 3.7.0 in the grouped minor/patch dependabot update.
+
+## [1.12.14] - 2026-09-15
+
+### Changed
+
+- Bumped `next` and `@next/eslint-plugin-next` from 16.3.4 to 16.3.5 and `lucide-react` from
+  1.44.0 to 1.45.0 in the grouped minor/patch dependabot update.
 
 ## [1.12.13] - 2026-09-15
 
