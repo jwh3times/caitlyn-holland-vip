@@ -14,31 +14,72 @@ disable-model-invocation: true
 on the other machine and registered it in the handoff map. This skill finds that document,
 claims it so it is not picked up twice, updates the checkout, and continues the work.
 
-First, read [docs/agents/handoffs.md](../../../docs/agents/handoffs.md). It has the folder paths,
-the map format, and the rules for editing the map.
+First, read [docs/agents/handoffs.md](../../../docs/agents/handoffs.md). It has the two
+transports (desktop client and CLI mirror), the map script, and the map format. Decide the
+transport before step 1.
 
-Git and script commands run in a bash/POSIX shell, including git-bash on Windows.
+Run the shell commands through the POSIX shell (Git Bash on Windows). The map is read and written
+only through `node scripts/handoff-map.mjs`, never with `jq` or by hand.
 
 ## 1. Find the active handoff
 
-Resolve the Handoffs folder and read `handoff_map.json`. Look up the `caitlyn-holland-vip` key.
+**Pull** (CLI mirror only). Fetch the current map before reading it:
 
-- **`null` or missing:** say "No active handoff for caitlyn-holland-vip." and stop.
-- **Names a file that is not in the folder:** Proton Drive has not finished syncing it. Report
-  the filename, leave the map unchanged, and stop.
+```bash
+mkdir -p "$HANDOFFS_DIR"
+proton-drive filesystem download -f remove /my-files/Documents/Handoffs/handoff_map.json "$HANDOFFS_DIR"
+```
+
+Then look up this repository's entry:
+
+```bash
+node scripts/handoff-map.mjs get
+```
+
+Branch on the result:
+
+- **No map found:** ask the user where the Handoffs folder is on this machine, rerun with
+  `--dir <path>`, and suggest they export `HANDOFFS_DIR`.
+- **`key` or `file` is null:** say "No active handoff for caitlyn-holland-vip." and stop. Leave
+  the map untouched.
+- **`exists` is false, CLI mirror:** fetch the document by name, then rerun `get`:
+
+  ```bash
+  proton-drive filesystem download -f remove "/my-files/Documents/Handoffs/<file>" "$HANDOFFS_DIR"
+  ```
+
+  A `Node not found` reply means the other machine has not uploaded the document yet. Tell the
+  user the filename and stop without clearing, so a retry still works.
+
+- **`exists` is false, desktop client:** the client has not synced the document here yet. Tell
+  the user the filename and stop without clearing, so a retry after sync still works.
+- **`exists` is true:** continue.
 
 ## 2. Read the handoff document
 
-Read the entire document before acting on any of it. Note where it says to resume (branch, PR,
-next action), its unmerged-work list, its human follow-up links, and its suggested skills.
+Read the entire document at `path` before acting on any of it. Note where it says to resume
+(branch, PR, next action), its unmerged-work list, its human follow-up links, and its suggested
+skills.
 
 ## 3. Claim it
 
-Set the `caitlyn-holland-vip` key to `null`, following the map editing rules. Claim the handoff
-now, before any work starts, so a second `/lets-go` on either machine cannot pick up the same
-handoff. Leave the document in the folder.
+```bash
+node scripts/handoff-map.mjs clear
+```
 
-Step 3 is done when the map parses and re-reading it shows `null` for this repository.
+Claim the handoff now, before any work starts, so a second `/lets-go` on either machine cannot
+pick up the same handoff. Leave the document in the folder.
+
+Step 3 is done when the echoed entry shows `file: null`.
+
+**Push** (CLI mirror only). The cleared map goes back to the cloud, so the other machine cannot
+resume the same handoff a second time:
+
+```bash
+proton-drive filesystem upload -f create-new-revision -t "$HANDOFFS_DIR/handoff_map.json" /my-files/Documents/Handoffs
+```
+
+The push is done when the transfer summary lists the map as uploaded.
 
 ## 4. Update the checkout
 
