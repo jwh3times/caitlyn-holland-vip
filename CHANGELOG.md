@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.19] - 2026-09-18
+
+### Changed
+
+- Every PR now lands as a merge commit: squash and rebase merging are disabled on the GitHub
+  repository, so a merge commit is the only method offered. The policy is forward-looking —
+  branches merged before it remain squashed and are not ancestors of `main`.
+- `/end-session` and `/handoff` no longer claim the repository squash-merges its PRs. The
+  merged-PR lookup stays `/end-session`'s primary branch test, because it is correct under either
+  merge method, but its rationale now matches the policy: ancestry is a fair test for anything
+  merged under it and unreliable only for the squash-era branches that predate it, which is the
+  class the non-fast-forward warning describes.
+
 ## [1.12.18] - 2026-09-18
 
 ### Fixed

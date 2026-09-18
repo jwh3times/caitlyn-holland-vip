@@ -85,6 +85,8 @@ entry in [.github/dependabot.yml](.github/dependabot.yml) maintains their update
 - **Post-deploy smoke — [.github/workflows/smoke.yml](.github/workflows/smoke.yml)** — runs on pushes to `main`, daily, and on manual dispatch. Push runs wait for the official Cloudflare Pages check on the exact pushed commit to succeed; daily/manual runs check the live site immediately. `Live-site Smoke` runs [scripts/smoke.mjs](scripts/smoke.mjs) without installing dependencies: homepage and missing-page status/content, significant values in six security headers (including the accepted compatibility script policy), and HTTP 200 responses from sitemap and robots. The dependent `Live-site CSP Browser` job installs dependencies, builds the route inventory, and runs the hosted compatibility evaluator in Chromium, including the React error boundary and recovery. Deployment failures, timeouts, and failed checks fail the workflow; this is a post-deploy monitor, not a deployment gate.
 - **Required checks** — the `No Push to Main` ruleset requires eight: the six `ci.yml` jobs above,
   `CodeQL`, and `Dependency Review`. `main` is protected; never push to it directly.
+- **Merge method** — PRs merge as merge commits; squash and rebase merging are disabled on the
+  repository. This is enforced by repository settings, not by anything in this repo.
 
 ## Architecture
 
