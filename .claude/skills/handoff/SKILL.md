@@ -41,7 +41,8 @@ gh pr list --author "@me" --state open --json number,title,headRefName,url
 If `private/` exists, run `git -C private status --porcelain` and
 `git -C private log --oneline @{u}..HEAD` too.
 
-PRs are squash-merged, so `--no-merged` also lists branches whose work is already on `main`.
+`--no-merged` can overstate the risk: a branch squash-merged before the repo moved to
+merge-commit-only PRs is not an ancestor of `main`, so it still lists even though its work landed.
 Check each branch with `gh pr list --head <branch> --state merged --json number`. A branch with
 a merged PR is not at risk.
 

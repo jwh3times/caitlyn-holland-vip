@@ -210,10 +210,13 @@ git pull --ff-only origin main
 `--ff-only` keeps the pull a fast-forward: if it refuses, local `main` carries commits of its
 own — report that and leave `main` alone rather than merging, rebasing, or resetting it.
 
-Then delete the local branches whose work is already in `main`. **Ask GitHub first.** This repo
-squash-merges its PRs, so a spent branch's commits were rewritten on the way in and `git` still
-calls the branch unmerged; the merged PR is the reliable signal. Run the lookup over every local
-branch, and use the equivalent GitHub MCP pull-request lookup when `gh` is unavailable:
+Then delete the local branches whose work is already in `main`. **Ask GitHub first, not git.**
+Merge commits are this repo's merge method — squash and rebase merging are disabled on the
+repository — so ancestry is a fair test for anything merged under that policy. It is not a fair
+test for the branches left over from before it: their commits were squashed on the way in, so
+`git` still calls them unmerged. A merged PR is the one signal that holds either way, so start
+there. Run the lookup over every local branch, and use the equivalent GitHub MCP pull-request
+lookup when `gh` is unavailable:
 
 ```bash
 for b in $(git branch --format='%(refname:short)' | grep -vx main); do
@@ -224,8 +227,9 @@ done
 A branch that prints a merged PR number is spent and can go. One that prints nothing either never
 had a PR or still has an open one — leave it, and see **Pushed is not merged** below.
 
-`git branch --merged main` then catches what the PR lookup cannot: a branch merged with a merge
-commit, or one whose commits reached `main` without ever going through a PR of its own.
+`git branch --merged main` then catches what the PR lookup cannot: a branch whose commits reached
+`main` without ever going through a PR of its own. Under the merge-commit policy it also confirms
+the branches the lookup already named.
 
 ```bash
 git branch --merged main --format='%(refname:short) %(worktreepath)' | grep -v '^main '
@@ -240,9 +244,10 @@ Never `git branch -D`: the capital form discards unmerged commits without asking
 that `-d` refuses is telling you it still holds work. That applies even to one whose PR merged —
 `-d` refusing it means it has commits that never reached the PR, so leave it and say so.
 
-**A squash-merged branch is spent.** Its commits are not ancestors of `main`, so pushing further
-work to it is rejected as non-fast-forward, and `/ship` forbids force-pushing — new work starts on
-a fresh branch cut from an updated `origin/main`, never on the old one.
+**A squash-merged branch is spent.** This applies to the branches predating the merge-commit
+policy. Their commits are not ancestors of `main`, so pushing further work to one is rejected as
+non-fast-forward, and `/ship` forbids force-pushing — new work starts on a fresh branch cut from
+an updated `origin/main`, never on the old one.
 
 **Pushed is not merged.** A branch with an open or unmerged PR stays, however green it is —
 deleting it strands the review. Only a branch whose work is on `main` goes.
