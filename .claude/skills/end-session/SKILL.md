@@ -212,22 +212,10 @@ git pull --ff-only origin main
 `--ff-only` keeps the pull a fast-forward: if it refuses, local `main` carries commits of its
 own — report that and leave `main` alone rather than merging, rebasing, or resetting it.
 
-Then delete the local branches whose work is already in `main`:
-
-```bash
-git branch --merged main --format='%(refname:short) %(worktreepath)' | grep -v '^main '
-```
-
-Every name that prints is fully contained in the refreshed `main` — delete each with
-`git branch -d <name>`, naming them in the report. A second column means the branch is checked
-out in a worktree and git will refuse; report those with the stale worktrees above instead of
-forcing them. Never `git branch -D`: the capital form discards unmerged commits without asking,
-and a branch `-d` refuses is telling you it still holds work.
-
-That list misses **squash- or rebase-merged branches**: their commits were rewritten on the way
-in, so git still calls them unmerged even though the change is on `main`. This repo merges PRs
-with merge commits today, so the case is rare — check the PR state before assuming a leftover
-branch is live. Use the equivalent GitHub MCP pull-request lookup when `gh` is unavailable:
+Then delete the local branches whose work is already in `main`. **Ask GitHub first.** This repo
+squash-merges its PRs, so a spent branch's commits were rewritten on the way in and `git` still
+calls the branch unmerged; the merged PR is the reliable signal. Run the lookup over every local
+branch, and use the equivalent GitHub MCP pull-request lookup when `gh` is unavailable:
 
 ```bash
 for b in $(git branch --format='%(refname:short)' | grep -vx main); do
@@ -235,9 +223,28 @@ for b in $(git branch --format='%(refname:short)' | grep -vx main); do
 done
 ```
 
-A branch that prints a merged PR number can go. Still delete it with `-d`, not `-D` — if `-d`
-refuses one whose PR merged, the branch has commits that never reached the PR, so leave it and
-say so.
+A branch that prints a merged PR number is spent and can go. One that prints nothing either never
+had a PR or still has an open one — leave it, and see **Pushed is not merged** below.
+
+`git branch --merged main` then catches what the PR lookup cannot: a branch merged with a merge
+commit, or one whose commits reached `main` without ever going through a PR of its own.
+
+```bash
+git branch --merged main --format='%(refname:short) %(worktreepath)' | grep -v '^main '
+```
+
+Every name that prints is fully contained in the refreshed `main`. A second column means the
+branch is checked out in a worktree and git will refuse to delete it; report those with the stale
+worktrees above instead of forcing them.
+
+Delete each branch that either test names with `git branch -d <name>`, naming them in the report.
+Never `git branch -D`: the capital form discards unmerged commits without asking, and a branch
+that `-d` refuses is telling you it still holds work. That applies even to one whose PR merged —
+`-d` refusing it means it has commits that never reached the PR, so leave it and say so.
+
+**A squash-merged branch is spent.** Its commits are not ancestors of `main`, so pushing further
+work to it is rejected as non-fast-forward, and `/ship` forbids force-pushing — new work starts on
+a fresh branch cut from an updated `origin/main`, never on the old one.
 
 **Pushed is not merged.** A branch with an open or unmerged PR stays, however green it is —
 deleting it strands the review. Only a branch whose work is on `main` goes.
