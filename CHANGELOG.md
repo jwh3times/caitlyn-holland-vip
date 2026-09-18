@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.18] - 2026-09-18
+
+### Fixed
+
+- `/end-session` now identifies spent branches correctly. It had treated
+  `git branch --merged main` as the primary test and called squash-merged branches a rare edge
+  case on the grounds that this repository merges PRs with merge commits; it squash-merges them,
+  so a spent branch's rewritten commits are not ancestors of `main` and that test missed nearly
+  every branch it was meant to delete. The merged-PR lookup is now the primary test, run over
+  every local branch, with `git branch --merged main` as a secondary pass for merge-commit and
+  never-PR'd branches.
+- The skill now states that a squash-merged branch is spent: pushing further work to it is
+  rejected as non-fast-forward, and because `/ship` forbids force-pushing, the fix is a fresh
+  branch cut from an updated `origin/main`.
+
+## [1.12.17] - 2026-09-17
+
+### Changed
+
+- Bumped `@testing-library/dom` from 10.4.1 to 10.4.2 in the grouped minor/patch dependabot update.
+
 ## [1.12.16] - 2026-09-16
 
 ### Added
