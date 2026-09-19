@@ -9,6 +9,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.20] - 2026-09-18
+
+### Fixed
+
+- `/end-session` no longer points its memory step at a directory belonging to an earlier
+  checkout location. It had named the per-project memory slug as an absolute path from the old
+  OneDrive checkout; that directory still exists and still holds a full copy of every memory as
+  it stood then, so a session that trusted the skill silently read stale facts instead of
+  failing. The step now describes how the slug follows the current checkout, warns that
+  superseded directories survive on disk, and treats `MEMORY.md` as the list of what exists
+  rather than naming individual memories inline, which went stale as soon as one was added.
+- `/end-session` can now finish cleaning up a branch that was squash-merged before the
+  merge-commit policy. Its merged-PR lookup called such a branch spent while `git branch -d`
+  refused it — `-d` only accepts one while its remote-tracking ref survives, and the step's own
+  `git fetch --prune` removes that ref — leaving the session with no permitted action. A `-d`
+  refusal on a branch the lookup named spent is now resolved by comparing the local tip against
+  the merged PR's head commit; equal tips prove every commit reached the PR and permit
+  `git branch -D` in that case alone. The step no longer claims that a `-d` refusal always means
+  the branch holds commits that never reached its PR.
+
+## [1.12.19] - 2026-09-18
+
+### Changed
+
+- Every PR now lands as a merge commit: squash and rebase merging are disabled on the GitHub
+  repository, so a merge commit is the only method offered. The policy is forward-looking —
+  branches merged before it remain squashed and are not ancestors of `main`.
+- `/end-session` and `/handoff` no longer claim the repository squash-merges its PRs. The
+  merged-PR lookup stays `/end-session`'s primary branch test, because it is correct under either
+  merge method, but its rationale now matches the policy: ancestry is a fair test for anything
+  merged under it and unreliable only for the squash-era branches that predate it, which is the
+  class the non-fast-forward warning describes.
+
+## [1.12.18] - 2026-09-18
+
+### Fixed
+
+- `/end-session` now identifies spent branches correctly. It had treated
+  `git branch --merged main` as the primary test and called squash-merged branches a rare edge
+  case on the grounds that this repository merges PRs with merge commits; it squash-merges them,
+  so a spent branch's rewritten commits are not ancestors of `main` and that test missed nearly
+  every branch it was meant to delete. The merged-PR lookup is now the primary test, run over
+  every local branch, with `git branch --merged main` as a secondary pass for merge-commit and
+  never-PR'd branches.
+- The skill now states that a squash-merged branch is spent: pushing further work to it is
+  rejected as non-fast-forward, and because `/ship` forbids force-pushing, the fix is a fresh
+  branch cut from an updated `origin/main`.
+
+## [1.12.17] - 2026-09-17
+
+### Changed
+
+- Bumped `@testing-library/dom` from 10.4.1 to 10.4.2 in the grouped minor/patch dependabot update.
+
 ## [1.12.16] - 2026-09-16
 
 ### Added

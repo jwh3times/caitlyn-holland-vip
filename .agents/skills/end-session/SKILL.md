@@ -49,15 +49,25 @@ that, do step 5, and stop.
 
 ## 2. Update memory
 
-Memory files live **outside the repo**, in the per-project memory directory
-`~/.claude/projects/<project-slug>/memory/` — for this repo the slug is
-`C--Users-jerry-OneDrive-Documents-VSCodeProjects-caitlyn-holland-vip`. Each file is one
-fact with `name` / `description` / `metadata.type` frontmatter, and `MEMORY.md` is the
-one-line-per-memory index loaded every session.
+Memory files live **outside the repo**, in the per-project memory directory: a `memory/`
+folder under `~/.claude/projects/<project-slug>/`, where the slug is this checkout's absolute
+path with every non-alphanumeric character replaced by `-`. **Do not copy a path out of this
+file.** The slug changes whenever the checkout moves, and the directory for a previous location
+survives on disk holding a full copy of every memory as it stood then — reading one is a silent
+failure that hands the next session stale facts instead of a clean "not found". Take the
+directory from the memory instructions this session was started with; if you have to find it
+yourself, confirm the slug matches the current checkout before reading anything:
 
-Read `MEMORY.md` first. Today it holds `main-branch-protection` and
-`dependency-automation` — **check whether the fact belongs in an existing file before
-creating a new one**, and prefer updating that file (correcting it counts, and a memory
+```bash
+ls -d ~/.claude/projects/*/memory
+```
+
+Each file is one fact with `name` / `description` / `metadata.type` frontmatter, and
+`MEMORY.md` is the one-line-per-memory index loaded every session.
+
+Read `MEMORY.md` first — it is the authoritative list of what already exists, and no list
+written anywhere else substitutes for it. **Check whether the fact belongs in an existing file
+before creating a new one**, and prefer updating that file (correcting it counts, and a memory
 proved wrong should be deleted, not left standing).
 
 Record only what is durable and **not derivable from the repo**: GitHub settings and
@@ -210,22 +220,13 @@ git pull --ff-only origin main
 `--ff-only` keeps the pull a fast-forward: if it refuses, local `main` carries commits of its
 own — report that and leave `main` alone rather than merging, rebasing, or resetting it.
 
-Then delete the local branches whose work is already in `main`:
-
-```bash
-git branch --merged main --format='%(refname:short) %(worktreepath)' | grep -v '^main '
-```
-
-Every name that prints is fully contained in the refreshed `main` — delete each with
-`git branch -d <name>`, naming them in the report. A second column means the branch is checked
-out in a worktree and git will refuse; report those with the stale worktrees above instead of
-forcing them. Never `git branch -D`: the capital form discards unmerged commits without asking,
-and a branch `-d` refuses is telling you it still holds work.
-
-That list misses **squash- or rebase-merged branches**: their commits were rewritten on the way
-in, so git still calls them unmerged even though the change is on `main`. This repo merges PRs
-with merge commits today, so the case is rare — check the PR state before assuming a leftover
-branch is live. Use the equivalent GitHub MCP pull-request lookup when `gh` is unavailable:
+Then delete the local branches whose work is already in `main`. **Ask GitHub first, not git.**
+Merge commits are this repo's merge method — squash and rebase merging are disabled on the
+repository — so ancestry is a fair test for anything merged under that policy. It is not a fair
+test for the branches left over from before it: their commits were squashed on the way in, so
+`git` still calls them unmerged. A merged PR is the one signal that holds either way, so start
+there. Run the lookup over every local branch, and use the equivalent GitHub MCP pull-request
+lookup when `gh` is unavailable:
 
 ```bash
 for b in $(git branch --format='%(refname:short)' | grep -vx main); do
@@ -233,9 +234,46 @@ for b in $(git branch --format='%(refname:short)' | grep -vx main); do
 done
 ```
 
-A branch that prints a merged PR number can go. Still delete it with `-d`, not `-D` — if `-d`
-refuses one whose PR merged, the branch has commits that never reached the PR, so leave it and
-say so.
+A branch that prints a merged PR number is spent and can go. One that prints nothing either never
+had a PR or still has an open one — leave it, and see **Pushed is not merged** below.
+
+`git branch --merged main` then catches what the PR lookup cannot: a branch whose commits reached
+`main` without ever going through a PR of its own. Under the merge-commit policy it also confirms
+the branches the lookup already named.
+
+```bash
+git branch --merged main --format='%(refname:short) %(worktreepath)' | grep -v '^main '
+```
+
+Every name that prints is fully contained in the refreshed `main`. A second column means the
+branch is checked out in a worktree and git will refuse to delete it; report those with the stale
+worktrees above instead of forcing them.
+
+Delete each branch that either test names with `git branch -d <name>`, naming them in the report.
+`git branch -D` discards unmerged commits without asking, so it is forbidden everywhere except
+the one case below.
+
+**A `-d` refusal does not always mean the branch holds work.** For a branch squash-merged before
+the merge-commit policy, git accepts the delete only while `refs/remotes/origin/<branch>`
+survives — it is that ref, not `main`, that contains the branch. The `--prune` above removes the
+ref as soon as the remote branch is deleted on GitHub, and from then on `-d` refuses a branch
+whose every commit is already in `main` under a different hash. So when `-d` refuses a branch the
+merged-PR lookup named spent, compare the tips before concluding anything:
+
+```bash
+gh pr view <n> --json headRefOid -q .headRefOid
+git rev-parse <branch>
+```
+
+Equal tips mean every commit on the branch went through that merged PR and nothing is stranded.
+`git branch -D <branch>` is permitted here, and only here; name the branch and the PR number in
+the report. If the tips differ, or the branch has no merged PR, the refusal is the real signal —
+the branch carries commits that never reached a PR. Leave it and say so.
+
+**A squash-merged branch is spent.** This applies to the branches predating the merge-commit
+policy. Their commits are not ancestors of `main`, so pushing further work to one is rejected as
+non-fast-forward, and `/ship` forbids force-pushing — new work starts on a fresh branch cut from
+an updated `origin/main`, never on the old one.
 
 **Pushed is not merged.** A branch with an open or unmerged PR stays, however green it is —
 deleting it strands the review. Only a branch whose work is on `main` goes.
@@ -255,7 +293,8 @@ say so and name `/ship` as the next step. State plainly what you deliberately le
 - Commit, push, or merge ordinary repository changes. Publishing required human follow-up wiki
   documentation in step 4 and fast-forwarding local `main` in step 5 are the exceptions;
   anything needing a PR goes through `/ship`.
-- Force-delete a branch (`git branch -D`), or delete one whose PR has not merged.
+- Force-delete a branch (`git branch -D`) outside step 5's tip-match exception, or delete one
+  whose PR has not merged.
 - Create or close issues without session or standing authorization; required human follow-ups
   have standing authorization under step 4.
 - Record in memory or `private/` what `AGENTS.md`, the ADRs, or git history already say.
