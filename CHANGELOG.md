@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.22] - 2026-09-20
+
+### Fixed
+
+- The Oxlint native-rule research doc no longer tells a future recheck to watch a signal that
+  cannot fire. Its revisit trigger waited for the Oxc umbrella tracker to mark
+  `nextjs/no-location-assign-relative-destination` implemented, but that issue was closed as
+  completed in July 2025 — before the rule entered Next.js's recommended set — so its state will
+  stay `closed` whether or not the rule ever ships, and only the CI-maintained table inside it
+  still moves. The trigger now names the native rule source directory and the official rule table,
+  requires a published Oxlint release rather than an unreleased `main`, and carries a dated recheck
+  log. The parity-fixture requirement is unchanged, so the bar for removing the
+  `@next/eslint-plugin-next` bridge has not moved, and no lint configuration changed.
+
+## [1.12.21] - 2026-09-19
+
+### Changed
+
+- Bumped `lucide-react` from 1.45.0 to 1.46.0, `@vitest/coverage-v8` and `vitest` from 5.0.0 to
+  5.0.1, and `oxlint` from 1.82.0 to 1.83.0 in the npm-minor-and-patch group (dependabot, PR
+  #205).
+
 ## [1.12.20] - 2026-09-18
 
 ### Fixed
