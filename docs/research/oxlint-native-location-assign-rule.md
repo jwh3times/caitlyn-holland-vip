@@ -7,10 +7,14 @@ _Researched 2026-08-12 for issue #119._
 **No-go. Do not remove `@next/eslint-plugin-next` yet.** The repository has Oxlint 1.78.0
 installed, which is also the latest official release checked (released 2026-08-10). It provides
 no native equivalent of
-`@next/next/no-location-assign-relative-destination`. The Oxc project's CI-maintained
+`@next/next/no-location-assign-relative-destination`. The Oxc project's
 [@next/eslint-plugin-next tracker](https://github.com/oxc-project/oxc/issues/1929) reports that
 one of 22 recommended rules remains TODO, and the only row without an implemented marker is
-`nextjs/no-location-assign-relative-destination`. The rule is also absent from the
+`nextjs/no-location-assign-relative-destination`. Read that tracker's **table**, not its state:
+the issue was closed as `completed` on 2025-07-30, while the table it carries is CI-maintained
+and still updates. The rule entered Next.js's recommended set after the closure, so neither
+"closed" nor "abandoned" is an answer about this rule, and nothing in Oxc currently tracks the
+gap. The rule is also absent from the
 [official Oxlint rule table](https://oxc.rs/docs/guide/usage/linter/rules.html), the
 [1.78.0 release notes](https://github.com/oxc-project/oxc/releases/tag/apps_v1.78.0), and the
 [1.78.0 `nextjs` rule source directory](https://github.com/oxc-project/oxc/tree/c42d6397eab5b2d5bb2bd6746c57bc2a9cad21bd/crates/oxc_linter/src/rules/nextjs).
@@ -101,6 +105,18 @@ the 2026-08-12 dependency graph and should be rechecked when the native rule lan
 
 Reopen the implementation when all three are true:
 
-1. The Oxc tracker marks `nextjs/no-location-assign-relative-destination` implemented.
-2. The rule appears in an Oxlint release and in the official rule table/source tree.
+1. `no_location_assign_relative_destination.rs` exists in Oxlint's native Next.js rule source
+   directory, [`crates/oxc_linter/src/rules/nextjs/`](https://github.com/oxc-project/oxc/tree/main/crates/oxc_linter/src/rules/nextjs),
+   or the rule is listed in the
+   [official Oxlint rule table](https://oxc.rs/docs/guide/usage/linter/rules.html). Check the
+   source tree and the table directly. The tracker issue linked above is closed, so its state
+   will not change when the rule lands; only the table inside it moves.
+2. The rule appears in a published Oxlint release, not only on `main`.
 3. Targeted fixtures demonstrate parity with the pinned Next.js behavior above.
+
+### Recheck log
+
+- **2026-09-20** — still absent. `oxlint@1.83.0` is both the latest published release and this
+  repository's pin; the native rule directory holds 21 rules at tag `apps_v1.83.0` and none on
+  `main` matches this rule, so it has not landed unreleased either. No open Oxc issue or pull
+  request proposes implementing it. The tracker's table still shows it unimplemented.
