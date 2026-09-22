@@ -40,7 +40,7 @@
     },
     "packageManager": {
       "name": "npm",
-      "version": "11.x",
+      "version": "11.x || 12.x",
       "onFail": "error"
     }
   },

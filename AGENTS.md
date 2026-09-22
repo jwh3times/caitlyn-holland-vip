@@ -36,8 +36,10 @@ Node version is pinned in [.nvmrc](.nvmrc) — run `nvm use` to match CI and Clo
 is **Node 26**, currently a _Current_ (pre-LTS) release rather than Active LTS; `@types/node` is
 held on the matching `26.x` typings line so the compiler cannot promise APIs the runtime lacks.
 The `devEngines` policy in [package.json](package.json) rejects `npm install`, `npm ci`, and
-`npm run` before they start when the active Node/npm major does not match the pinned Node 26/npm
-11 toolchain; switch runtimes before dependency work rather than accepting lockfile churn.
+`npm run` before they start when the active Node/npm major does not match the pinned toolchain:
+Node 26 with npm 11 or 12. Both npm lines write an identical lockfile; npm 11 is what Node 26
+bundles, so CI and Cloudflare use it, while npm 12 is accepted locally. Switch runtimes before
+dependency work rather than accepting lockfile churn.
 See [ADR-0007](docs/adr/0007-node-runtime-pin-tracks-types-node.md) — the pin and the typings move
 together, in either direction.
 

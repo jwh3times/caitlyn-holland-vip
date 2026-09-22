@@ -9,6 +9,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.25] - 2026-09-22
+
+### Changed
+
+- The toolchain policy now accepts npm 12 as well as npm 11. Before this, `npm ci`, `npm install`
+  and `npm run` failed with `EBADDEVENGINES` on a Node 26 install whose npm had been upgraded to 12.
+  npm 12 was verified to leave `package-lock.json` byte-for-byte unchanged, so the lockfile-churn
+  guard the pin exists for still holds. The range is `11.x || 12.x` rather than a strict `12.x`
+  because every Node 26 release still bundles npm 11 and Cloudflare Pages takes npm from the Node
+  version with no override, so CI and deploys keep running on the bundled npm 11 with no workflow
+  or dashboard change. ADR-0007 records when to tighten the range.
+
+## [1.12.24] - 2026-09-22
+
+### Changed
+
+- Bumped `@types/node` from 26.6.1 to 26.6.2 in the npm-minor-and-patch group (dependabot, PR
+  #213).
+
+## [1.12.23] - 2026-09-21
+
+### Changed
+
+- Bumped `lucide-react` from 1.46.0 to 1.47.0, `@types/node` from 26.5.1 to 26.6.1, `jsdom` from
+  30.0.1 to 30.1.0, and `prettier` from 3.9.6 to 3.9.8 in the npm-minor-and-patch group
+  (dependabot, PR #212).
+
 ## [1.12.22] - 2026-09-20
 
 ### Fixed
