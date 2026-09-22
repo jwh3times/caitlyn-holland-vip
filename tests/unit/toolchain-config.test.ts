@@ -29,10 +29,10 @@ describe("development toolchain policy", () => {
     expect(typesNodeMajor).toBe(pinnedNodeMajor);
   });
 
-  it("requires the npm line that preserves the committed lockfile metadata", () => {
+  it("accepts only the npm lines that preserve the committed lockfile metadata", () => {
     expect(manifest.devEngines.packageManager).toEqual({
       name: "npm",
-      version: "11.x",
+      version: "11.x || 12.x",
       onFail: "error",
     });
   });

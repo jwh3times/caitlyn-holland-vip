@@ -16,6 +16,13 @@ lockfile, we added npm's source-worktree-specific `devEngines` policy instead. I
 manager is npm 11. Tests bind that policy to `.nvmrc` and the typings major, so all three move as
 one toolchain decision.
 
+The npm policy later widened to `11.x || 12.x`. npm 12 was verified to leave the committed
+lockfile byte-for-byte unchanged, but no Node 26 release bundles it, and Cloudflare Pages v3 takes
+npm from the Node version with no override. A strict `12.x` pin would therefore have required an
+npm self-upgrade in every CI job and a custom Cloudflare install step. Tighten the range to `12.x`
+once the pinned Node line bundles npm 12, and re-verify the lockfile before admitting a new npm
+major.
+
 ## Consequences
 
 - Until Node 26 reaches LTS, the toolchain runs on a Current release: a shorter patch window and less third-party soak time than the LTS line. No action is required when it graduates — the pin is already there.

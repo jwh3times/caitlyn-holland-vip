@@ -16,13 +16,13 @@ A single-page site (Hero → About → Skills → Experience → Contact) built 
 
 ## Getting started
 
-Requires **Node 26** and **npm 11**. The repository's `devEngines` policy rejects npm commands
+Requires **Node 26** and **npm 11 or 12**. The repository's `devEngines` policy rejects npm commands
 under a different major-version toolchain so an older npm cannot silently rewrite lockfile
 metadata; see [`.nvmrc`](.nvmrc) and
 [`package.json`](package.json).
 
 ```bash
-nvm use          # or install Node 26 with npm 11
+nvm use          # or install Node 26 (bundled npm 11; npm 12 also accepted)
 npm ci           # install exact dependencies
 npm run dev      # start the dev server at http://localhost:3000
 ```
