@@ -38,8 +38,8 @@ features or capabilities that don't exist in the code.
 
 **AI config change (`.agents/skills/**`, `.claude/agents/**`)**
 
-- Run `npm run sync:ai` and commit the regenerated mirrors. The `AI Config Parity` job fails
-  otherwise — including on a drifted `.agents/` source, because the sync reformats it.
+- Run `npm run sync:agents` and commit the regenerated mirrors. The `AI Config Parity` job
+  runs `npm run sync:agents:check` and fails otherwise.
 - `AGENTS.md`: the "Agent configuration & docs automation" section, if the layout changed
 
 **Metadata or headers change (`app/layout.tsx`, `public/_headers`)**

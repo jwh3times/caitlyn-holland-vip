@@ -37,7 +37,7 @@ An authored configuration file — anything under `.agents/skills/` or `.claude/
 _Avoid_: original, master copy
 
 **Mirror**:
-A file generated from a Source by `npm run sync:ai` — anything under `.claude/skills/` or `.codex/agents/`. Never edited by hand.
+A file generated from a Source by `npm run sync:agents` — anything under `.claude/skills/` or `.codex/agents/`. Never edited by hand.
 _Avoid_: copy, duplicate, build output
 
 **Skill**:

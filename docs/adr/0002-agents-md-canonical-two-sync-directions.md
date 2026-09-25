@@ -9,3 +9,7 @@ The directions differ because the operations differ. Mirroring a skill is a copy
 - `npm run sync:ai` regenerates both trees, and the `AI Config Parity` CI job fails if any mirror drifts. It also fails on a drifted `.agents/` **source**, because the sync prettier-formats sources on the way through.
 - Never hand-edit `.claude/skills/` or `.codex/agents/`. Deleting a skill from `.agents/` prunes its mirror automatically.
 - `.codex/config.toml` is the exception to "everything under `.codex/` is generated" — it is hand-authored Codex configuration with no generating source.
+
+## Update (2026-09-25)
+
+`scripts/sync-ai.mjs` and `npm run sync:ai` were replaced by the cross-repo `scripts/sync-agents.mjs`, run as `npm run sync:agents` (write) and `npm run sync:agents:check` (verify only). The two directions above are unchanged. `AI Config Parity` now runs `--check` instead of regenerating and diffing, so an unformatted `.agents/` source is caught by `Format Check` rather than here, and the generated trees are excluded from Prettier.

@@ -39,7 +39,8 @@ npm run dev      # start the dev server at http://localhost:3000
 | `npm run lint:fix`                                | Oxlint with safe autofixes                                                                                                        |
 | `npm run format`                                  | Prettier write                                                                                                                    |
 | `npm run format:check`                            | Prettier check (used in CI)                                                                                                       |
-| `npm run sync:ai`                                 | Regenerate the AI-tool config mirrors                                                                                             |
+| `npm run sync:agents`                             | Regenerate the AI-tool config mirrors                                                                                             |
+| `npm run sync:agents:check`                       | Verify the AI-tool config mirrors without writing (used in CI)                                                                    |
 | `npm run sync:main`                               | Switch the public and optional private repositories to `main` and fast-forward from `origin/main`                                 |
 | `npm run bootstrap:private`                       | Install the optional private companion; see the [owner recovery runbook](docs/agents/private-workspace.md)                        |
 | `npm run test:unit`                               | Vitest unit/component tests                                                                                                       |

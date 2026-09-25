@@ -1,5 +1,3 @@
-<!-- AUTO-GENERATED from .agents/skills/tdd/tests.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
-
 # Good and Bad Tests
 
 ## Good Tests

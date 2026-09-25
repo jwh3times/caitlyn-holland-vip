@@ -1,9 +1,8 @@
 ---
+# GENERATED — do not edit. Source: .agents/skills/prototype/SKILL.md — regenerate with 'node scripts/sync-agents.mjs'.
 name: prototype
 description: Build a throwaway prototype to answer a design question. Use when the user wants to sanity-check whether a state model or logic feels right, or explore what a UI should look like.
 ---
-
-<!-- AUTO-GENERATED from .agents/skills/prototype/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
 
 # Prototype
 

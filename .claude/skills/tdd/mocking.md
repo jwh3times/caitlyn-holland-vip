@@ -1,5 +1,3 @@
-<!-- AUTO-GENERATED from .agents/skills/tdd/mocking.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
-
 # When to Mock
 
 Mock at **system boundaries** only:

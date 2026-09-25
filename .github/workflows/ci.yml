@@ -166,21 +166,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Regenerate AI tool config mirrors
-        run: npm run sync:ai
+      - name: Test the sync script
+        run: node --test scripts/sync-agents.test.mjs
 
       - name: Verify generated AI configs are committed
-        run: |
-          # .claude/skills and .codex are generated; .agents is the skill source
-          # but sync:ai reformats it, so a drifted source shows up here too.
-          PATHS=".codex .claude/skills .agents"
-          if [ -n "$(git status --porcelain -- $PATHS)" ]; then
-            echo "::error::Generated AI tool configs are out of date. Run 'npm run sync:ai' and commit the result."
-            git --no-pager diff -- $PATHS
-            git status --porcelain -- $PATHS
-            exit 1
-          fi
-          echo "AI tool config mirrors are in sync."
+        # .codex/agents and .claude/skills are generated; --check fails on any stale,
+        # missing, or orphaned mirror. Unformatted .agents/ sources fail Format Check.
+        run: npm run sync:agents:check
 
   changelog:
     name: Changelog Version

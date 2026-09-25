@@ -1,9 +1,8 @@
 ---
+# GENERATED — do not edit. Source: .agents/skills/writing-for-agents/SKILL.md — regenerate with 'node scripts/sync-agents.mjs'.
 name: writing-for-agents
 description: Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.
 ---
-
-<!-- AUTO-GENERATED from .agents/skills/writing-for-agents/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
 
 Reference for writing any document an agent consumes — a skill, an `AGENTS.md` / `CLAUDE.md`, a doc reached by a pointer. The packaging differs; the writing does not: the same levers make each one predictable — the agent taking the same _process_ every run, not producing the same output.
 

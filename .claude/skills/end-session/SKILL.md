@@ -1,9 +1,8 @@
 ---
+# GENERATED — do not edit. Source: .agents/skills/end-session/SKILL.md — regenerate with 'node scripts/sync-agents.mjs'.
 name: end-session
 description: End the work session cleanly — flush what you learned into memory, private/ docs, and GitHub issues, then tidy the local workspace. Use when the user says they are done for the session, or when another skill (such as handoff) calls for a close-out.
 ---
-
-<!-- AUTO-GENERATED from .agents/skills/end-session/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
 
 # End Session
 
@@ -184,8 +183,8 @@ git worktree list
 - **Stale agent worktrees** under `.claude/worktrees/` — report any that `git worktree list`
   shows; removing one is a user decision because it may hold unpushed commits.
 - **Generated mirrors** — if the session edited `.agents/skills/**` or `.claude/agents/**`,
-  run `npm run sync:ai` and confirm `git status --porcelain -- .codex .claude/skills .agents`
-  prints nothing, so the `AI Config Parity` gate stays green. A hand-edit under
+  run `npm run sync:agents`, commit the result, and confirm `npm run sync:agents:check`
+  passes, so the `AI Config Parity` gate stays green. A hand-edit under
   `.claude/skills/` or `.codex/agents/` is the real bug — fix the source and re-sync.
 
 ### Branches

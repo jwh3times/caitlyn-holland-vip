@@ -35,6 +35,10 @@ export default defineConfig({
         "app/layout.tsx",
         // Re-export barrel — no logic to cover.
         "components/sections/index.ts",
+        // Shared verbatim across repositories and covered by its own node:test
+        // suite (`node --test scripts/sync-agents.test.mjs`), not by vitest.
+        "scripts/sync-agents.mjs",
+        "scripts/sync-agents.test.mjs",
       ],
       // Baseline coverage gate. CI fails (and merges are blocked) below this.
       thresholds: {
