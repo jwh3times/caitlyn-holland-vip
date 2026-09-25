@@ -1,10 +1,9 @@
 ---
+# GENERATED — do not edit. Source: .agents/skills/lets-go/SKILL.md — regenerate with 'node scripts/sync-agents.mjs'.
 name: lets-go
 description: Pick up this repo's active Proton Drive handoff from the other machine and continue the work.
 disable-model-invocation: true
 ---
-
-<!-- AUTO-GENERATED from .agents/skills/lets-go/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
 
 # Let's Go
 

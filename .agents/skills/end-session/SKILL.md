@@ -182,8 +182,8 @@ git worktree list
 - **Stale agent worktrees** under `.claude/worktrees/` — report any that `git worktree list`
   shows; removing one is a user decision because it may hold unpushed commits.
 - **Generated mirrors** — if the session edited `.agents/skills/**` or `.claude/agents/**`,
-  run `npm run sync:ai` and confirm `git status --porcelain -- .codex .claude/skills .agents`
-  prints nothing, so the `AI Config Parity` gate stays green. A hand-edit under
+  run `npm run sync:agents`, commit the result, and confirm `npm run sync:agents:check`
+  passes, so the `AI Config Parity` gate stays green. A hand-edit under
   `.claude/skills/` or `.codex/agents/` is the real bug — fix the source and re-sync.
 
 ### Branches

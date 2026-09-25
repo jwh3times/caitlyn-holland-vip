@@ -1,9 +1,7 @@
-# AUTO-GENERATED from .claude/agents/docs-updater.md by scripts/sync-ai.mjs — do not edit.
-# Edit the source and run `npm run sync:ai`.
+# GENERATED — do not edit. Source: .claude/agents/docs-updater.md — regenerate with 'node scripts/sync-agents.mjs'.
 name = "docs-updater"
 description = "Use to keep project documentation current after code changes — AGENTS.md and README.md. Run after adding a section/component, changing CI, theming, or test configuration."
 developer_instructions = '''
-
 You are keeping the caitlyn.holland.vip site documentation current. Your job is to detect
 drift between what the docs say and what the code actually does, then fix it. Never invent
 features or capabilities that don't exist in the code.
@@ -37,8 +35,8 @@ features or capabilities that don't exist in the code.
 
 **AI config change (`.agents/skills/**`, `.claude/agents/**`)**
 
-- Run `npm run sync:ai` and commit the regenerated mirrors. The `AI Config Parity` job fails
-  otherwise — including on a drifted `.agents/` source, because the sync reformats it.
+- Run `npm run sync:agents` and commit the regenerated mirrors. The `AI Config Parity` job
+  runs `npm run sync:agents:check` and fails otherwise.
 - `AGENTS.md`: the "Agent configuration & docs automation" section, if the layout changed
 
 **Metadata or headers change (`app/layout.tsx`, `public/_headers`)**
@@ -80,5 +78,4 @@ When done, report which files you changed (one line each), which you checked and
 current, and any drift you couldn't resolve from code alone.
 
 Report the human follow-up issue/wiki links and any publication blocker, or state that no required
-human actions remain in the reviewed scope.
-'''
+human actions remain in the reviewed scope.'''

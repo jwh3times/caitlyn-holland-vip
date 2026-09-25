@@ -254,6 +254,13 @@
         "browser": true,
         "node": true
       }
+    },
+    {
+      "files": ["scripts/sync-agents.mjs"],
+      "rules": {
+        "no-control-regex": "off",
+        "no-useless-assignment": "off"
+      }
     }
   ]
 }

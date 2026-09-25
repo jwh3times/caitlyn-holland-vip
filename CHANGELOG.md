@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.27] - 2026-09-25
+
+### Changed
+
+- Replaced `scripts/sync-ai.mjs` with the cross-repo `scripts/sync-agents.mjs`, shared verbatim
+  with other repositories and tested by its own `node:test` suite
+  (`node --test scripts/sync-agents.test.mjs`). `npm run sync:ai` is now `npm run sync:agents`, and
+  the new `npm run sync:agents:check` verifies the mirrors without writing. The `AI Config Parity`
+  job runs the suite and the check instead of regenerating and diffing the working tree.
+- Mirror output changed once: only `SKILL.md` and Codex TOML files carry the new
+  `# GENERATED — do not edit.` banner, and every other skill file (other markdown, YAML, scripts)
+  is now copied byte-for-byte. The sync now also prunes orphaned `.codex/agents` files and copies
+  binary assets as raw bytes.
+- `.claude/skills/` and `.codex/agents/` are excluded from Prettier, so formatting can no longer
+  drift generated files; `sync:agents` still formats the `.agents/` markdown sources first.
+
 ## [1.12.25] - 2026-09-22
 
 ### Changed

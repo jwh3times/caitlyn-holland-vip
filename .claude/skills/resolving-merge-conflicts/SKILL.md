@@ -1,9 +1,8 @@
 ---
+# GENERATED — do not edit. Source: .agents/skills/resolving-merge-conflicts/SKILL.md — regenerate with 'node scripts/sync-agents.mjs'.
 name: resolving-merge-conflicts
 description: "Use when you need to resolve an in-progress git merge/rebase conflict."
 ---
-
-<!-- AUTO-GENERATED from .agents/skills/resolving-merge-conflicts/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
 
 1. **See the current state** of the merge/rebase. Check git history, and the conflicting files.
 

@@ -79,7 +79,7 @@ E2E specs in [tests/e2e/](tests/e2e/) cover homepage rendering, navigation, them
 Keep workflow actions pinned to full commit SHAs with version comments. The GitHub Actions
 entry in [.github/dependabot.yml](.github/dependabot.yml) maintains their updates.
 
-- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with **six** jobs: `Format Check` (`npm run format:check`), `Coverage` (`npm run coverage` — **fails below the 80% thresholds** and uploads a `coverage-report` artifact), `Build & Lint` (`npm run lint` + `npm run build` + accepted compatibility CSP validation in Chromium, uploads the `static-site` artifact), `Playwright Tests` (needs Build & Lint; installs Chromium and runs the desktop Chromium and Mobile Chrome projects with one CI worker), `AI Config Parity` (runs `npm run sync:ai` and fails if `.codex`, `.claude/skills`, or `.agents` is dirty afterwards — it covers the **sources** too, because the sync reformats them, so an unformatted `.agents/` edit fails here rather than in `Format Check`), and `Changelog Version` (PRs only; computes the next version via [scripts/next-version.sh](scripts/next-version.sh) and fails if [CHANGELOG.md](CHANGELOG.md) has no `## [x.y.z]` section for it — dependabot PRs are exempt). **A PR fails CI if formatting drifts — run `npm run format` before committing.**
+- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with **six** jobs: `Format Check` (`npm run format:check`), `Coverage` (`npm run coverage` — **fails below the 80% thresholds** and uploads a `coverage-report` artifact), `Build & Lint` (`npm run lint` + `npm run build` + accepted compatibility CSP validation in Chromium, uploads the `static-site` artifact), `Playwright Tests` (needs Build & Lint; installs Chromium and runs the desktop Chromium and Mobile Chrome projects with one CI worker), `AI Config Parity` (runs the generator's own `node --test scripts/sync-agents.test.mjs` suite, then `npm run sync:agents:check`, which fails on any stale, missing, or orphaned file under `.codex/agents` or `.claude/skills`; an unformatted `.agents/` source fails `Format Check`), and `Changelog Version` (PRs only; computes the next version via [scripts/next-version.sh](scripts/next-version.sh) and fails if [CHANGELOG.md](CHANGELOG.md) has no `## [x.y.z]` section for it — dependabot PRs are exempt). **A PR fails CI if formatting drifts — run `npm run format` before committing.**
 - **Dependency review — [.github/workflows/dependency-review.yml](.github/workflows/dependency-review.yml)** — on PRs, fails on vulnerable dependency changes.
 - **Code scanning — CodeQL default setup** — configured repository-side (Settings → Code security), scanning JavaScript/TypeScript and Actions. There is **no `codeql.yml` on purpose**: an advanced-config workflow conflicts with default setup, so do not add one. Its `CodeQL` check is required to merge even though nothing in the repo declares it.
 - **Versioning — [.github/workflows/version.yml](.github/workflows/version.yml)** — on every merge (push) to `main`, tags the merge commit and creates a GitHub Release using standard SemVer `v<major>.<minor>.<build>` (e.g. `v1.2.7`). It computes the build number with [scripts/next-version.sh](scripts/next-version.sh) — the same script the `Changelog Version` guard and the `ship` skill use, so the tag minted always matches the version the changelog was written for. The `package.json` `version` is the major/minor/build floor; for an existing major/minor line the build increments from the highest matching tag, and a new line starts at the floor's own build — bump the floor to `1.2.3` with no `v1.2.*` tags and the first tag on that line is `v1.2.3`, not `v1.2.0`. The floor is a lower bound only, never a record of the current release, so it legitimately sits far behind the latest tag.
@@ -153,7 +153,7 @@ is edited once:
 - **Shared project guidance** lives in this file, `AGENTS.md`. Claude Code reads it through an
   `@AGENTS.md` import in [CLAUDE.md](CLAUDE.md); other tools read `AGENTS.md` directly.
 - **Skills** are authored under **`.agents/skills/<name>/`** and mirrored to
-  `.claude/skills/<name>/` by `npm run sync:ai`. The **whole skill directory** is mirrored —
+  `.claude/skills/<name>/` by `npm run sync:agents`. The **whole skill directory** is mirrored —
   `SKILL.md` plus every auxiliary file (`agents/openai.yaml`, `scripts/*.sh`, reference
   docs) — so all of it is covered by drift detection. Of the 17 skills, 14 originated in
   [`mattpocock/skills`](https://github.com/mattpocock/skills) but are now forked and owned
@@ -172,13 +172,17 @@ is edited once:
   a format conversion (markdown + YAML frontmatter → TOML), not a copy.
 
 Never edit a generated file — that means anything under **`.claude/skills/`** or
-**`.codex/agents/`**. Edit the source and re-run `npm run sync:ai`. Generated markdown and YAML
-carry an `AUTO-GENERATED` banner naming their source; shell scripts are copied verbatim so their
-shebang stays on line 1, and are drift-checked by content instead. The sync also **prunes**
-mirrors whose source is gone, so deleting a skill from `.agents/` removes its `.claude/` copy.
+**`.codex/agents/`**. Edit the source and re-run `npm run sync:agents` (it prettier-formats the
+`.agents/` markdown sources, then runs [scripts/sync-agents.mjs](scripts/sync-agents.mjs)). Each
+mirrored `SKILL.md` and each Codex TOML carries a `# GENERATED — do not edit.` banner naming its
+source; every other skill file is copied byte-for-byte and drift-checked by content. The sync
+also **prunes** mirrors whose source is gone (in both generated trees), so deleting a skill from
+`.agents/` removes its `.claude/` copy. The generator is shared verbatim with other repositories —
+do not edit it here — and the generated trees are in `.prettierignore` so formatting cannot drift
+them.
 The one exception is [.codex/config.toml](.codex/config.toml) — hand-authored Codex
 configuration with no generating source, safe to edit directly. The `AI Config Parity` CI job
-regenerates everything and fails if the result differs from what is committed.
+runs `npm run sync:agents:check` and fails if any mirror differs from what is committed.
 
 ### Next.js agent rules — auto-generation is off
 
@@ -191,8 +195,8 @@ hand-authored, so no tool writes into it and no unrelated diff picks up a dirty 
 Do not remove the flag, and do not commit the block if you see it — restore the flag instead.
 [tests/unit/next-config.test.ts](tests/unit/next-config.test.ts) guards both halves of that.
 
-Note what the opt-out does **not** touch: `npm run sync:ai` and the `AI Config Parity` CI job
-only regenerate `.agents/`, `.claude/skills/`, and `.codex/agents/`. Neither reads or writes
+Note what the opt-out does **not** touch: `npm run sync:agents` and the `AI Config Parity` CI
+job only touch `.agents/`, `.claude/skills/`, and `.codex/agents/`. Neither reads or writes
 `AGENTS.md`, so the block was never a parity failure — only a dirty working tree.
 
 The block's actual advice is worth keeping, so it lives here by hand instead:
@@ -207,7 +211,7 @@ refreshed when you **ship a branch**: the `ship` skill invokes `docs-updater` (s
 branch diff) as part of opening a PR — alongside evaluating whether the changes warrant a major,
 minor, or standard build-number release, adjusting the package-version floor when needed,
 computing the exact version via [scripts/next-version.sh](scripts/next-version.sh), writing the
-[CHANGELOG.md](CHANGELOG.md) entry for it, running `npm run sync:ai`, running the fast checks
+[CHANGELOG.md](CHANGELOG.md) entry for it, running `npm run sync:agents`, running the fast checks
 (`format:check`, `lint`, `tsc --noEmit`), and pushing. Say "ship it" when a branch is ready for review. The
 `Changelog Version` CI job then verifies the changelog names the version the merge will actually
 mint. Both `ship` and `end-session` use GitHub MCP operations when `gh` is unavailable, so remote

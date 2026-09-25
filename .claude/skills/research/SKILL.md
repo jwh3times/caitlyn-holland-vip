@@ -1,9 +1,8 @@
 ---
+# GENERATED — do not edit. Source: .agents/skills/research/SKILL.md — regenerate with 'node scripts/sync-agents.mjs'.
 name: research
 description: Investigate a question against high-trust primary sources and capture the findings as a Markdown file in the repo. Use when the user wants a topic researched, docs or API facts gathered, or reading legwork delegated to a subagent.
 ---
-
-<!-- AUTO-GENERATED from .agents/skills/research/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
 
 Dispatch a **subagent** to do the research. Subagents here run to completion and report back — you do not keep working alongside one, so scope the question tightly enough that the wait is worth it. Several independent questions can be dispatched at once; one question split across several agents usually cannot.
 

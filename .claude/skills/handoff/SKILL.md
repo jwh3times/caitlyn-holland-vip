@@ -1,11 +1,10 @@
 ---
+# GENERATED — do not edit. Source: .agents/skills/handoff/SKILL.md — regenerate with 'node scripts/sync-agents.mjs'.
 name: handoff
 description: Hand the session off to the other machine — write a handoff document to Proton Drive, register it in the handoff map, alert on unmerged work, then close out with end-session.
 argument-hint: "What will the next session be used for?"
 disable-model-invocation: true
 ---
-
-<!-- AUTO-GENERATED from .agents/skills/handoff/SKILL.md by scripts/sync-ai.mjs — do not edit. Edit the source and run `npm run sync:ai`. -->
 
 # Handoff
 
