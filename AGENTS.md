@@ -28,7 +28,10 @@ npm run sync:main    # Update clean public/private checkouts to origin/main (mis
 Run `npm run build` before `npm run preview`; the preview command serves the completed static
 export using the local `serve` dependency installed by `npm ci` from the lockfile. It serves
 content only and does not apply Cloudflare's `out/_headers`; deployed-header validation
-remains the responsibility of the post-deploy smoke workflow.
+remains the responsibility of the post-deploy smoke workflow. `serve` pins `compression` to a
+vulnerable `1.8.1` (GHSA-vc2v-76pw-4v95), so the `overrides` block in
+[package.json](package.json) forces `compression` to `1.8.2`; drop the override once a `serve`
+release depends on `compression >= 1.8.2`.
 
 Lint rules live in [.oxlintrc.json](.oxlintrc.json). Oxlint owns the core, TypeScript, React, React Compiler, and React Hooks checks natively; one unsupported Next.js navigation rule still runs through `@next/eslint-plugin-next` (no native `nextjs/no-location-assign-relative-destination` rule exists yet — see [the Oxlint research](docs/research/oxlint-native-location-assign-rule.md)). ESLint is only a transitive compatibility dependency of that plugin, not the lint runner. Next.js 16.3 defaults production type-checking to the project-local TypeScript 7 CLI; keep `useTypeScriptCli` unset unless a future Next.js upgrade changes that default. See [the compatibility research](docs/research/nextjs-typescript-cli-stability.md).
 
