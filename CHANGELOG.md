@@ -9,6 +9,103 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.39] - 2026-10-13
+
+### Security
+
+- Patched three open Dependabot alerts, all in development-only transitive dependencies; nothing
+  from them ships in the static export. `compression` moves from 1.8.1 to 1.8.2
+  (GHSA-vc2v-76pw-4v95, a memory leak when a response closes early), reachable only through the
+  local `npm run preview` server. `serve` 14.2.6 pins `compression` to exactly 1.8.1 and has no
+  newer release, so `package.json` gains an `overrides` entry forcing 1.8.2; drop it once `serve`
+  depends on a patched `compression` itself.
+- `brace-expansion` moves from 5.0.9 to 5.0.12 and from 1.1.18 to 1.1.21 (GHSA-q2hr-2g5m-vwhr,
+  quadratic-time brace expansion), and `fast-uri` from 3.1.7 to 3.1.8 (GHSA-hrr3-gc8f-f4qj).
+  These are lockfile-only transitive bumps inside the existing ranges. The patched `compression`
+  adds one new transitive package, `destroy` 1.2.0.
+- `braces` 3.0.3 (GHSA-vfj7-8cjw-p6xm), pulled in by `@next/eslint-plugin-next` through
+  `fast-glob`, stays as it is: no patched release exists.
+
+## [1.12.38] - 2026-10-13
+
+### Changed
+
+- Bumped `lucide-react` from 1.52.0 to 1.54.0, `next` and `@next/eslint-plugin-next` from 16.3.8
+  to 16.4.0, `@playwright/test` from 1.63.0 to 1.64.0, and `@types/node` from 26.6.4 to 26.6.5 in
+  the npm-minor-and-patch group (dependabot, PR #228).
+
+## [1.12.37] - 2026-10-13
+
+### Changed
+
+- Bumped the pinned `actions/setup-node` from 7.0.0 to 7.1.0 and `actions/upload-artifact` from
+  7.0.1 to 7.0.2 in the CI and smoke workflows (dependabot, PR #227).
+
+## [1.12.36] - 2026-10-09
+
+### Changed
+
+- Bumped `@vitejs/plugin-react` from 6.1.1 to 6.1.2 and `oxlint` from 1.86.0 to 1.87.0 in the
+  npm-minor-and-patch group (dependabot, PR #226).
+
+## [1.12.35] - 2026-10-08
+
+### Changed
+
+- Bumped `lucide-react` from 1.51.0 to 1.52.0 and `jsdom` from 30.1.1 to 30.1.2 in the
+  npm-minor-and-patch group (dependabot, PR #225).
+
+## [1.12.34] - 2026-10-07
+
+### Security
+
+- Bumped the transitive dependency `sharp` from 0.35.4 to 0.35.5, a lockfile-only change that
+  resolves GHSA-wq5f-xc86-pv6w (dependabot, PR #224).
+
+## [1.12.33] - 2026-10-07
+
+### Security
+
+- Bumped the transitive dependency `source-map-js` from 1.2.1 to 1.2.2, a lockfile-only change
+  that resolves GHSA-68fv-2mgg-jv7q (dependabot, PR #223).
+
+## [1.12.32] - 2026-10-07
+
+### Changed
+
+- Bumped `lucide-react` from 1.49.0 to 1.51.0 in the npm-minor-and-patch group (dependabot, PR
+  #222).
+
+## [1.12.31] - 2026-10-05
+
+### Changed
+
+- Bumped `lucide-react` from 1.48.0 to 1.49.0, `next` and `@next/eslint-plugin-next` from 16.3.7
+  to 16.3.8, `@types/node` from 26.6.3 to 26.6.4, and `@vitest/coverage-v8` and `vitest` from
+  5.0.2 to 5.0.3 in the npm-minor-and-patch group (dependabot, PR #221).
+
+## [1.12.30] - 2026-10-02
+
+### Changed
+
+- Bumped `next` and `@next/eslint-plugin-next` from 16.3.6 to 16.3.7 and `oxlint` from 1.85.0 to
+  1.86.0 in the npm-minor-and-patch group (dependabot, PR #220).
+
+## [1.12.29] - 2026-09-29
+
+### Changed
+
+- Bumped `@types/node` from 26.6.2 to 26.6.3 in the npm-minor-and-patch group (dependabot, PR
+  #219).
+
+## [1.12.28] - 2026-09-28
+
+### Changed
+
+- Bumped `lucide-react` from 1.47.0 to 1.48.0, `next` and `@next/eslint-plugin-next` from 16.3.5
+  to 16.3.6, `@vitest/coverage-v8` and `vitest` from 5.0.1 to 5.0.2, and `prettier` from 3.9.8 to
+  3.9.9 in the npm-minor-and-patch group (dependabot, PR #218).
+
 ## [1.12.27] - 2026-09-25
 
 ### Changed
@@ -24,6 +121,13 @@ No unreleased changes.
   binary assets as raw bytes.
 - `.claude/skills/` and `.codex/agents/` are excluded from Prettier, so formatting can no longer
   drift generated files; `sync:agents` still formats the `.agents/` markdown sources first.
+
+## [1.12.26] - 2026-09-25
+
+### Changed
+
+- Bumped `jsdom` from 30.1.0 to 30.1.1 and `oxlint` from 1.83.0 to 1.85.0 in the
+  npm-minor-and-patch group (dependabot, PR #216).
 
 ## [1.12.25] - 2026-09-22
 
