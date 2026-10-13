@@ -238,8 +238,8 @@ Rules:
 
 ### 7. Fast checks — refuse to push if any fail
 
-Tests, coverage, the production build, and Playwright are **not** run here; CI owns
-them. These are the cheap gates that catch most mistakes in seconds:
+Coverage, the production build, and Playwright are **not** run here; CI owns them.
+These are the cheap gates that catch most mistakes in seconds:
 
 ```bash
 npm run format:check
@@ -252,8 +252,20 @@ npm run sync:agents:check
 `CHANGELOG.md`, the docs, and the source — there is no separate markdown run. Fix
 formatting with `npm run format`. The `sync:agents:check` line verifies the mirrors without
 writing; a failure means a source edit wasn't synced — run `npm run sync:agents` and commit the
-regenerated `.claude/skills/` / `.codex/` files before pushing. If any check is red, stop and report —
-do not push.
+regenerated `.claude/skills/` / `.codex/` files before pushing.
+
+When the branch changes `package.json` or `package-lock.json`, also run the unit suite:
+
+```bash
+git diff --name-only origin/main...HEAD -- package.json package-lock.json
+npm run test:unit
+```
+
+Unit tests assert on the manifest itself — which dependencies and `overrides` it may carry — so a
+dependency change can pass every check above and still fail CI's `Coverage` job. The suite takes
+seconds; skip it when the first command prints nothing.
+
+If any check is red, stop and report — do not push.
 
 ### 8. Commit the release preparation
 

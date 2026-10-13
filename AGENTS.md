@@ -215,7 +215,8 @@ branch diff) as part of opening a PR — alongside evaluating whether the change
 minor, or standard build-number release, adjusting the package-version floor when needed,
 computing the exact version via [scripts/next-version.sh](scripts/next-version.sh), writing the
 [CHANGELOG.md](CHANGELOG.md) entry for it, running `npm run sync:agents`, running the fast checks
-(`format:check`, `lint`, `tsc --noEmit`), and pushing. Say "ship it" when a branch is ready for review. The
+(`format:check`, `lint`, `tsc --noEmit`, plus `test:unit` when the branch changes `package.json` or
+the lockfile), and pushing. Say "ship it" when a branch is ready for review. The
 `Changelog Version` CI job then verifies the changelog names the version the merge will actually
 mint. Both `ship` and `end-session` use GitHub MCP operations when `gh` is unavailable, so remote
 agents follow the same workflow and completion criteria rather than skipping GitHub work.
