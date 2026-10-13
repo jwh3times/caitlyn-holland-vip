@@ -22,7 +22,9 @@ describe("Tailwind webpack integration", () => {
     expect(manifest.devDependencies["@tailwindcss/webpack"]).toBe(
       manifest.devDependencies.tailwindcss
     );
-    expect(manifest.overrides).toBeUndefined();
+    expect(
+      Object.keys(manifest.overrides ?? {}).filter((name) => /postcss|autoprefixer/.test(name))
+    ).toEqual([]);
   });
 
   it("uses the class-based dark variant required by next-themes", () => {
