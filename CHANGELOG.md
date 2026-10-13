@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.40] - 2026-10-13
+
+### Changed
+
+- The `ship` skill's fast checks now run `npm run test:unit` when the branch changes
+  `package.json` or `package-lock.json`. Unit tests assert on the manifest itself, so a dependency
+  change could pass formatting, lint, and type-checking and still fail CI's `Coverage` job after
+  the PR was open — as the `compression` override in 1.12.39 did. Branches that leave the manifest
+  alone skip the suite as before; coverage, the build, and Playwright remain CI's job.
+
 ## [1.12.39] - 2026-10-13
 
 ### Security
