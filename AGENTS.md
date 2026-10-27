@@ -223,6 +223,26 @@ agents follow the same workflow and completion criteria rather than skipping Git
 
 ## Agent skills
 
+### Development flow
+
+This flow is binding. **Every code change starts from a ready issue**: an open `ready-for-agent`
+issue whose body is a `/to-spec` spec or a `/to-tickets` ticket, or a `bug` issue worked through
+`/diagnosing-bugs`. Confirm it before the first edit to a code path; with none, stop before
+editing and route the user. Reading code, running tests, and answering questions need no issue.
+
+The human starts every phase. At a phase boundary, name the next command, say in one line why,
+and wait. Inside a phase, use `/tdd`, `/code-review`, `/diagnosing-bugs`, `/domain-modeling`,
+`/codebase-design`, `/prototype`, and `/research` yourself wherever they fit. The flow map is the
+[`ask-matt` router](.agents/skills/ask-matt/SKILL.md).
+
+Exempt from the gate: dependency bumps (Dependabot, `chore(deps)`), branches that touch only docs
+and agent config, `/ship`'s release-prep commit, and an explicit user waiver recorded in the PR
+body as `Flow waived by the user: <reason>`.
+
+Read [docs/agents/dev-flow.md](docs/agents/dev-flow.md) when there is no ready issue (the routes),
+when deciding whether a path is code, and before creating a branch or opening a PR (the
+`<type>/<issue#>-<slug>` branch name and the `Closes #N` / `Part of #N` body line).
+
 ### Secret-file prevention
 
 Before publishing changes, adding environment templates, or reviewing repositories for
