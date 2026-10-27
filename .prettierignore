@@ -27,6 +27,14 @@ dist/
 # Shared verbatim across repositories; never reformat locally.
 scripts/sync-agents.mjs
 scripts/sync-agents.test.mjs
+scripts/lint-agent-neutrality.mjs
+scripts/lint-agent-neutrality.test.mjs
+# Installed from jwh3times/skills (ADR-0011); a reinstall must find them byte for byte.
+.agents/skills/end-session/
+.agents/skills/handoff/
+.agents/skills/lets-go/
+.agents/skills/ship/
+.agents/skills/docs-updater/
 
 # Logs
 *.log

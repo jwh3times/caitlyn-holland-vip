@@ -15,6 +15,7 @@
     "format:check": "prettier --check .",
     "sync:agents": "prettier --write \".agents/**/*.md\" && node scripts/sync-agents.mjs",
     "sync:agents:check": "node scripts/sync-agents.mjs --check",
+    "lint:agents": "node scripts/lint-agent-neutrality.mjs",
     "sync:main": "node scripts/sync-main.mjs",
     "test": "playwright test",
     "test:e2e": "playwright test",

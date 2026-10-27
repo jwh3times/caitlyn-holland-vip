@@ -158,18 +158,21 @@ is edited once:
 - **Skills** are authored under **`.agents/skills/<name>/`** and mirrored to
   `.claude/skills/<name>/` by `npm run sync:agents`. The **whole skill directory** is mirrored —
   `SKILL.md` plus every auxiliary file (`agents/openai.yaml`, `scripts/*.sh`, reference
-  docs) — so all of it is covered by drift detection. Of the 17 skills, 14 originated in
+  docs) — so all of it is covered by drift detection. Of the 18 skills, 13 originated in
   [`mattpocock/skills`](https://github.com/mattpocock/skills) but are now forked and owned
   locally — edited in place rather than tracked upstream — per
-  [ADR-0006](docs/adr/0006-vendored-skill-policy.md). [skills-lock.json](skills-lock.json)
-  records provenance only (nothing reads it): the `computedHash` per skill is what was
-  originally fetched, not current content, and `localized: true` flags skills that have
-  since diverged from that upstream source. The three written here rather than fetched —
+  [ADR-0006](docs/adr/0006-vendored-skill-policy.md). Five —
   [`ship`](.agents/skills/ship/SKILL.md),
-  [`end-session`](.agents/skills/end-session/SKILL.md), and
-  [`lets-go`](.agents/skills/lets-go/SKILL.md) — have no lockfile entry, which is how
-  you tell them apart; authoring one is just adding the directory under `.agents/skills/` and
-  re-running the sync.
+  [`end-session`](.agents/skills/end-session/SKILL.md),
+  [`handoff`](.agents/skills/handoff/SKILL.md),
+  [`lets-go`](.agents/skills/lets-go/SKILL.md) and
+  [`docs-updater`](.agents/skills/docs-updater/SKILL.md) — install from
+  [`jwh3times/skills`](https://github.com/jwh3times/skills) and are never edited here, per
+  [ADR-0011](docs/adr/0011-shared-skills-install-from-jwh3times-skills.md): what they need to know
+  about this repository is in the settings files under `docs/agents/`. [skills-lock.json](skills-lock.json)
+  records where each skill came from: for the forked set, the `computedHash` is what was originally
+  fetched and `localized: true` flags divergence; for the shared five, re-running the install
+  command in ADR-0011 is the update.
 - **Agents** go the other way: authored under **`.claude/agents/*.md`** and generated into
   `.codex/agents/*.toml` by the same command. This direction is `.claude`-first because it is
   a format conversion (markdown + YAML frontmatter → TOML), not a copy.
@@ -180,8 +183,8 @@ Never edit a generated file — that means anything under **`.claude/skills/`** 
 mirrored `SKILL.md` and each Codex TOML carries a `# GENERATED — do not edit.` banner naming its
 source; every other skill file is copied byte-for-byte and drift-checked by content. The sync
 also **prunes** mirrors whose source is gone (in both generated trees), so deleting a skill from
-`.agents/` removes its `.claude/` copy. The generator is shared verbatim with other repositories —
-do not edit it here — and the generated trees are in `.prettierignore` so formatting cannot drift
+`.agents/` removes its `.claude/` copy. The generator and the neutrality lint (`npm run lint:agents`) are canonical in
+`jwh3times/skills` — fix them there, then copy them here — and the generated trees are in `.prettierignore` so formatting cannot drift
 them.
 The one exception is [.codex/config.toml](.codex/config.toml) — hand-authored Codex
 configuration with no generating source, safe to edit directly. The `AI Config Parity` CI job
@@ -273,14 +276,14 @@ model-invocable so `/handoff` can run it as its final step.
 ### Cross-device handoffs
 
 `/handoff` parks a session for the owner's other machine. It alerts on work not merged to
-`main`, writes the handoff document to Proton Drive, registers it in the shared
-`handoff_map.json` through [scripts/handoff-map.mjs](scripts/handoff-map.mjs), and then runs
+`main`, writes the handoff document to the Handoffs folder, registers it in the shared
+`handoff_map.json` through `.agents/skills/handoff/handoff-map.mjs`, and then runs
 `/end-session`. `/lets-go` claims this repository's active handoff from the map, sets its entry
-back to `null`, updates the checkout, and continues the work. On a machine with no Proton Drive
-desktop client, `HANDOFFS_DIR` is a local mirror and both skills pull and push it through the
-`proton-drive` CLI against `/my-files/Documents/Handoffs`. Both skills follow
-[docs/agents/handoffs.md](docs/agents/handoffs.md) for the transports, the map script, and the
-map format.
+back to `null`, updates the checkout, and continues the work. How the folder reaches each machine —
+a synced Proton Drive folder, or a local mirror moved by the `proton-drive` CLI — is that machine's
+`~/.config/handoffs/config`, which the skills propose on first run
+(`.agents/skills/handoff/machine-config.md`). This repository's map key is in
+[docs/agents/handoffs.md](docs/agents/handoffs.md).
 
 ### Issue tracker
 

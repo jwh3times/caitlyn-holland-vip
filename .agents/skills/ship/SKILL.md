@@ -1,337 +1,295 @@
 ---
 name: ship
-description: Ship the current branch — refresh docs, write the CHANGELOG entry for the version this merge will mint, run fast checks, push, and open or update the PR. Use when a feature branch is ready for review, or when the user says "ship it", "open a PR", or "push this".
+description: Ship the current branch — evaluate its SemVer release impact, refresh the docs, write the changelog entry for the version this merge will mint, file its human follow-ups, run the fast checks, push, and open or update the PR. Use when a feature branch is ready for review, or when the user says "ship it", "open a PR", or "push this".
+metadata:
+  settings: workspace issue-tracker human-follow-up releases ship
 ---
 
 # Ship
 
-Take the current branch from "code is done" to "PR is open and green-able", and make
-sure the changelog names the version this merge will actually create.
+Take the current branch from "code is done" to "PR is open and green-able", with a changelog that
+names the version this merge will actually create.
 
 **Announce at start:** "I'm using the ship skill to open a PR for this branch."
 
-## Why this exists
-
-Every merge to `main` is auto-tagged `v<major>.<minor>.<build>` by
-`.github/workflows/version.yml`. Existing release lines auto-increment `build`; a higher
-floor in `package.json` starts a new major or minor line. Ship classifies the branch's
-SemVer impact, adjusts that floor when a new line is warranted, computes **the version
-its merge will mint**, and writes the changelog entry for it. An `[Unreleased]` section
-is always wrong the moment it lands. The `Changelog Version` CI job re-checks the
-prediction **when the PR runs**.
-
-That check is PR-time, not merge-time: it does not re-run when a _different_ PR merges
-ahead of yours. If that happens your entry is numbered for a version someone else took,
-and the guard may still be showing green from its earlier run. Re-run ship to renumber
-(step 6).
-
-All git, GitHub CLI, and script commands in this skill run in a bash/POSIX shell,
-including git-bash on Windows. Where `gh` is unavailable, use the equivalent GitHub
-MCP operation; a missing CLI changes the interface, not the step or its completion
+Run shell snippets in bash (Git Bash on Windows). Where `gh` is unavailable, use the equivalent
+GitHub MCP operation: a missing CLI changes the interface, not the step or its completion
 criterion.
 
-## Steps
+`ship` stops at "PR open". It never merges, never pushes to `main`, never force-pushes, and never
+runs the full test suites: CI owns them, and running them here makes the skill slow.
 
-### 1. Preconditions — stop if any fail
+## 0. Settings
 
-- **Not on `main`.** `main` is protected; work must be on a branch. If on `main`, stop
-  and offer to create one named `<type>/<issue#>-<slug>` (`git checkout -b fix/236-braces-advisory`),
-  or `<type>/<slug>` for exempt work with no issue — see
-  [the development flow](../../../docs/agents/dev-flow.md#linking-work-to-its-issue).
-- **Clean working tree.** Run `git status --porcelain`. If anything is uncommitted, stop
-  and ask the user whether to commit it — do not commit silently. Once they answer, act
-  on it and restart from this step, so the rest of the skill runs against a clean tree.
-- **GitHub authenticated.** If `gh` is installed, `gh auth status` must succeed. Otherwise,
-  verify GitHub MCP access to this repository. Stop only when neither interface is usable.
+This skill reads `docs/agents/workspace.md`, `docs/agents/issue-tracker.md`,
+`docs/agents/human-follow-up.md`, `docs/agents/releases.md` and `docs/agents/ship.md`. Follow
+`.agents/skills/ship/settings/README.md` to read them and complete any that are missing; the
+definitions sit beside it. Resolve each `discover:` value once, here, and
+reuse it below.
 
-### 2. Backfill any undocumented released versions
+With `Scheme: none`, skip every step marked **(release)**.
 
-List released versions that have no changelog section. Run this exactly — do **not**
-eyeball two raw lists, because tags print as `v1.1.5` while changelog sections parse as
-`1.1.5`, so an unnormalized comparison reports every tag as missing:
+## 1. Preconditions — stop if any fail
 
-```bash
-git fetch --tags -q origin
-comm -23 \
-  <(git tag -l "v*" | sed -nE 's/^v([0-9]+\.[0-9]+\.[0-9]+)$/\1/p' | sort) \
-  <(sed -nE 's/^## \[([0-9]+\.[0-9]+\.[0-9]+)\].*/\1/p' CHANGELOG.md | sort)
-```
+- **Not on `main`.** Work happens on a branch. On `main`, stop and offer to create one named by the
+  `Issue link` branch pattern (`<type>/<slug>` when it is `none`).
+- **Clean tree.** `git status --porcelain` prints nothing but the settings files step 0 just wrote,
+  which go into this run's commit. Otherwise stop and ask whether to commit what is there; never
+  commit it silently. Once answered, restart from this step. Every change staged later was then
+  made by this run.
+- **GitHub reachable.** `gh auth status` succeeds, or GitHub MCP can reach this repository.
+- **Companion in step.** When the `Private companion` is set and its checkout exists, run the
+  `Workspace status command`: the companion must be clean and neither ahead of nor behind its
+  upstream. An absent checkout is a valid state; report it.
+- **Up to date with `main`.**
 
-**Empty output means nothing to backfill — skip to step 3.** The `sed` strips the `v` and
-drops the legacy 4-part `v1.0.0.x` tags (they predate the changelog and are never
-backfilled).
+  ```bash
+  git fetch -q --tags origin
+  git merge-base --is-ancestor origin/main HEAD && echo current || echo behind
+  ```
 
-Anything listed is a released version with no entry — in practice a merged dependabot PR,
-which the CI guard exempts. Backfill it now: read what that tag changed and add a dated
-section in the right position, newest first. Use the merge's **second parent** (`^2`) — the
-branch that was merged — because the tag itself is the merge commit:
+  When behind, offer to `git merge origin/main` now, and resolve conflicts with the user. Never
+  rebase a pushed branch.
 
-```bash
-git log -1 --format='%cs' "v<version>"                 # date for the section heading
-git log --format='%s%n%b' "v<version>^1..v<version>^2"  # what actually landed
-git diff "v<version>^1" "v<version>" -- package.json    # dependency bumps
-```
+Use `origin/main` throughout, never local `main`: a stale local `main` silently widens the diff to
+work already merged, and a clone that fetched only this branch has none.
 
-Keep it factual — name the packages and versions. A lockfile-only bump (empty
-`package.json` diff) is a transitive dependency; say so rather than implying a direct one.
+## 2. Evaluate the release impact (release)
 
-Attribute to dependabot **only** if the merged branch's commits are the bot's:
-
-```bash
-git log -1 --format=%an "v<version>^2"    # → dependabot[bot] for a bot PR
-```
-
-Check `^2`, **not** `git log -1 --format=%an v<version>` — that reads the merge commit,
-whose author is always the human who clicked Merge, so it never reports `dependabot[bot]`
-and would misclassify every bot PR as human. If the tag is not a merge commit (`^2` fails),
-fall back to the tag's own author. A human commit that merely edits dependabot config is
-not a bot PR.
-
-This is what makes the bot exemption safe. Skipping it lets the changelog silently lose
-versions.
-
-### 3. Evaluate the release level
-
-Review the whole branch against current `main`, not just its latest commit:
+Read the whole branch, not its latest commit:
 
 ```bash
 base="$(git merge-base origin/main HEAD)"
 git diff --stat "$base"..HEAD
-git diff --name-status "$base"..HEAD
 git log --format='%s%n%b' "$base"..HEAD
-git tag -l "v*" | sed -nE 's/^v([0-9]+\.[0-9]+\.[0-9]+)$/\1/p' | sort -V | tail -1
-git show origin/main:package.json | sed -nE 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p' | head -1
-node -p "require('./package.json').version"
+git diff "$base"..HEAD
 ```
 
-The summary, file list, and commits are an index: read the actual diff and relevant
-tests or docs before deciding. Classify the impact to **this project** as exactly one:
+The stat and the log are an index. Read the diff, and the tests and docs it touches, before
+deciding. Classify the impact to **this project**, highest level present:
 
-- **Major** — an existing public behavior, URL, persisted-data shape, command/config
-  contract, or deployment/operational contract becomes incompatible and its consumers
-  must migrate.
-- **Minor** — a backwards-compatible capability or materially new behavior is added, or
-  an intentional platform/toolchain generation change raises the project's supported
-  operating baseline without breaking its public behavior.
-- **Build** — backwards-compatible fixes, routine dependency updates, documentation,
-  tests, refactors, or internal tooling changes add no capability and do not raise a
-  support baseline.
+- **Major** — an existing public behavior, API, URL, persisted-data shape, configuration,
+  deployment contract or established user workflow becomes incompatible, and its users must
+  migrate. On a `0.y` line, an incompatible change is minor unless the branch deliberately cuts
+  `1.0.0`.
+- **Minor** — a backwards-compatible capability or a material expansion of behavior, or a
+  deliberate platform or toolchain generation change that raises the supported baseline.
+- **Build** — fixes (security fixes included), dependency maintenance, refactors, tests, docs,
+  tooling: nothing that adds capability or raises a baseline.
 
-Judge the project's compatibility and significance, not the version printed on a
-dependency. A dependency's major upgrade does not by itself make this project's release
-major; an internal rewrite does not either when the project's contracts remain intact.
-When changes span categories, choose the highest applicable level.
+Judge this project's contracts, not a dependency's version number. Release metadata and generated
+mirrors are not evidence. With `Scheme: per-merge`, the cumulative content of `Unreleased` counts
+too. A level the user asked for is still evaluated; when the evaluation differs, show both and ask.
 
-Record the decision as `Release level: <major|minor|build> — <one-sentence rationale>`;
-step 9 puts that exact line in the PR and step 10 reports it to the user.
+Record `Release level: <major|minor|build> — <one-sentence rationale>`. Steps 9 and 10 use that
+exact line.
 
-Use the higher of the latest released version and the `package.json` floor on
-`origin/main` as the release baseline. The final command above prints the branch's
-current floor separately. Apply the decision:
+**Apply it.** The baseline is the higher of the newest `v*` tag (ignoring the `Skipped tags`
+**Ignore** patterns) and the `Version file` on `origin/main` (`git show "origin/main:<file>"`).
 
-- **Build:** the manifest and lockfile version fields stay at the `origin/main` floor;
-  the release script increments that line's build number.
-- **Minor:** advance the baseline to its next minor line with build zero.
-- **Major:** advance the baseline to its next major line with minor and build zero.
+- **Build** — the `Version file` stays at its `origin/main` value. Restore it if the branch moved it
+  without release intent.
+- **Minor** — the target line is `<major>.<minor + 1>.0` of the baseline.
+- **Major** — the target line is `<major + 1>.0.0`.
 
-For a major or minor decision, update both manifest and lockfile with:
+For major or minor, follow `Ask before bumping` first, then run `Bump command` with the exact
+target, so a re-run lands on the same value instead of advancing twice. Check that the version file
+and any lockfile beside it agree. A branch that already carries the target keeps it; a branch that
+carries a different line was bumped on purpose: ask before replacing it.
 
-```bash
-npm version <new-floor> --no-git-tag-version
-```
+## 3. Compute the target version (release)
 
-If the branch already contains the calculated floor, keep it — a re-run must not advance
-the line twice. A build-level branch that changes the floor without separate release
-intent must restore the `origin/main` floor. Never lower the `origin/main` floor or reuse
-a released line. If the compatibility promise itself is genuinely ambiguous, show the
-evidence and ask the user before changing the floor. This step is complete only when the
-classification has a concrete rationale and the manifest/lockfile floor matches it.
-
-### 4. Compute the target version
-
-```bash
-bash scripts/next-version.sh
-```
-
-This prints a bare SemVer (e.g. `1.1.6`) — no `v` prefix. Run it after applying any
-major/minor floor change. It is the single source of truth for the exact tag; the tag
-workflow and the CI guard call the same script. The release-level evaluation selects the
-line, but this script selects the final build. Do not compute that final version
-yourself.
-
-### 5. Refresh the docs
-
-Invoke the `docs-updater` subagent, scoped to **this branch's diff only** — not a full
-audit:
-
-```bash
-git diff $(git merge-base origin/main HEAD)..HEAD --stat
-```
-
-Use `origin/main`, not local `main` — step 2 fetched, so `origin/main` is current while a
-stale local `main` would silently widen the diff to include work already merged.
-
-Tell it exactly what changed and let it update the docs it owns (AGENTS.md and
-README.md). **You** write the changelog section in step 6 — tell it to leave
-`CHANGELOG.md` alone so you don't fight over the file.
-
-`docs-updater` owns `AGENTS.md` and `README.md`. `CLAUDE.md` is a thin `@AGENTS.md`
-import plus Claude-specific notes and rarely needs edits. The mirrors under
-`.claude/skills/` and `.codex/` are generated: after `docs-updater` runs — and after any
-skill edit under `.agents/skills/` or agent edit under `.claude/agents/` on this branch —
-run `npm run sync:agents` and commit the regenerated files in step 8 so the
-`AI Config Parity` gate stays green.
-
-Before continuing, apply the [required human follow-up procedure](../../../docs/agents/issue-tracker.md#required-human-follow-ups-from-completed-agent-work)
-to the completed branch work. Coordinate publication ownership with `docs-updater`; verify every
-required human action has a private issue on the board and published step-by-step wiki
-instructions. Reuse existing records on re-ship. Include their private links only in the user
-report or private records, keeping public PRs free of private details. Report access failures
-explicitly instead of treating documentation as complete.
-
-### 6. Write the CHANGELOG entry
-
-Insert a section for the target version immediately below `## [Unreleased]`:
-
-```markdown
-## [Unreleased]
-
-No unreleased changes.
-
-## [1.1.6] - 2026-07-16
-
-### Added
-
-- ...
-```
-
-Rules:
-
-- `## [Unreleased]` **stays**, with the `No unreleased changes.` placeholder.
-- Date is today, `YYYY-MM-DD`.
-- Group under Keep a Changelog headings — `Added`, `Changed`, `Fixed`, `Removed`,
-  `Security`. Use **one** heading of each kind per section.
-- Describe user-visible behavior and its consequences, derived from the branch diff. Not
-  a commit log.
-- **Idempotent.** Before writing, list what is already there:
+- **`per-merge`** — first confirm the newest merge on `origin/main` is tagged:
 
   ```bash
-  git diff origin/main...HEAD -- CHANGELOG.md | grep '^+## \['
+  git tag --points-at origin/main -l 'v*'
   ```
 
-  That prints only the sections **this branch added**, which is what distinguishes your
-  entry from a legitimately released one. If it names the target version, **rewrite that
-  section in place** — never stack a second one. If it names a different (now stale)
-  version because someone merged ahead of you, **renumber that same section** to the
-  target rather than adding a new one.
+  Empty output means the tag workflow has not finished for a merge that just landed, and the next
+  version would repeat a taken number. Wait for the workflow, fetch tags again, and re-check; if it
+  stays untagged after the workflow finished, ask the user. Then run `Next-version command`. It
+  prints a bare SemVer and is the single source of truth: never compute the build number yourself.
 
-- **If you renumbered, sync with `main` before pushing.** Someone merging first means
-  their changelog section is also sitting directly under `## [Unreleased]` — the same
-  spot as yours — so the merge will conflict there. Handle it now, not in the PR:
+  Check whether another open PR already claims that version:
 
   ```bash
-  git merge origin/main
+  gh pr list --state open --json number,headRefName --jq '.[] | "\(.number) \(.headRefName)"'
+  gh pr diff <number> -- CHANGELOG.md | grep '^+## \['
   ```
 
-  Resolve `CHANGELOG.md` by keeping **both** sections, theirs above yours, ordered newest
-  version first. Then re-run step 4: their merge minted a tag, so the target version has
-  moved again.
+  If one does, name it in the report: whichever merges second renumbers on its next `ship`.
+- **`cut-on-line`** — a build has no exact target: the next tag assigns it, whether a workflow tags
+  each merge or a maintainer tags a release, and another merge can land first. A confirmed major or
+  minor's target is the new line from step 2.
 
-### 7. Fast checks — refuse to push if any fail
+## 4. Backfill skipped tags (release)
 
-Coverage, the production build, and Playwright are **not** run here; CI owns them.
-These are the cheap gates that catch most mistakes in seconds:
-
-```bash
-npm run format:check
-npm run lint
-npx tsc --noEmit
-npm run sync:agents:check
-```
-
-`npm run format:check` is `prettier --check .` at the repo root, so it already covers
-`CHANGELOG.md`, the docs, and the source — there is no separate markdown run. Fix
-formatting with `npm run format`. The `sync:agents:check` line verifies the mirrors without
-writing; a failure means a source edit wasn't synced — run `npm run sync:agents` and commit the
-regenerated `.claude/skills/` / `.codex/` files before pushing.
-
-When the branch changes `package.json` or `package-lock.json`, also run the unit suite:
+Only with `Scheme: per-merge` and `Skipped tags: backfill`. List released versions with no section.
+Run it exactly; tags print as `v1.1.5` and sections as `1.1.5`, so comparing raw lists by eye
+reports every tag as missing:
 
 ```bash
-git diff --name-only origin/main...HEAD -- package.json package-lock.json
-npm run test:unit
+comm -23 \
+  <(git tag -l 'v*' | sed -nE 's/^v([0-9]+\.[0-9]+\.[0-9]+)$/\1/p' | sort) \
+  <(sed -nE 's/^## \[([0-9]+\.[0-9]+\.[0-9]+)\].*/\1/p' CHANGELOG.md | sort)
 ```
 
-Unit tests assert on the manifest itself — which dependencies and `overrides` it may carry — so a
-dependency change can pass every check above and still fail CI's `Coverage` job. The suite takes
-seconds; skip it when the first command prints nothing.
+Drop versions matching the **Ignore** patterns. Each one left is a merge that wrote no section — a
+dependency bot's PR, or one opened in the web UI. Add a dated section for it in place, newest
+first. With `version` set to each, read the tag; it is the merge commit, so the merged branch is its
+second parent:
 
-If any check is red, stop and report — do not push.
+```bash
+git log -1 --format='%cs' "v$version"                  # the section's date
+git log --format='%s%n%b' "v$version^1..v$version^2"   # what landed
+git diff "v$version^1" "v$version" --stat              # manifests and lockfiles it changed
+git log -1 --format=%an "v$version^2"                  # dependabot[bot] for a bot PR
+```
 
-### 8. Commit the release preparation
+Keep it factual: name the packages and versions, and call a lockfile-only change transitive.
+Attribute to a bot only when the second parent's author is the bot: the merge commit's author is
+whoever clicked Merge. When `^2` does not exist (a squash or fast-forward), read the tag's own
+commit.
 
-Only if `git status --porcelain` is non-empty (on a re-ship with nothing to change, this
-step is a no-op — do not create an empty commit):
+With `Skipped tags: roll up`, invent no section per skipped tag; their changes join the next section
+written.
+
+## 5. Refresh the docs
+
+Run the `docs-updater` skill in `fix` mode, scoped to this branch's diff, not a full audit — in a
+subagent where the harness has one, told to follow `.agents/skills/docs-updater/SKILL.md`;
+otherwise follow it yourself. A subagent cannot ask the user, so complete its settings first, here,
+by following its step 0.
+
+```bash
+range="$(git merge-base origin/main HEAD)..HEAD"
+```
+
+Tell it what changed and why, that it was invoked by `ship` on an unmerged branch, and that this
+skill writes the changelog and the `Version file`. It leaves its edits uncommitted and returns the
+human actions it found for step 6, and any wiki search it owes after the merge (the `Follow-up
+wiki`, or a `Doc map` item in a wiki).
+Companion edits are committed there as its own repository, never in this one: with `Companion
+commit policy` `commit` or `ship`, commit and push them; with `ask`, show the diff and ask first.
+Run its **Before committing** checks either way.
+
+## 6. Human follow-ups
+
+Run the `## Procedure` in `.agents/skills/ship/settings/human-follow-up.md` for every required human
+action this branch leaves, before the PR opens, including those `docs-updater` returned. Reconcile
+rather than duplicate; on a re-ship, reuse the records already made. A follow-up never lives only
+in the changelog or the PR body. Its links go in the report and private records, never in the
+public PR.
+
+## 7. Write the changelog (release)
+
+Write user-visible behavior and its consequences, derived from the diff — not a commit log. Use the
+headings the file already uses (Keep a Changelog: `Added`, `Changed`, `Deprecated`, `Removed`,
+`Fixed`, `Security`, plus any the file adds), one of each per section, and match its voice. Dates
+are today's, `YYYY-MM-DD`.
+
+**Idempotent.** List the sections this branch added:
+
+```bash
+git diff origin/main...HEAD -- CHANGELOG.md | grep '^+## \['
+```
+
+A section listed there is this branch's from an earlier `ship`: rewrite it in place, never stack a
+second. Entries this branch added to `Unreleased` are rewritten the same way.
+
+- **`per-merge`** — insert `## [<target>] - <date>` directly below `## [Unreleased]`, holding this
+  branch's entries plus anything accumulated in `Unreleased`; reset `Unreleased` to the `Unreleased
+  placeholder`. When the branch's section names an older version because another PR merged first,
+  **renumber that section** to the target. Then merge `origin/main`: their section sits in the same
+  place, so resolve `CHANGELOG.md` keeping both, newest version first, and go back to step 3 — their
+  merge minted a tag, so the target moved again.
+- **`cut-on-line`, build** — add the entries under `Unreleased`, replacing its placeholder. No dated
+  section, no `Version file` edit.
+- **`cut-on-line`, confirmed major or minor** — add the entries under `Unreleased`, move its whole
+  content into `## [<target>] - <date>`, and restore the placeholder. When the cut is already there
+  from an earlier `ship`, rewrite this branch's entries inside it; never leave them both above and
+  below the cut.
+
+**Reference links.** When the file ends in a link footer, keep it consistent in the pattern its
+entries follow: `[Unreleased]` compares from the newest version to `HEAD`, and each new or
+renumbered section — backfilled ones too — gets its own link, newest first.
+
+Run `Changelog check`. A mismatch names the version the merge will really mint: redo this step with
+it.
+
+## 8. Fast checks — refuse to push if any fail
+
+Run every `Fast checks` entry, in order, from its folder; skip a conditional entry only when none of
+its paths changed (`git diff --name-only origin/main...HEAD`). They run after the doc and changelog
+edits, because formatters and linters cover those files too.
+
+If any is red, stop and report; do not push. Offer the entry's fix command. After a fix that writes
+files, run the list again from the top: a generated mirror built from unformatted sources is stale
+again once they are formatted. A check that cannot run here (a missing service, a missing secret) is
+named in the report as left to CI.
+
+Then run `Hook: before PR` from `docs/agents/ship.md`. Its findings go in the report and, where it
+says, the PR body.
+
+## 9. Commit, push, and open or update the PR
+
+Commit only when `git status --porcelain` shows changes; a re-ship with nothing new makes no empty
+commit. Staging everything is safe because step 1 proved the tree was clean, and the companion is
+ignored, never staged:
 
 ```bash
 git add -A
-git commit -m "chore: prepare release v1.1.6"
-```
-
-Substitute the real version from step 4 into the message — do not commit the literal
-string `v<version>`.
-
-`git add -A` is safe here only because step 1 proved the tree was clean, so everything
-staged was created during this ship run. If you skipped or overrode step 1, stage
-explicitly instead.
-
-### 9. Push and open or update the PR
-
-The commands below are the primary `gh` form. Where `gh` is unavailable, use the
-equivalent GitHub MCP operations to find, create, or update the pull request.
-
-```bash
+git commit -m "<Release commit message, with the real version>"
 git push -u origin "$(git branch --show-current)"
 ```
 
-If the push is **rejected** (non-fast-forward), stop and report. Do not force-push: the
-remote has commits you do not, and overwriting them destroys someone's work.
-
-Then check whether a PR already exists for this branch:
+A rejected push means the remote has commits this checkout lacks: stop and report. Never force-push.
 
 ```bash
-gh pr list --head "$(git branch --show-current)" --state open --json number -q '.[0].number'
+gh pr list --head "$(git branch --show-current)" --state open --json number,url
 ```
 
-- **No PR** → `gh pr create --base main` with a title and a body derived from the
-  changelog section you just wrote. Include the exact `Release level: ...` decision from
-  step 3.
-- **PR exists** → `gh pr edit <number>` to refresh the body, including the release-level
-  decision. Do not open a second PR.
+- **No PR** → `gh pr create --base main`.
+- **A PR exists** → `gh pr edit <number>` to refresh its body. Never open a second PR.
 
-Either way, the body's first line links the branch's issue: `Closes #<n>` when this PR
-finishes it, `Part of #<n>` when it is one slice of a spec that stays open, or
-`Flow waived by the user: <reason>` for a waived change. Exempt work with no issue has no
-linking line. A `#<n>` in the title alone links nothing. The rules are in
-[the development flow](../../../docs/agents/dev-flow.md#linking-work-to-its-issue).
+Write the body to a temporary file and pass `--body-file`. Fill the repository's PR template
+(`.github/pull_request_template.md` or `PULL_REQUEST_TEMPLATE.md`) when there is one, from the
+changelog entries and the diff. Include the `Release level:` line from step 2 and, with `per-merge`,
+the version this merge will mint.
 
-### 10. Report
+**Issue link**, when the setting is not `none`. The body opens with the link line, in the slot the
+template leaves for it:
 
-Give the user: the human follow-up issue/wiki links (or that none remain); the PR URL; the major/minor/build evaluation and its rationale; the
-version this merge will mint; and anything the fast checks or backfill surfaced. State
-plainly that the build, coverage (80% gate), and Playwright suites run in CI, not locally
-— do not imply the branch is verified beyond the fast checks.
+- Take `N` from the branch per its **Branch pattern**, and read the issue:
+  `gh issue view <N> --json title,state,labels,body`.
+- The finishing line (`Closes #N`) when this PR finishes the issue; the slice line (`Part of #N`)
+  when it is one slice of a spec that stays open. Each finished issue gets its own keyword:
+  GitHub links only the first issue in `Closes #1 and #2`.
+- A branch with no number: the **Waiver line** when the user waived the flow; no link line for an
+  **Exempt** kind.
+- When the branch's number and the issue disagree, or finishing versus slice is unclear, ask before
+  creating the PR. A refreshed body keeps its link line. A number in the title alone links nothing.
 
-If `Changelog Version` is not yet in the "No Push to Main" ruleset's required checks, it
-reports red/green but does not block a merge. Do not describe the changelog as _enforced_
-until it is.
+Warn, never block, when the PR opens with no link line and is not exempt, or when the `Board` is set
+and the linked issue is not on it. An issue in the `Private issue repository` is never named in a
+public PR body, commit message or public issue; it is closed by hand after the merge.
 
-## Do not
+Nothing this step writes in public carries a private repository name, link, board number or
+companion detail.
 
-- Merge the PR. This repo does not self-merge; ship stops at "PR open".
-- Push to `main`.
-- Force-push anything, ever. If a push is rejected, stop and report.
-- Run the build, coverage, or Playwright suites — that is CI's job and it makes this
-  skill slow.
-- Invent the final version number. Evaluate the release line, then call
-  `bash scripts/next-version.sh` for the exact tag.
+## 10. Report
+
+- The PR URL and branch.
+- The `Release level:` line and its evidence; the version this merge will mint (`per-merge`), the
+  new line (a `cut-on-line` cut), or that the next tag assigns the build. Name a competing PR
+  claiming the same version, and say the section is renumbered on a re-ship.
+- What the docs refresh changed, the changelog entries written, and any sections backfilled. When
+  docs-updater owes a wiki search after the merge, say so: the next `end-session` performs it.
+- Human follow-ups: verified issue and wiki links, what is unpublished and why, or that none remain.
+- Fast-check results, checks left to CI, `Hook: before PR` findings, and issue-link warnings.
+- The companion: absent, or clean and in step, and any companion commit made. Never describe the
+  unmerged PR as shipped there.
+- Settings files written in step 0.
+
+Say plainly that the full suites run in CI, not here: the branch is verified only as far as the fast
+checks go.
