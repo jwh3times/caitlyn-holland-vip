@@ -82,7 +82,7 @@ E2E specs in [tests/e2e/](tests/e2e/) cover homepage rendering, navigation, them
 Keep workflow actions pinned to full commit SHAs with version comments. The GitHub Actions
 entry in [.github/dependabot.yml](.github/dependabot.yml) maintains their updates.
 
-- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with **six** jobs: `Format Check` (`npm run format:check`), `Coverage` (`npm run coverage` — **fails below the 80% thresholds** and uploads a `coverage-report` artifact), `Build & Lint` (`npm run lint` + `npm run build` + accepted compatibility CSP validation in Chromium, uploads the `static-site` artifact), `Playwright Tests` (needs Build & Lint; installs Chromium and runs the desktop Chromium and Mobile Chrome projects with one CI worker), `AI Config Parity` (runs the generator's own `node --test scripts/sync-agents.test.mjs` suite, then `npm run sync:agents:check`, which fails on any stale, missing, or orphaned file under `.codex/agents` or `.claude/skills`; an unformatted `.agents/` source fails `Format Check`), and `Changelog Version` (PRs only; computes the next version via [scripts/next-version.sh](scripts/next-version.sh) and fails if [CHANGELOG.md](CHANGELOG.md) has no `## [x.y.z]` section for it — dependabot PRs are exempt). **A PR fails CI if formatting drifts — run `npm run format` before committing.**
+- **Validation — [.github/workflows/ci.yml](.github/workflows/ci.yml)** — runs on push/PR to `main` with **six** jobs: `Format Check` (`npm run format:check`), `Coverage` (`npm run coverage` — **fails below the 80% thresholds** and uploads a `coverage-report` artifact), `Build & Lint` (`npm run lint` + `npm run build` + accepted compatibility CSP validation in Chromium, uploads the `static-site` artifact), `Playwright Tests` (needs Build & Lint; installs Chromium and runs the desktop Chromium and Mobile Chrome projects with one CI worker), `AI Config Parity` (runs the `node --test` suites of the generator and the neutrality lint — `scripts/sync-agents.test.mjs` and `scripts/lint-agent-neutrality.test.mjs` — then `npm run lint:agents`, which fails on a skill or agent source that would read wrongly from its mirrored location, then `npm run sync:agents:check`, which fails on any stale, missing, or orphaned file under `.codex/agents` or `.claude/skills`; an unformatted `.agents/` source fails `Format Check`), and `Changelog Version` (PRs only; computes the next version via [scripts/next-version.sh](scripts/next-version.sh) and fails if [CHANGELOG.md](CHANGELOG.md) has no `## [x.y.z]` section for it — dependabot PRs are exempt). **A PR fails CI if formatting drifts — run `npm run format` before committing.**
 - **Dependency review — [.github/workflows/dependency-review.yml](.github/workflows/dependency-review.yml)** — on PRs, fails on vulnerable dependency changes.
 - **Code scanning — CodeQL default setup** — configured repository-side (Settings → Code security), scanning JavaScript/TypeScript and Actions. There is **no `codeql.yml` on purpose**: an advanced-config workflow conflicts with default setup, so do not add one. Its `CodeQL` check is required to merge even though nothing in the repo declares it.
 - **Versioning — [.github/workflows/version.yml](.github/workflows/version.yml)** — on every merge (push) to `main`, tags the merge commit and creates a GitHub Release using standard SemVer `v<major>.<minor>.<build>` (e.g. `v1.2.7`). It computes the build number with [scripts/next-version.sh](scripts/next-version.sh) — the same script the `Changelog Version` guard and the `ship` skill use, so the tag minted always matches the version the changelog was written for. The `package.json` `version` is the major/minor/build floor; for an existing major/minor line the build increments from the highest matching tag, and a new line starts at the floor's own build — bump the floor to `1.2.3` with no `v1.2.*` tags and the first tag on that line is `v1.2.3`, not `v1.2.0`. The floor is a lower bound only, never a record of the current release, so it legitimately sits far behind the latest tag.
@@ -175,7 +175,9 @@ is edited once:
   command in ADR-0011 is the update.
 - **Agents** go the other way: authored under **`.claude/agents/*.md`** and generated into
   `.codex/agents/*.toml` by the same command. This direction is `.claude`-first because it is
-  a format conversion (markdown + YAML frontmatter → TOML), not a copy.
+  a format conversion (markdown + YAML frontmatter → TOML), not a copy. None is authored today —
+  the last, `docs-updater`, became a skill under ADR-0011 — but the sync converts any that are
+  added.
 
 Never edit a generated file — that means anything under **`.claude/skills/`** or
 **`.codex/agents/`**. Edit the source and re-run `npm run sync:agents` (it prettier-formats the
@@ -212,17 +214,18 @@ The block's actual advice is worth keeping, so it lives here by hand instead:
 > version-matched to the installed `next`). Heed deprecation notices. Appending `.md` to any
 > nextjs.org/docs URL returns the same content over the network.
 
-The `docs-updater` subagent keeps `AGENTS.md` and `README.md` in sync with the code. Docs are
-refreshed when you **ship a branch**: the `ship` skill invokes `docs-updater` (scoped to the
-branch diff) as part of opening a PR — alongside evaluating whether the changes warrant a major,
-minor, or standard build-number release, adjusting the package-version floor when needed,
-computing the exact version via [scripts/next-version.sh](scripts/next-version.sh), writing the
-[CHANGELOG.md](CHANGELOG.md) entry for it, running `npm run sync:agents`, running the fast checks
-(`format:check`, `lint`, `tsc --noEmit`, plus `test:unit` when the branch changes `package.json` or
-the lockfile), and pushing. Say "ship it" when a branch is ready for review. The
-`Changelog Version` CI job then verifies the changelog names the version the merge will actually
-mint. Both `ship` and `end-session` use GitHub MCP operations when `gh` is unavailable, so remote
-agents follow the same workflow and completion criteria rather than skipping GitHub work.
+The `docs-updater` skill keeps the docs in line with the code, following the documents and
+triggers in [docs/agents/docs.md](docs/agents/docs.md). Docs are refreshed when you **ship a
+branch**: the `ship` skill runs `docs-updater` (scoped to the branch diff) as part of opening a PR
+— alongside evaluating whether the changes warrant a major, minor, or standard build-number
+release, adjusting the package-version floor when needed, computing the exact version via
+[scripts/next-version.sh](scripts/next-version.sh), writing the [CHANGELOG.md](CHANGELOG.md) entry
+for it, filing the branch's human follow-ups, running the fast checks listed in
+[docs/agents/ship.md](docs/agents/ship.md), and pushing. `end-session` runs it too, on the
+session's work. Say "ship it" when a branch is ready for review. The `Changelog Version` CI job
+then verifies the changelog names the version the merge will actually mint. `ship` uses GitHub MCP
+operations when `gh` is unavailable, so remote agents follow the same workflow and completion
+criteria rather than skipping GitHub work.
 
 ## Agent skills
 
@@ -305,8 +308,8 @@ sub-issue/blocking mechanics are all in `docs/agents/issue-tracker.md`.
 record every remaining required human action as a private companion follow-up issue, label it
 `ready-for-human`, add it to the shared private board, and publish linked step-by-step instructions
 in the private wiki `human-todo` page. Follow the creation, deduplication, confidentiality, and
-publication criteria in [the human follow-up procedure](docs/agents/issue-tracker.md#required-human-follow-ups-from-completed-agent-work).
-This is standing authorization to record and publish those follow-ups without another confirmation.
+publication criteria in the procedure [docs/agents/human-follow-up.md](docs/agents/human-follow-up.md)
+points to. This is standing authorization to record and publish those follow-ups without another confirmation.
 
 ### Domain docs
 

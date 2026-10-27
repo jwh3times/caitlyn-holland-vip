@@ -39,6 +39,10 @@ export default defineConfig({
         // suite (`node --test scripts/sync-agents.test.mjs`), not by vitest.
         "scripts/sync-agents.mjs",
         "scripts/sync-agents.test.mjs",
+        // The neutrality lint is shared the same way and tested by
+        // `node --test scripts/lint-agent-neutrality.test.mjs`.
+        "scripts/lint-agent-neutrality.mjs",
+        "scripts/lint-agent-neutrality.test.mjs",
       ],
       // Baseline coverage gate. CI fails (and merges are blocked) below this.
       thresholds: {

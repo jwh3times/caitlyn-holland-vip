@@ -17,7 +17,9 @@
   - agent config changes (`.agents/skills/`, `.claude/agents/`): "Agent configuration & docs
     automation";
   - metadata or headers change (`app/layout.tsx`, `public/_headers`): the metadata and
-    security-headers notes.
+    security-headers notes;
+  - an npm script or a `scripts/` file is added or removed: the Commands lists, the CI description,
+    and the coverage exclusions in `vitest.config.ts`.
 - `CLAUDE.md` — a thin entry point: the `@AGENTS.md` import plus Claude Code-only notes. **When:**
   only a Claude Code-specific note changes.
 - `README.md` — overview and setup for human developers. **When:** a prerequisite, setup step or
@@ -35,7 +37,9 @@
 - `.agents/skills/*/**` — skills, mirrored to `.claude/skills/`. The skills ADR-0006 vendored from
   `mattpocock/skills` are forked and owned here: edit them in place, and update `ask-matt`'s routing
   when a skill is added or removed. `end-session`, `handoff`, `lets-go`, `ship` and `docs-updater`
-  install from `jwh3times/skills` (ADR-0011): `frozen` here, fixed upstream.
+  install from `jwh3times/skills` (ADR-0011): `frozen` here, fixed upstream. **When:** a skill is
+  added, removed or replaced (`.agents/skills/`, `skills-lock.json`): `ask-matt`'s routing,
+  `CLAUDE.md` and AGENTS.md's skill paragraph.
 - `.github/pull_request_template.md` — the PR body's sections. **When:** the development flow's
   linking rule changes.
 - `private/**/*.md` — durable private procedures in the companion; live status belongs in issues.
@@ -49,8 +53,8 @@ material, and unpublished vulnerability details (they stay in a draft advisory).
 - Sections that exist: `components/sections/*.tsx`
 - Anchor ids: `id="` in `components/sections/`
 - Coverage thresholds: `thresholds|statements|branches` in `vitest.config.ts`
-- CI jobs: the job keys (`^  [a-z-]+:$`) in `.github/workflows/ci.yml`, then each one's `name:` —
-  never a bare `name:` grep, which counts steps too
+- CI jobs: the keys under `jobs:` in `.github/workflows/ci.yml` (two-space indent, after the
+  `jobs:` line), then each one's `name:` — never a bare `name:` grep, which counts steps too
 - npm scripts: `scripts` in `package.json`
 - Required status checks: `gh api repos/jwh3times/caitlyn-holland-vip/rules/branches/main`
 

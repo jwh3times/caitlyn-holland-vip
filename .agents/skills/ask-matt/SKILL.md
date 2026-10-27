@@ -15,10 +15,7 @@ A **flow** is a path through the skills. Most paths run along one **main flow**;
 The route most work travels. You have an idea and want it built and merged.
 
 1. **`/grilling`** — sharpen the idea by interview. In a repo it runs `/domain-modeling` alongside, so terms land in `CONTEXT.md` and hard-to-reverse decisions land in `docs/adr/` as they settle. Outside a working directory it runs the interview alone.
-2. **Branch — can you settle every question in conversation?** If a question needs a runnable answer (state, business logic, a UI you have to see), detour through a prototype, bridged by **`/handoff`** in both directions — a prototype lives in its own directory, which is exactly what `/handoff` is for (see Phase boundaries):
-   - **`/handoff`** out, then open a fresh session against that file,
-   - **`/prototype`** to answer the question with throwaway code,
-   - **`/handoff`** back what you learned, and reference it from the original idea thread.
+2. **Branch — can you settle every question in conversation?** If a question needs a runnable answer (state, business logic, a UI you have to see), detour through **`/prototype`**: it answers the question with throwaway code, keeps the prototype on a branch out of main, and records the verdict on the issue or in a commit — reference that from the original idea thread and carry on.
 3. **Branch — is this a multi-session build?**
    - **Yes** → **`/to-spec`** to turn the thread into a spec, then **`/to-tickets`** to split it into tracer-bullet tickets, each declaring its blocking edges as GitHub issue dependencies. Work each ticket in its own session, **`/clear`ing context between them** — each is self-contained, so the last one's context is disposable.
    - **No** → build it right here, in the same context window.
@@ -51,7 +48,7 @@ A **phase** is a chunk of work inside a session — the grilling, the implementa
 
 - **Continue** — stay put. Costs nothing, loses nothing.
 - **`/clear`** — empty the window, when nothing here matters to what's next.
-- **`/handoff`** — write a portable markdown file. Narrow: only for a **new harness**, a **new directory**, a **colleague**, or forking a side task **mid-phase**. What it buys is portability.
+- **`/handoff`** — park the session in a handoff document for your **other machine** or a **new harness**, then close out with `/end-session`; **`/lets-go`** resumes it there. Narrow: what it buys is portability, and it ends this session.
 - **Subagent** — send a tightly-scoped task to its own window and get a report back.
 - **`/compact`** — compress this context and seed a fresh session with it. The **default**, at the bottom of the tree rather than the first reach.
 
@@ -66,6 +63,7 @@ Off the main flow entirely.
 - **`/research`** — delegate reading legwork: it investigates a question against **primary sources**, then leaves a cited Markdown file in the repo. What it produces is something to take _into_ the main flow at `/grilling` — research feeds the thinking, it doesn't replace it.
 - **`/wait-what`** — the corrective for a message that didn't land. Use it mid-conversation, inside any other skill, and the agent re-pitches what it just said in plain English, using the `CONTEXT.md` vocabulary. It works after the fact; `/grilling` is the upfront cure, because a shared language agreed early is what stops the jargon arriving at all.
 - **`/writing-for-agents`** — reference for writing documents agents consume: skills, `AGENTS.md`, pointed-at docs.
+- **`/docs-updater`** — bring the docs in line with the code, or audit them in `check` mode. `/ship` and `/end-session` already run it on their own diffs; reach for it directly for a full audit or after a change you are not shipping yet.
 
 ## What this repo deliberately does not have
 

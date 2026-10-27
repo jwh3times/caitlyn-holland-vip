@@ -14,6 +14,8 @@ All from the repository root; together they cover the required checks that run l
   (**AI Config Parity**)
 - only when `package.json` or `package-lock.json` changed: `npm run test:unit` — unit tests assert
   on the manifest, so a dependency change can pass the checks above and still fail **Coverage**
+- only when `scripts/` or `vitest.config.ts` changed: `npm run coverage` — coverage counts
+  `scripts/*.mjs`, so a new script without tests drops it under the 80% **Coverage** gate
 
 The production build, **Coverage** (80% gate), **Playwright Tests**, **CodeQL** and
 **Dependency Review** run only in CI.

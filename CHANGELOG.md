@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.50] - 2026-10-27
+
+### Changed
+
+- The `ship`, `end-session`, `handoff` and `lets-go` agent skills now install from the shared
+  `jwh3times/skills` repository instead of being maintained here, and the `docs-updater` agent
+  becomes a skill installed the same way (ADR-0011; ADR-0006 still covers the forked
+  `mattpocock/skills` set). What the skills need to know about this repository lives in settings
+  files under `docs/agents/`, which each skill proposes on its first run. `/handoff` and `/lets-go`
+  read how the Handoffs folder reaches each machine from that machine's
+  `~/.config/handoffs/config`, and `scripts/handoff-map.mjs` is gone.
+- The AI Config Parity CI job now also runs `npm run lint:agents`, which rejects agent and skill
+  sources that would read wrongly from their mirrored copies.
+
+## [1.12.49] - 2026-10-27
+
+### Changed
+
+- Bumped `next` and `@next/eslint-plugin-next` from 16.4.2 to 16.4.3 in the npm-minor-and-patch
+  group (dependabot, PR #241).
+
 ## [1.12.48] - 2026-10-26
 
 ### Added
