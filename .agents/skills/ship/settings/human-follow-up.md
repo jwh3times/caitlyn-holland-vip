@@ -18,7 +18,8 @@ finds today's values.
 - **Read by:** docs-updater, end-session, ship
 - **Value:** the label a follow-up issue carries (`ready-for-human`, `human-action-required`, …),
   or `none` for a tracking-issue checkbox.
-- **Discover:** as above, and `docs/agents/triage-labels.md`.
+- **Discover:** as above, and the triage label vocabulary (`docs/agents/triage-labels.md`, or its
+  section of `docs/agents/issue-tracker.md`).
 
 ## Follow-up board
 

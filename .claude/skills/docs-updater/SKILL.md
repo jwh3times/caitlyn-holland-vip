@@ -45,15 +45,16 @@ git diff --name-status "$range"
 ```
 
 Read the diff itself, not only the file list. Skip generated copies (the mirrors the
-`Generated-config check` regenerates) and read their sources instead. Skip the bodies of installed
-skills too (every skill `skills-lock.json` lists): read only what their change means for claims in
-other documents, such as a renamed setting or a new command. A repository that installs its own
-skills skips the installed copy, never the authored source it was installed from. Match each
-change against every `Doc map` item's **when**: the paths it names, and the kind of change (a new
-endpoint, a changed command, a new setting, a removed feature). A **when** is a signal, not a limit: a change
-that plainly affects a document it does not match is in scope too, and is named in the report so
-the `Doc map` can be extended. A pure refactor often owes no doc edit; say so rather than inventing
-one. For a list of changes, match the same way. For a full audit, every item is in scope.
+`Generated-config check` regenerates) and read their sources instead. Skip the bodies of the skills
+the `Doc map` marks `frozen` too (installed, and never edited here): read only what their change
+means for claims in other documents, such as a renamed setting or a new command. A repository that
+installs its own skills skips the installed copy, never the authored source it was installed from.
+Match each change against every `Doc map` item's **when**: the paths it names, and the kind of
+change (a new endpoint, a changed command, a new setting, a removed feature). A **when** is a
+signal, not a limit: a change that plainly affects a document it does not match is in scope too, and
+is named in the report so the `Doc map` can be extended. A pure refactor often owes no doc edit; say
+so rather than inventing one. For a list of changes, match the same way. For a full audit, every
+item is in scope.
 
 Then search for the names the diff removed or renamed (settings, commands, files, flags, counts
 such as "all four"), and for names whose meaning it widened or narrowed: stale references to them

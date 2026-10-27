@@ -14,11 +14,12 @@ get wrong, and what it **left behind** (the workspace). Sweep those, in that ord
 
 **Announce at start:** "I'm using the end-session skill to close out this session."
 
-Run shell snippets in bash (Git Bash on Windows).
+Run shell snippets in bash (Git Bash on Windows). Where `gh` is unavailable, use the equivalent
+GitHub MCP operation: a missing CLI changes the interface, not the step.
 
-This skill leaves shipping to the `ship` skill: no version bump, changelog section, source push, or PR. A
-finished branch is shipped first, then this runs; a mid-flight branch stays mid-flight, recorded
-where it stands.
+This skill leaves shipping to the `ship` skill: no version bump, changelog section, source push,
+or PR. A finished branch is shipped first, then this runs; a mid-flight branch stays mid-flight,
+recorded where it stands.
 
 Three rules hold throughout:
 
@@ -83,8 +84,9 @@ half-decided work.
 
 ## 3. Issues and the board
 
-Issues carry the work; the `Board` carries its state. Labels come from
-`docs/agents/triage-labels.md`.
+Issues carry the work; the `Board` carries its state. Labels come from the repository's triage
+label vocabulary: `docs/agents/triage-labels.md`, or the section of `docs/agents/issue-tracker.md`
+that holds it.
 
 Board writes need the `gh` token's `project` scope, and fail silently without it. Check
 `gh auth status` for `project` (not just `read:project`). If it is missing, report it and skip board

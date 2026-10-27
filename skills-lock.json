@@ -25,7 +25,7 @@
       "source": "jwh3times/skills",
       "sourceType": "github",
       "skillPath": "skills/docs-updater/SKILL.md",
-      "computedHash": "d438aed601595bf99eb69a7bbf9f56145e758fae871ee4262698595018487f01"
+      "computedHash": "220411ea8ff475cf978afeb01096e6f1a09c1c8f59d82e1d658a0b4053a8b9eb"
     },
     "domain-modeling": {
       "source": "mattpocock/skills",
@@ -37,7 +37,7 @@
       "source": "jwh3times/skills",
       "sourceType": "github",
       "skillPath": "skills/end-session/SKILL.md",
-      "computedHash": "2bcd9c3b0bda47da49a5631a495acb804657b208c989afc6a45be86717375003"
+      "computedHash": "dd9a8c934c79d73004fde5ad4d00180c074ea64d9a22823df2a1b1bcf85b7b55"
     },
     "grilling": {
       "source": "mattpocock/skills",
@@ -82,7 +82,7 @@
       "source": "jwh3times/skills",
       "sourceType": "github",
       "skillPath": "skills/ship/SKILL.md",
-      "computedHash": "2f653065df434c01d593a5691149115f5074a94e6c10c05e7482dc847dd770aa"
+      "computedHash": "111123904a8046abfb94604bf4c164f172610a6ec1e745448349744009f49999"
     },
     "tdd": {
       "source": "mattpocock/skills",

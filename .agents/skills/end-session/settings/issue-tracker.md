@@ -3,7 +3,8 @@
 
 `docs/agents/issue-tracker.md` — where work is tracked. The file usually exists already (from the
 `mattpocock/skills` setup flow) with its own sections; these settings are added beside them. Label
-names stay in `docs/agents/triage-labels.md`.
+names stay in `docs/agents/triage-labels.md`, or in this file's own triage-labels section where a
+repository keeps them there.
 
 ## Public repository
 
