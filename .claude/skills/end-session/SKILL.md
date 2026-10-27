@@ -139,8 +139,10 @@ For each issue this session touched:
 - **Learned something material** → `gh issue comment <n> --body "..."`. Comment when the
   session changed what a reader would conclude — a root cause, a blocker, a rejected
   approach. Don't narrate that you looked at it.
-- **Fixed it** → do **not** close it by hand if a PR is open; put `Fixes #<n>` in the PR
-  body and let the merge close it. Close directly only for work that will never have a PR,
+- **Fixed it** → do **not** close it by hand if a PR is open; make `Closes #<n>` the first
+  line of the PR body and let the merge close it. When the PR is one slice of a spec that stays
+  open, the line is `Part of #<n>` instead, which closes nothing — see
+  [the development flow](../../../docs/agents/dev-flow.md#linking-work-to-its-issue). Close directly only for work that will never have a PR,
   and always with `--comment` explaining why.
 - **Triage state moved** → adjust labels with `gh issue edit <n> --add-label / --remove-label`.
 - **Found a new, self-contained follow-up** → `gh issue create` with a heredoc body, and

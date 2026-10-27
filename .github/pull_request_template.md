@@ -1,4 +1,8 @@
-# Pull Request Template
+Closes #
+
+<!-- Keep the issue link as the first line: `Closes #<n>` when this PR finishes the issue,
+`Part of #<n>` for one slice of a spec that stays open, or `Flow waived by the user: <reason>`.
+Delete it only for exempt dependency or docs-only work. See docs/agents/dev-flow.md. -->
 
 ## Summary
 

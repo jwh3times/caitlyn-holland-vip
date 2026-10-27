@@ -35,7 +35,9 @@ criterion.
 ### 1. Preconditions — stop if any fail
 
 - **Not on `main`.** `main` is protected; work must be on a branch. If on `main`, stop
-  and offer to create one (`git checkout -b agent/<topic>`).
+  and offer to create one named `<type>/<issue#>-<slug>` (`git checkout -b fix/236-braces-advisory`),
+  or `<type>/<slug>` for exempt work with no issue — see
+  [the development flow](../../../docs/agents/dev-flow.md#linking-work-to-its-issue).
 - **Clean working tree.** Run `git status --porcelain`. If anything is uncommitted, stop
   and ask the user whether to commit it — do not commit silently. Once they answer, act
   on it and restart from this step, so the rest of the skill runs against a clean tree.
@@ -306,6 +308,12 @@ gh pr list --head "$(git branch --show-current)" --state open --json number -q '
   step 3.
 - **PR exists** → `gh pr edit <number>` to refresh the body, including the release-level
   decision. Do not open a second PR.
+
+Either way, the body's first line links the branch's issue: `Closes #<n>` when this PR
+finishes it, `Part of #<n>` when it is one slice of a spec that stays open, or
+`Flow waived by the user: <reason>` for a waived change. Exempt work with no issue has no
+linking line. A `#<n>` in the title alone links nothing. The rules are in
+[the development flow](../../../docs/agents/dev-flow.md#linking-work-to-its-issue).
 
 ### 10. Report
 

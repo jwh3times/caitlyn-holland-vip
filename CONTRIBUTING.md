@@ -14,7 +14,11 @@ Follow the [Getting started](./README.md#getting-started) section of the README
 ## Workflow
 
 1. **Open an issue first** for anything non-trivial so we can agree on the approach.
-2. Create a branch and make your change in small, focused commits.
+2. Create a branch named `<type>/<issue#>-<slug>`, where `<type>` is the
+   Conventional Commit type of the change (`feat`, `fix`, `docs`, `chore`,
+   `refactor`, `test`, `ci`) — for example `fix/236-braces-advisory`. A change
+   with no issue drops the number (`docs/fix-typo`). Make your change in small,
+   focused commits.
 3. Ensure everything is green locally — these mirror the CI jobs:
 
    ```bash
@@ -25,8 +29,13 @@ Follow the [Getting started](./README.md#getting-started) section of the README
                           # and Mobile Chrome projects)
    ```
 
-4. Open a Pull Request and fill in the template. Eight checks are required to
-   merge: the six CI jobs (`Format Check`, `Coverage`, `Build & Lint`,
+4. Open a Pull Request and fill in the template. Its first line links the issue:
+   `Closes #<n>` when the PR finishes it, or `Part of #<n>` when it is one slice
+   of a larger issue that stays open. An issue number in the title alone does not
+   link it. AI coding agents follow the stricter
+   [development flow](docs/agents/dev-flow.md).
+
+   Eight checks are required to merge: the six CI jobs (`Format Check`, `Coverage`, `Build & Lint`,
    `Playwright Tests`, `AI Config Parity`, `Changelog Version`), plus `CodeQL`
    and `Dependency Review`. The `Cloudflare Pages` check reports the deployment
    build but does not block the merge.
