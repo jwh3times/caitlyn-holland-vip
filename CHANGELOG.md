@@ -9,6 +9,79 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.48] - 2026-10-26
+
+### Added
+
+- A binding development flow for AI coding agents in `docs/agents/dev-flow.md`, summarized in
+  `AGENTS.md`. Every code change now starts from a ready issue — an open `ready-for-agent` spec or
+  ticket, or a `bug` issue worked through `/diagnosing-bugs` — and an agent with none stops before
+  its first edit and routes the user to the skill that produces one. The human starts every phase;
+  at a phase boundary the agent names the next command and waits. Dependency bumps, docs- and
+  agent-config-only changes, release preparation, and an explicit user waiver are exempt, and the
+  doc lists which paths count as code.
+
+### Changed
+
+- Branches are named `<type>/<issue#>-<slug>`, and a PR body's first line links its issue with
+  `Closes #N` or `Part of #N`. The `ship` skill now suggests that branch name and writes that line,
+  `end-session` uses it in place of `Fixes #N`, the pull request template opens with it, and
+  `CONTRIBUTING.md` describes both for human contributors.
+
+## [1.12.47] - 2026-10-26
+
+### Changed
+
+- Bumped `lucide-react` from 1.60.0 to 1.61.0 in the npm-minor-and-patch group (dependabot, PR
+  #239).
+
+## [1.12.46] - 2026-10-25
+
+### Security
+
+- Bumped the transitive development dependency `fast-uri` from 3.1.8 to 3.1.9, a lockfile-only
+  change that resolves GHSA-w74x-v6f9-j3xg, GHSA-wjr9-j795-jxcr, GHSA-xhq7-xmqj-769h, and
+  GHSA-333x-w4r6-6crp (dependabot, PR #238).
+
+## [1.12.45] - 2026-10-25
+
+### Changed
+
+- Bumped `lucide-react` from 1.58.0 to 1.60.0 and `oxlint` from 1.88.0 to 1.89.0 in the
+  npm-minor-and-patch group (dependabot, PR #237).
+
+## [1.12.44] - 2026-10-22
+
+### Changed
+
+- Bumped the transitive development dependency `vite` from 8.0.16 to 8.3.5, a lockfile-only change
+  (dependabot, PR #235).
+
+## [1.12.43] - 2026-10-22
+
+### Changed
+
+- Bumped `next` and `@next/eslint-plugin-next` from 16.4.0 to 16.4.2, `react` and `react-dom` from
+  19.3.0 to 19.3.1, `lucide-react` from 1.56.0 to 1.58.0, `@axe-core/playwright` from 4.13.0 to
+  4.14.0, `@playwright/test` from 1.64.0 to 1.64.1, `@vitest/coverage-v8` from 5.0.4 to 5.0.5,
+  `jsdom` from 30.1.2 to 30.1.3, and `oxlint` from 1.87.0 to 1.88.0 in the npm-minor-and-patch
+  group (dependabot, PR #234).
+
+## [1.12.42] - 2026-10-16
+
+### Changed
+
+- Bumped `lucide-react` from 1.55.0 to 1.56.0, `@testing-library/user-event` from 14.6.7 to
+  14.6.8, and `@vitest/coverage-v8` from 5.0.3 to 5.0.4 in the npm-minor-and-patch group
+  (dependabot, PR #233).
+
+## [1.12.41] - 2026-10-14
+
+### Changed
+
+- Bumped `lucide-react` from 1.54.0 to 1.55.0 and `prettier` from 3.9.9 to 3.9.10 in the
+  npm-minor-and-patch group (dependabot, PR #232).
+
 ## [1.12.40] - 2026-10-13
 
 ### Changed
