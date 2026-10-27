@@ -25,7 +25,7 @@ Delete it only for exempt dependency or docs-only work. See docs/agents/dev-flow
 - [ ] `npm run build` succeeds (static export)
 - [ ] `npm run coverage` passes (≥ 80% gate)
 - [ ] `npm test` (Playwright e2e) passes
-- [ ] `npm run sync:agents:check` passes (for skill or agent edits)
+- [ ] `npm run sync:agents:check` and `npm run lint:agents` pass (for skill or agent edits)
 - [ ] [`CHANGELOG.md`](../CHANGELOG.md) has a `## [x.y.z]` section for the version this merge will mint —
       run `bash scripts/next-version.sh` for the number, or say "ship it" to Claude Code (dependabot PRs are exempt)
 - [ ] Verified in both light and dark mode (for UI changes)

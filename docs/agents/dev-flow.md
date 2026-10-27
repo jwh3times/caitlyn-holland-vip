@@ -83,7 +83,7 @@ Code is every other tracked path: `app/`, `components/`, `lib/`, `public/`, `scr
 (`package.json`, `package-lock.json`, `next.config.ts`, `tsconfig.json`, `vitest.config.ts`,
 `vitest.setup.ts`, `playwright.config.ts`, `.oxlintrc.json`, `.prettierrc`, `.prettierignore`,
 `.gitignore`, `.gitattributes`, `.nvmrc`). Agent tooling written as code —
-`scripts/sync-agents.mjs`, `scripts/handoff-map.mjs` — is code. A branch that touches any code
+`scripts/sync-agents.mjs`, `scripts/lint-agent-neutrality.mjs` — is code. A branch that touches any code
 path is gated, whatever else it touches.
 
 ## Linking work to its issue

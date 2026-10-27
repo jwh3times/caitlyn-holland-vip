@@ -166,8 +166,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Test the sync script
-        run: node --test scripts/sync-agents.test.mjs
+      - name: Test the sync script and the neutrality lint
+        run: node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs
+
+      - name: Lint agent and skill sources for tool neutrality
+        run: npm run lint:agents
 
       - name: Verify generated AI configs are committed
         # .codex/agents and .claude/skills are generated; --check fails on any stale,

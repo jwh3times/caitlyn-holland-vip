@@ -6,13 +6,13 @@ The **phase boundary** is the gap between two phases, and it is the only place t
 
 ## The five options
 
-| Option         | What it does                                                        |
-| -------------- | ------------------------------------------------------------------- |
-| **Continue**   | Stay in the session. No context switch at all.                      |
-| **`/clear`**   | Empty the context window and start from nothing.                    |
-| **`/handoff`** | Write a portable markdown file and seed a session anywhere with it. |
-| **Subagent**   | Send the task to its own context window and get a report back.      |
-| **`/compact`** | Compress this context and seed a fresh session with the summary.    |
+| Option         | What it does                                                             |
+| -------------- | ------------------------------------------------------------------------ |
+| **Continue**   | Stay in the session. No context switch at all.                           |
+| **`/clear`**   | Empty the context window and start from nothing.                         |
+| **`/handoff`** | Park the session in a handoff document; `/lets-go` resumes it elsewhere. |
+| **Subagent**   | Send the task to its own context window and get a report back.           |
+| **`/compact`** | Compress this context and seed a fresh session with the summary.         |
 
 ## The tree
 
@@ -26,12 +26,10 @@ The cost of getting this wrong is one-way. Clear a _relevant_ context and you lo
 
 **3. Do you need to hand off?** `/handoff` is narrow. You need it only when you are:
 
-- swapping to a **new harness** (Claude → Codex),
-- moving to a **new directory** or repo,
-- sending the work to a **colleague**,
-- or forking a side task you found **mid-phase** without derailing what you're doing.
+- moving to your **other machine**,
+- or swapping to a **new harness** (Claude → Codex) or another checkout of this repository.
 
-That list is the whole clause. What `/handoff` buys is **portability** — a file that travels. If nothing is travelling, you don't need it.
+That list is the whole clause. `/handoff` writes the handoff document into the Handoffs folder, marks it as this repository's active handoff, and closes the session out with `/end-session`; `/lets-go`, run in this repository on the other side, resumes it. What it buys is **portability** — a document that travels. If nothing is travelling, you don't need it. Because it ends the session, it is never a way to fork a side task mid-phase: send that to a subagent.
 
 **4. Can the task be done AFK?** Is it scoped tightly enough to run with you away from the keyboard, no steering? Then send it to a **subagent** and leave this session untouched. Automated review is the standard case: the agent reads the diff and reports, and you aren't needed while it does.
 

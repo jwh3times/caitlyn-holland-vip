@@ -10,15 +10,14 @@ everything under "Claude-specific" applies only to Claude Code.
 The two kinds of config are authored in **different** trees. Check which one you are in
 before editing:
 
-- **Agents — authored under `.claude/`.** The `docs-updater` subagent is defined at
-  [.claude/agents/docs-updater.md](.claude/agents/docs-updater.md); `npm run sync:agents`
-  generates [.codex/agents/docs-updater.toml](.codex/agents/docs-updater.toml) from it.
+- **Agents — authored under `.claude/`.** A subagent is defined at `.claude/agents/<name>.md`, and
+  `npm run sync:agents` generates `.codex/agents/<name>.toml` from it; none is defined today.
   This direction stays `.claude`-first because it is a format conversion
   (markdown + YAML frontmatter → TOML), not a copy.
-- **Skills — authored under `.agents/`.** Every skill, including `ship`, is authored at
-  `.agents/skills/<name>/**` and mirrored to `.claude/skills/<name>/**` by
-  `npm run sync:agents`. The `ship` skill source is
-  [.agents/skills/ship/SKILL.md](.agents/skills/ship/SKILL.md).
+- **Skills — under `.agents/`.** Every skill lives at `.agents/skills/<name>/**` and is mirrored
+  to `.claude/skills/<name>/**` by `npm run sync:agents`. `ship`, `end-session`, `handoff`,
+  `lets-go` and `docs-updater` are installed from `jwh3times/skills` and never edited here
+  (ADR-0011); the rest are forked and edited in place.
 
 **Never edit anything under `.claude/skills/` or `.codex/agents/` — both are generated**, and
 `npm run sync:agents` will overwrite your changes. Every file in a skill directory is

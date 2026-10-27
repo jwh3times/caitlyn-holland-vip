@@ -1,6 +1,5 @@
 {
   "version": 1,
-  "policy": "Vendored skills are forked and owned locally — see docs/adr/0006-vendored-skill-policy.md. computedHash records what was fetched from upstream, NOT the current local content. A skill marked \"localized\" has diverged deliberately; re-running the installer would overwrite those edits.",
   "skills": {
     "ask-matt": {
       "source": "mattpocock/skills",
@@ -22,11 +21,23 @@
       "computedHash": "b69bc2ee03ee31200639deed65168ab9e48db43af3ed47889a66c4bd190601eb",
       "localized": true
     },
+    "docs-updater": {
+      "source": "jwh3times/skills",
+      "sourceType": "github",
+      "skillPath": "skills/docs-updater/SKILL.md",
+      "computedHash": "220411ea8ff475cf978afeb01096e6f1a09c1c8f59d82e1d658a0b4053a8b9eb"
+    },
     "domain-modeling": {
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/engineering/domain-modeling/SKILL.md",
       "computedHash": "b747e8b4dcd0f367ef940c290b14f858bf9576ad9961fd6684bacff5688f4a2b"
+    },
+    "end-session": {
+      "source": "jwh3times/skills",
+      "sourceType": "github",
+      "skillPath": "skills/end-session/SKILL.md",
+      "computedHash": "dd9a8c934c79d73004fde5ad4d00180c074ea64d9a22823df2a1b1bcf85b7b55"
     },
     "grilling": {
       "source": "mattpocock/skills",
@@ -36,11 +47,16 @@
       "localized": true
     },
     "handoff": {
-      "source": "mattpocock/skills",
+      "source": "jwh3times/skills",
       "sourceType": "github",
-      "skillPath": "skills/productivity/handoff/SKILL.md",
-      "computedHash": "7b03a812d5ca10fa8fe69d4cf8a34542684db51f5db0271254b96074e9f3a243",
-      "localized": true
+      "skillPath": "skills/handoff/SKILL.md",
+      "computedHash": "e052a4f36ca4df2aa6ef54b23eaa81482e89bf872d4a219197799f38a6d58c00"
+    },
+    "lets-go": {
+      "source": "jwh3times/skills",
+      "sourceType": "github",
+      "skillPath": "skills/lets-go/SKILL.md",
+      "computedHash": "094f9dcb16796a4bb159a3bb569f98c5c6154ed76a857b4e5c56ddcf25364a76"
     },
     "prototype": {
       "source": "mattpocock/skills",
@@ -61,6 +77,12 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/resolving-merge-conflicts/SKILL.md",
       "computedHash": "6a005119c18c477c2122321a380a43d40242bae3cc7027125f13497d90875be2"
+    },
+    "ship": {
+      "source": "jwh3times/skills",
+      "sourceType": "github",
+      "skillPath": "skills/ship/SKILL.md",
+      "computedHash": "111123904a8046abfb94604bf4c164f172610a6ec1e745448349744009f49999"
     },
     "tdd": {
       "source": "mattpocock/skills",

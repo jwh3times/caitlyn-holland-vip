@@ -99,52 +99,10 @@ Used by `/to-tickets` when publishing a set of tickets that hang off a parent or
 
 ## Required human follow-ups from completed agent work
 
-Before reporting work complete, shipping, or ending a session, identify every required human
-action left by the completed work: owner decisions, account or billing choices, manual setup,
-access provisioning, and operational verification that the agent cannot perform. Complete work
-already authorized and executable by the agent first; conditional access needs become required
-follow-ups only when the missing prerequisite is established. Optional suggestions are not
-required human actions.
-
-This standing instruction authorizes creating/updating the follow-up issues, adding them to the
-shared private project board, and publishing the private wiki instructions without asking again.
-It authorizes documentation, not the underlying account changes, purchases, or secret disclosure.
-
-1. **Find or create the canonical private issue.** Read the private workspace runbook to locate
-   and verify the companion repository. Search its issues and `human-todo` before creating
-   anything; reuse an issue that already tracks the same action. Otherwise create one private
-   follow-up issue per independently completable human outcome, even when the originating work
-   is public. Record the originating issue/PR, what the agent completed and verified, why a human
-   is needed, the required action, prerequisites, and acceptance evidence. Keep public originating
-   records free of private locators and details. Unpublished vulnerability details stay in a
-   draft security advisory; the private issue/wiki may contain only a sanitized coordination
-   action and restricted advisory reference.
-2. **Label and place it on the board.** Apply `ready-for-human` (create the label using the
-   established vocabulary if missing), remove conflicting `needs-triage` / `ready-for-agent`
-   labels, and add the issue to the shared private project board described above. Set Status to
-   `Blocked` while waiting on the human, Gate to the actual reason (`Owner decision`, `Repo admin access`, or `Evidence needed`), and Area to the relevant project area. Explain the blocker in
-   the issue so it survives stale board fields. Keep the follow-up open until its acceptance
-   evidence exists, even if the originating implementation PR merges.
-3. **Publish step-by-step wiki instructions.** Create or update a section on the private wiki's
-   `human-todo` page, linked from its Home page. Link each section to its canonical private issue
-   and link the issue back to the section. Include the responsible human role, prerequisites,
-   ordered numbered steps with exact settings/commands where known, expected results, completion
-   checks, and rollback/recovery steps where relevant. Distinguish verified work from pending
-   actions. Use credential-free placeholders; keep credentials and recovery material in their
-   approved secret store. For long procedures, link a dedicated private wiki page from
-   `human-todo`; the full instructions must be available in the wiki.
-4. **Verify publication.** The wiki is a separate Git repository. Verify its private parent and
-   intended remote, inspect existing edits, preserve unrelated content, review the intended diff,
-   and run the canonical secret scan before committing/pushing only the wiki documentation.
-   Use GitHub MCP equivalents when `gh` is unavailable. Confirm the remote wiki revision, issue
-   label, board membership/fields, and reciprocal links. Report the private issue and wiki links
-   to the user. When the human action completes, update the canonical issue and wiki checklist
-   together. If access prevents publication, report the exact missing step and retain the prepared
-   private text safely; do not claim the follow-up was recorded or silently omit it.
-
-The completion criterion is exhaustive: every required human action has an existing or newly
-published private issue on the board and published, linked wiki instructions. If none remain,
-state that in the completion report. A final-response checklist alone does not satisfy this rule.
+Required human actions left by completed agent work follow `docs/agents/human-follow-up.md`. This
+standing instruction authorizes creating and updating those follow-up issues, adding them to the
+board, and publishing the private wiki instructions without asking again. It authorizes
+documentation, not the underlying account changes, purchases, or secret disclosure.
 
 ## Private work
 
@@ -152,3 +110,32 @@ Private, non-vulnerability actions belong to the companion repository's issues i
 [the private workspace runbook](private-workspace.md). Required human follow-ups use its issues and the linked `human-todo` wiki instructions above;
 other task documents are not stored in the ordinary repository, and its issues go on the same private board as this repository's. Genuine unpublished
 vulnerabilities belong in a draft security advisory in this public repository.
+
+## Public repository
+
+jwh3times/caitlyn-holland-vip
+
+## Private issue repository
+
+`discover: git -C private remote get-url origin` — the private companion's issues, for work whose
+description would leak private material.
+
+## Board
+
+jwh3times 9
+
+## Board fields
+
+- `Status`: `Todo` / `In Progress` / `Blocked` / `Parked` / `Done`.
+- `Gate`: why a `Blocked` or `Parked` item cannot start — `Nothing — ready to work`,
+  `Owner decision`, `Upstream capability`, `Automation opens it`, `Depends on another item`,
+  `Evidence needed`, `Repo admin access`. A `Blocked` or `Parked` item never carries
+  `Nothing — ready to work`.
+- `Area`: `Site content and sections`, `Design system and theming`, `Build and static export`,
+  `Testing and coverage`, `CI and release`, `Dependencies and runtime`, `AI config and skills`,
+  `Docs and process`, `Security`, `Defect`.
+
+## Security findings
+
+A draft security advisory in this repository, never an issue (see `SECURITY.md`). A private
+follow-up issue may hold only a sanitized coordination action and a restricted advisory reference.

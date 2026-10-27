@@ -1,5 +1,5 @@
 interface:
   display_name: "Handoff"
-  short_description: "Hand a session off through Proton Drive"
+  short_description: "Hand this session to the other machine"
 policy:
   allow_implicit_invocation: false
