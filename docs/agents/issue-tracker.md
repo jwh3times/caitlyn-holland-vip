@@ -139,3 +139,7 @@ jwh3times 9
 
 A draft security advisory in this repository, never an issue (see `SECURITY.md`). A private
 follow-up issue may hold only a sanitized coordination action and a restricted advisory reference.
+
+## New work
+
+issue
