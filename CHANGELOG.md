@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.52] - 2026-10-28
+
+### Changed
+
+- The shared agent skills are refreshed from `jwh3times/skills`, whose settings now carry
+  defaults: a repository writes a setting only to override one. `/ship`'s release commit becomes
+  `docs: update docs and changelog for v<version>` (it was `chore: prepare release v<version>`),
+  and `docs/agents/releases.md` drops that setting and the `Unreleased` placeholder, which match
+  the defaults. New human follow-up wiki pages are named `<Topic>-<YYYY-MM-DD>`.
+- `/ship`'s fast checks run `npm run coverage` (the unit suite under the 80% **Coverage** gate)
+  whenever a path it covers changes, not only when a manifest, `scripts/` or `vitest.config.ts`
+  does, so a source change that would fail **Coverage** is caught before the push.
+
 ## [1.12.51] - 2026-10-27
 
 ### Changed
