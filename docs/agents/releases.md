@@ -28,15 +28,7 @@ when ambiguous
 
 `bash scripts/next-version.sh`
 
-## Unreleased placeholder
-
-`No unreleased changes.`
-
 ## Changelog check
 
 `grep -Eq "^## \[$(bash scripts/next-version.sh | sed 's/\./\\./g')\]" CHANGELOG.md` — the
 required **Changelog Version** check, inline in `.github/workflows/ci.yml`.
-
-## Release commit message
-
-`chore: prepare release v<version>`
