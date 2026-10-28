@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.51] - 2026-10-27
+
+### Changed
+
+- The shared agent skills are refreshed from `jwh3times/skills`: `/end-session` records work it
+  discovers as an issue on the board, per the new `New work` setting in
+  `docs/agents/issue-tracker.md`, and `npm run lint:agents`' script also lints another checkout
+  when given its root, and names the root it linted.
+
 ## [1.12.50] - 2026-10-27
 
 ### Changed
