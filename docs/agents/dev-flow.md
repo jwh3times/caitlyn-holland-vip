@@ -62,9 +62,9 @@ These changes need no ready issue:
   for an advisory patch, `fix(deps): …`.
 - **Docs and agent config only** — a branch whose every changed path is in the docs list under
   [What counts as code](#what-counts-as-code).
-- **Release prep** — the `chore: prepare release v<x.y.z>` commit `/ship` makes, which moves the
-  `package.json` floor and writes `CHANGELOG.md` on a branch that already passed the gate or is
-  exempt.
+- **Release prep** — the `docs: update docs and changelog for v<x.y.z>` commit `/ship` makes,
+  which moves the `package.json` floor and writes `CHANGELOG.md` on a branch that already passed
+  the gate or is exempt.
 - **User waiver** — the user explicitly waives the flow for this change. Record it in the PR body
   as `Flow waived by the user: <reason>`.
 

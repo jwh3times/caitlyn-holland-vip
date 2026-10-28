@@ -12,13 +12,13 @@ All from the repository root; together they cover the required checks that run l
 - `npm run lint:agents` (**AI Config Parity**)
 - only when `scripts/` changed: `node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs`
   (**AI Config Parity**)
-- only when `package.json` or `package-lock.json` changed: `npm run test:unit` — unit tests assert
-  on the manifest, so a dependency change can pass the checks above and still fail **Coverage**
-- only when `scripts/` or `vitest.config.ts` changed: `npm run coverage` — coverage counts
-  `scripts/*.mjs`, so a new script without tests drops it under the 80% **Coverage** gate
+- only when `app/`, `components/`, `lib/`, `public/`, `scripts/`, `tests/unit/`,
+  `vitest.config.ts`, `vitest.setup.ts`, `next.config.ts`, `.nvmrc`, `.gitignore`, `package.json` or
+  `package-lock.json` changed: `npm run coverage` (**Coverage**) — the unit suite under the 80% gate,
+  a few seconds here; it counts `scripts/*.mjs`, so a new script without tests drops it under the
+  gate, and unit tests assert on the manifest, so a dependency change can fail it too
 
-The production build, **Coverage** (80% gate), **Playwright Tests**, **CodeQL** and
-**Dependency Review** run only in CI.
+The production build, **Playwright Tests**, **CodeQL** and **Dependency Review** run only in CI.
 
 ## Issue link
 
@@ -31,5 +31,5 @@ The production build, **Coverage** (80% gate), **Playwright Tests**, **CodeQL** 
 - **Exempt:**
   - dependency bumps
   - changes touching only docs and agent config
-  - release prep (the `chore: prepare release v<x.y.z>` commit)
+  - release prep (the `docs: update docs and changelog for v<x.y.z>` commit)
 - **Defined in:** `docs/agents/dev-flow.md`.
