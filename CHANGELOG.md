@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.54] - 2026-10-30
+
+### Changed
+
+- The shared agent skills are refreshed from `jwh3times/skills`. Agents commit in `private/` only
+  after asking, by one procedure every repository shares, which also confirms the companion is
+  private before pushing; the `ship` value of `Companion commit policy`, which left companion work
+  to no skill, is gone. `/ship` reports an open PR that claims the same version again, and
+  `/lets-go` installs from a changed lockfile.
+
 ## [1.12.53] - 2026-10-28
 
 ### Changed
