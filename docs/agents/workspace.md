@@ -10,10 +10,6 @@ through `docs/agents/private-workspace.md` when the checkout is absent).
 
 `git status --short --branch` and `git -C private status --short --branch`
 
-## Companion commit policy
-
-ship
-
 ## Sync with main
 
 `npm run sync:main` — fast-forwards both clean worktrees.
