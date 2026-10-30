@@ -6,15 +6,6 @@ Required human actions left by completed agent work follow the procedure in the 
 the standing authorization to publish them. Keep public originating records free of private
 locators and details.
 
-## Follow-up destination
-
-`discover: git -C private remote get-url origin` — issues in the private companion, selected
-explicitly with `--repo`, even for follow-ups from public work.
-
-## Follow-up label
-
-`ready-for-human` (remove a conflicting `needs-triage` or `ready-for-agent`)
-
 ## Follow-up board
 
 same as Board — `Status` `Blocked` while waiting on the human, `Gate` to the real reason
@@ -23,7 +14,6 @@ project.
 
 ## Follow-up wiki
 
-The private companion's wiki: `discover: git -C private remote get-url origin`, with `.wiki.git` in
-place of `.git`. Index page `human-todo`, linked from `Home`. Push without asking: the standing
-authorization covers it. Before committing, verify the wiki's private parent and remote, review the
-diff, and run the secret scan in `docs/agents/secret-prevention.md`.
+The private companion's wiki, index page `human-todo` linked from `Home`. Push without asking
+once the diff is reviewed and the secret scan in `docs/agents/secret-prevention.md` passes: the
+standing authorization covers it.

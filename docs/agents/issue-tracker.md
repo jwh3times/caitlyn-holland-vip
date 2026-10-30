@@ -115,11 +115,6 @@ vulnerabilities belong in a draft security advisory in this public repository.
 
 jwh3times/caitlyn-holland-vip
 
-## Private issue repository
-
-`discover: git -C private remote get-url origin` — the private companion's issues, for work whose
-description would leak private material.
-
 ## Board
 
 jwh3times 9
@@ -134,12 +129,3 @@ jwh3times 9
 - `Area`: `Site content and sections`, `Design system and theming`, `Build and static export`,
   `Testing and coverage`, `CI and release`, `Dependencies and runtime`, `AI config and skills`,
   `Docs and process`, `Security`, `Defect`.
-
-## Security findings
-
-A draft security advisory in this repository, never an issue (see `SECURITY.md`). A private
-follow-up issue may hold only a sanitized coordination action and a restricted advisory reference.
-
-## New work
-
-issue
