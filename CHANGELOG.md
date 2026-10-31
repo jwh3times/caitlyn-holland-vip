@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.58] - 2026-10-31
+
+### Changed
+
+- `AGENTS.md` now describes Node 26 as an LTS line, which it has been since v26.13.0, instead of a
+  pre-LTS Current release. The pin itself is unchanged.
+
+## [1.12.57] - 2026-10-30
+
+### Changed
+
+- Bumped `lucide-react` from 1.61.0 to 1.62.0 and `oxlint` from 1.89.0 to 1.90.0 in the
+  npm-minor-and-patch group (PR #246).
+
 ## [1.12.56] - 2026-10-30
 
 ### Changed
