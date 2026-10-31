@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.59] - 2026-10-31
+
+### Changed
+
+- The Oxlint native-rule research now records the 2026-10-31 recheck: the rule is still absent from
+  `oxlint@1.90.0`, and its earlier claim that no pull request proposed the rule was wrong, since
+  oxc-project/oxc#26301 was already open. The no-go decision stands until the rule ships in a
+  release.
+
 ## [1.12.58] - 2026-10-31
 
 ### Changed
