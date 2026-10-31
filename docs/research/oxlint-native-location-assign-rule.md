@@ -21,6 +21,10 @@ gap. The rule is also absent from the
 The installed version is recorded in this repository's
 [`package-lock.json`](../../package-lock.json).
 
+_Amended 2026-10-31:_ "nothing in Oxc currently tracks the gap" no longer holds. An unmerged pull
+request, recorded in the [recheck log](#recheck-log), now implements the rule. The no-go stands
+until the [revisit trigger](#revisit-trigger) is met.
+
 Consequently, there is no supported native rule configuration to enable and no native
 implementation whose behavior can be shown to match Next.js. Issue #119's replacement and
 parity criteria are not met.
@@ -120,3 +124,11 @@ Reopen the implementation when all three are true:
   repository's pin; the native rule directory holds 21 rules at tag `apps_v1.83.0` and none on
   `main` matches this rule, so it has not landed unreleased either. No open Oxc issue or pull
   request proposes implementing it. The tracker's table still shows it unimplemented.
+- **2026-10-31** — still absent. `oxlint@1.90.0` is both the latest published release and this
+  repository's pin; `npx --no-install oxlint --rules --format=default` lists 21 `nextjs` rules and
+  no location rule, and the native rule directory on `main` holds none either. (Without `--format`,
+  the command printed nothing in a non-interactive shell, so an empty result there proves nothing.)
+  The 2026-09-20 claim that no open pull request proposes implementing it was wrong:
+  [oxc-project/oxc#26301](https://github.com/oxc-project/oxc/pull/26301), "feat(linter): implement
+  nextjs/no-location-assign-relative-destination", was opened on 2026-09-03 by this repository's
+  owner (`jwh3times`). It is still open, with merge conflicts and no reviews.
