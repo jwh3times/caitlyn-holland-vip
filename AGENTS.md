@@ -36,7 +36,7 @@ release depends on `compression >= 1.8.2`.
 Lint rules live in [.oxlintrc.json](.oxlintrc.json). Oxlint owns the core, TypeScript, React, React Compiler, and React Hooks checks natively; one unsupported Next.js navigation rule still runs through `@next/eslint-plugin-next` (no native `nextjs/no-location-assign-relative-destination` rule exists yet — see [the Oxlint research](docs/research/oxlint-native-location-assign-rule.md)). ESLint is only a transitive compatibility dependency of that plugin, not the lint runner. Next.js 16.3 defaults production type-checking to the project-local TypeScript 7 CLI; keep `useTypeScriptCli` unset unless a future Next.js upgrade changes that default. See [the compatibility research](docs/research/nextjs-typescript-cli-stability.md).
 
 Node version is pinned in [.nvmrc](.nvmrc) — run `nvm use` to match CI and Cloudflare. The pin
-is **Node 26**, currently a _Current_ (pre-LTS) release rather than Active LTS; `@types/node` is
+is **Node 26**, an LTS line since v26.13.0; `@types/node` is
 held on the matching `26.x` typings line so the compiler cannot promise APIs the runtime lacks.
 The `devEngines` policy in [package.json](package.json) rejects `npm install`, `npm ci`, and
 `npm run` before they start when the active Node/npm major does not match the pinned toolchain:
