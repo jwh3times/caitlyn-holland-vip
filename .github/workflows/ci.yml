@@ -167,10 +167,14 @@ jobs:
         run: npm ci
 
       - name: Test the sync script and the neutrality lint
-        run: node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs
+        run: node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs scripts/sync-main.test.mjs scripts/next-version.test.mjs scripts/check-changelog.test.mjs scripts/check-docs.test.mjs
 
       - name: Lint agent and skill sources for tool neutrality
         run: npm run lint:agents
+
+      # Local links and anchors resolve, and the doc map lists every document.
+      - name: Check the docs
+        run: node scripts/check-docs.mjs
 
       - name: Verify generated AI configs are committed
         # .codex/agents and .claude/skills are generated; --check fails on any stale,
@@ -188,7 +192,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0 # full history + tags, needed by next-version.sh
+          fetch-depth: 0 # full history + tags, needed by next-version.mjs
 
       - name: Verify CHANGELOG names the target version
         env:
@@ -204,11 +208,4 @@ jobs:
             exit 0
           fi
 
-          version=$(bash scripts/next-version.sh)
-          version_re=$(printf '%s' "$version" | sed 's/\./\\./g')
-
-          if ! grep -Eq "^## \[${version_re}\]" CHANGELOG.md; then
-            echo "::error::CHANGELOG.md has no '## [${version}]' section for the version this merge will mint. Run /ship to write it."
-            exit 1
-          fi
-          echo "CHANGELOG.md has an entry for ${version}."
+          node scripts/check-changelog.mjs

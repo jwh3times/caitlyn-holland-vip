@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.60] - 2026-10-31
+
+### Changed
+
+- The version, changelog, docs and sync scripts are now the canonical ones from `jwh3times/skills`,
+  and the shared skills are refreshed to match. **Changelog Version** also requires a section for
+  every released build, so a Dependabot merge must be backfilled by the next human PR. CI now runs
+  `node scripts/check-docs.mjs`: local links and anchors must resolve, and the doc map must list
+  every document.
+
 ## [1.12.59] - 2026-10-31
 
 ### Changed

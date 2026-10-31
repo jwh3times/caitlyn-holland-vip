@@ -53,7 +53,7 @@ The invariant that every Mirror matches what regenerating from its Source would 
 _Avoid_: sync, drift check
 
 **Minted version**:
-The SemVer that merging a branch to `main` will create, computed by `scripts/next-version.sh`. Changelog entries are written for the Minted version.
+The SemVer that merging a branch to `main` will create, computed by `scripts/next-version.mjs`. Changelog entries are written for the Minted version.
 _Avoid_: next version, release number, upcoming version
 
 **Floor**:
