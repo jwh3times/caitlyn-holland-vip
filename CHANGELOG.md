@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.56] - 2026-10-30
+
+### Changed
+
+- The agent settings now map `LICENSE`, mark it and `CODE_OF_CONDUCT.md` `owner-only`, and mark the
+  dated research `amend-only`, as the other repositories do; a stale `.claude/agents/` path is gone.
+  `/end-session` deletes the build output it lists instead of leaving it by default, and handles
+  worktrees and scratch files through its own rules.
+
 ## [1.12.55] - 2026-10-30
 
 ### Changed
