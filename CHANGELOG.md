@@ -9,6 +9,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.56] - 2026-10-30
+
+### Changed
+
+- The agent settings now map `LICENSE`, mark it and `CODE_OF_CONDUCT.md` `owner-only`, and mark the
+  dated research `amend-only`, as the other repositories do; a stale `.claude/agents/` path is gone.
+  `/end-session` deletes the build output it lists instead of leaving it by default, and handles
+  worktrees and scratch files through its own rules.
+
+## [1.12.55] - 2026-10-30
+
+### Changed
+
+- The shared agent skills are refreshed from `jwh3times/skills`, which now give most settings a
+  default, so the ones that matched leave `docs/agents/`. `/end-session` runs the generated-config
+  check every time, not only when agent sources changed, and ends by proving both repositories
+  clean and pushed. `/ship` bumps with `--allow-same-version`, so a re-run lands on the same
+  version; `/handoff` names `npm run bootstrap:private` for a machine without `private/`, and
+  `/lets-go` offers it.
+
+## [1.12.54] - 2026-10-30
+
+### Changed
+
+- The shared agent skills are refreshed from `jwh3times/skills`. Agents commit in `private/` only
+  after asking, by one procedure every repository shares, which also confirms the companion is
+  private before pushing; the `ship` value of `Companion commit policy`, which left companion work
+  to no skill, is gone. `/ship` reports an open PR that claims the same version again, and
+  `/lets-go` installs from a changed lockfile.
+
 ## [1.12.53] - 2026-10-28
 
 ### Changed
