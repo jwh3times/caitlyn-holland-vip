@@ -42,7 +42,7 @@ jobs:
       - name: Compute next SemVer build tag
         id: version
         run: |
-          version=$(bash scripts/next-version.sh)
+          version=$(node scripts/next-version.mjs)
           tag="v${version}"
 
           if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then

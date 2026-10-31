@@ -43,6 +43,16 @@ export default defineConfig({
         // `node --test scripts/lint-agent-neutrality.test.mjs`.
         "scripts/lint-agent-neutrality.mjs",
         "scripts/lint-agent-neutrality.test.mjs",
+        // The other canonical scripts are shared the same way, each with its own
+        // node:test suite that CI runs.
+        "scripts/sync-main.mjs",
+        "scripts/sync-main.test.mjs",
+        "scripts/next-version.mjs",
+        "scripts/next-version.test.mjs",
+        "scripts/check-changelog.mjs",
+        "scripts/check-changelog.test.mjs",
+        "scripts/check-docs.mjs",
+        "scripts/check-docs.test.mjs",
       ],
       // Baseline coverage gate. CI fails (and merges are blocked) below this.
       thresholds: {

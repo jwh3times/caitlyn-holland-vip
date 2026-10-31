@@ -43,7 +43,7 @@ Follow the [Getting started](./README.md#getting-started) section of the README
    The `Changelog Version` check requires [`CHANGELOG.md`](CHANGELOG.md) to have
    a `## [x.y.z]` section for the version your merge will mint — every merge to
    `main` is auto-tagged, so an `[Unreleased]` heading alone will not pass. Run
-   `bash scripts/next-version.sh` to see that version, or say "ship it" to
+   `node scripts/next-version.mjs` to see that version, or say "ship it" to
    Claude Code and the `ship` skill writes the entry for you. Dependabot PRs are
    exempt.
 

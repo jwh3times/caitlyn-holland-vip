@@ -6,10 +6,6 @@
 `discover: git -C private remote get-url origin` (its name stays out of public files; recover it
 through `docs/agents/private-workspace.md` when the checkout is absent).
 
-## Sync with main
-
-`npm run sync:main` — fast-forwards both clean worktrees.
-
 ## Safe-to-remove paths
 
 - `.next/`, `out/`, `coverage/`, `playwright-report/`, `test-results/`, `blob-report/`
