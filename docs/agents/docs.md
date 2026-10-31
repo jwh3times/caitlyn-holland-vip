@@ -14,7 +14,7 @@
   - CI or test configuration changes (`.github/workflows/`, `vitest.config.ts`,
     `playwright.config.ts`): the CI/CD and Testing sections — the coverage threshold matching
     `vitest.config.ts`, the job count and names matching `ci.yml`;
-  - agent config changes (`.agents/skills/`, `.claude/agents/`): "Agent configuration & docs
+  - agent config changes (`.agents/skills/`, `skills-lock.json`): "Agent configuration & docs
     automation";
   - metadata or headers change (`app/layout.tsx`, `public/_headers`): the metadata and
     security-headers notes;
@@ -24,14 +24,15 @@
   only a Claude Code-specific note changes.
 - `README.md` — overview and setup for human developers. **When:** a prerequisite, setup step or
   command changes.
-- `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md` — how to contribute, how to report a
-  vulnerability, conduct. **When:** the development flow, PR template or security process changes.
+- `CONTRIBUTING.md`, `SECURITY.md` — how to contribute, how to report a vulnerability. **When:** the
+  development flow, PR template or security process changes.
+- `CODE_OF_CONDUCT.md`, `LICENSE` — `owner-only`.
 - `CHANGELOG.md` — release notes, Keep a Changelog, one dated section per merge. `ship-owned`.
 - `CONTEXT.md`, `docs/adr/*.md` — the domain glossary and decisions, written by the `grilling` and
   `domain-modeling` skills. `frozen` for this skill: point at them, and report a contradiction
   between an accepted ADR and the code instead of editing either.
-- `docs/research/*.md` — standing research that backs a live decision, never a status report.
-  **When:** the decision it backs, or the evidence it cites, changes.
+- `docs/research/*.md` — dated research behind a live decision, never a status report.
+  `amend-only`. **When:** the decision it backs, or the evidence it cites, changes.
 - `docs/agents/*.md` — conventions and settings the skills read. **When:** a convention or setting
   changes.
 - `.agents/skills/*/**` — skills, mirrored to `.claude/skills/`. The skills ADR-0006 vendored from
