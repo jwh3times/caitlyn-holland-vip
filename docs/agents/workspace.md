@@ -6,6 +6,10 @@
 `discover: git -C private remote get-url origin` (its name stays out of public files; recover it
 through `docs/agents/private-workspace.md` when the checkout is absent).
 
+## AGENTS.md blocks
+
+`shared-skills` — the shared flow names skills this repository's fork removed.
+
 ## Safe-to-remove paths
 
 - `.next/`, `out/`, `coverage/`, `playwright-report/`, `test-results/`, `blob-report/`
