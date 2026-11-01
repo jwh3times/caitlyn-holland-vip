@@ -10,7 +10,7 @@ codebase.
 - **[`docs/adr/`](../adr/)** — the ADRs touching the area you are about to work in. One decision
   per file, newest number last.
 
-The `/domain-modeling` skill maintains both — reached directly, or pulled in by `/grilling`, which
+The `/domain-modeling` skill maintains both — reached directly, or pulled in by `/grill-with-docs`, which
 runs it alongside the interview whenever there is a repo under the conversation. Terms and
 decisions are recorded as they get resolved, not batched up front.
 

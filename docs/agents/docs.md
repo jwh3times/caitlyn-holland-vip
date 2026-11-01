@@ -28,19 +28,18 @@
   development flow, PR template or security process changes.
 - `CODE_OF_CONDUCT.md`, `LICENSE` — `owner-only`.
 - `CHANGELOG.md` — release notes, Keep a Changelog, one dated section per merge. `ship-owned`.
-- `CONTEXT.md`, `docs/adr/*.md` — the domain glossary and decisions, written by the `grilling` and
+- `CONTEXT.md`, `docs/adr/*.md` — the domain glossary and decisions, written by the `grill-with-docs` and
   `domain-modeling` skills. `frozen` for this skill: point at them, and report a contradiction
   between an accepted ADR and the code instead of editing either.
 - `docs/research/*.md` — dated research behind a live decision, never a status report.
   `amend-only`. **When:** the decision it backs, or the evidence it cites, changes.
 - `docs/agents/*.md` — conventions and settings the skills read. **When:** a convention or setting
   changes.
-- `.agents/skills/*/**` — skills, mirrored to `.claude/skills/`. The skills ADR-0006 vendored from
-  `mattpocock/skills` are forked and owned here: edit them in place, and update `ask-matt`'s routing
-  when a skill is added or removed. `end-session`, `handoff`, `lets-go`, `ship` and `docs-updater`
-  install from `jwh3times/skills` (ADR-0011): `frozen` here, fixed upstream. **When:** a skill is
-  added, removed or replaced (`.agents/skills/`, `skills-lock.json`): `ask-matt`'s routing,
-  `CLAUDE.md` and AGENTS.md's skill paragraph.
+- `.agents/skills/*/**` — installed skills, mirrored to `.claude/skills/`: `end-session`, `handoff`,
+  `lets-go`, `ship` and `docs-updater` from `jwh3times/skills` (ADR-0011), and the `mattpocock/skills`
+  snapshot (ADR-0012). `frozen` here: fixed upstream, and what they need to know goes in `AGENTS.md` or
+  `docs/agents/`. **When:** a skill is added, removed or replaced (`.agents/skills/`,
+  `skills-lock.json`): `CLAUDE.md` and AGENTS.md's skill paragraph.
 - `.github/pull_request_template.md` — the PR body's sections. **When:** the development flow's
   linking rule changes.
 - `private/**/*.md` — durable private procedures in the companion; live status belongs in issues.

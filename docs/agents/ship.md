@@ -11,7 +11,8 @@ All from the repository root; together they cover the required checks that run l
   the regenerated mirrors
 - `npm run lint:agents` (**AI Config Parity**)
 - `node scripts/check-docs.mjs` (**AI Config Parity**)
-- only when `scripts/` changed: `node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs scripts/sync-main.test.mjs scripts/next-version.test.mjs scripts/check-changelog.test.mjs scripts/check-docs.test.mjs`
+- `node scripts/check-skills.mjs` (**AI Config Parity**)
+- only when `scripts/` changed: `node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs scripts/sync-main.test.mjs scripts/next-version.test.mjs scripts/check-changelog.test.mjs scripts/check-docs.test.mjs scripts/check-skills.test.mjs`
   (**AI Config Parity**)
 - only when `app/`, `components/`, `lib/`, `public/`, `scripts/`, `tests/unit/`,
   `vitest.config.ts`, `vitest.setup.ts`, `next.config.ts`, `.nvmrc`, `.gitignore`, `package.json` or
@@ -20,17 +21,3 @@ All from the repository root; together they cover the required checks that run l
   gate, and unit tests assert on the manifest, so a dependency change can fail it too
 
 The production build, **Playwright Tests**, **CodeQL** and **Dependency Review** run only in CI.
-
-## Issue link
-
-- **Branch pattern:** `<type>/<issue#>-<slug>`, `<type>` the Conventional Commit type (`feat`,
-  `fix`, `docs`, `chore`, `refactor`, `test`, `ci`). Exempt work drops the number
-  (`docs/dev-flow`); Dependabot names its own.
-- **Link line:** `Closes #<n>` when the PR finishes the issue (a ticket, a one-PR spec, a bug);
-  `Part of #<n>` for one slice of a spec that stays open. It sits above the summary.
-- **Waiver line:** `Flow waived by the user: <reason>`.
-- **Exempt:**
-  - dependency bumps
-  - changes touching only docs and agent config
-  - release prep (the `docs: update docs and changelog for v<x.y.z>` commit)
-- **Defined in:** `docs/agents/dev-flow.md`.

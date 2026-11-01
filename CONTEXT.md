@@ -33,7 +33,7 @@ _Avoid_: hydration check, client check
 ### Repo machinery
 
 **Source**:
-An authored configuration file — anything under `.agents/skills/` or `.claude/agents/`. The only place an edit is valid.
+A configuration file a Mirror is generated from — anything under `.agents/skills/`, which is installed and never edited here, or `.claude/agents/`, which is authored here.
 _Avoid_: original, master copy
 
 **Mirror**:
@@ -41,7 +41,7 @@ A file generated from a Source by `npm run sync:agents` — anything under `.cla
 _Avoid_: copy, duplicate, build output
 
 **Skill**:
-A capability authored under `.agents/skills/<name>/` and mirrored into `.claude/skills/`.
+A capability installed under `.agents/skills/<name>/` and mirrored into `.claude/skills/`.
 _Avoid_: command, macro
 
 **Agent**:
