@@ -168,8 +168,7 @@ is edited once:
   [`lets-go`](.agents/skills/lets-go/SKILL.md) and
   [`docs-updater`](.agents/skills/docs-updater/SKILL.md) — install from
   [`jwh3times/skills`](https://github.com/jwh3times/skills) and are never edited here, per
-  [ADR-0011](docs/adr/0011-shared-skills-install-from-jwh3times-skills.md): what they need to know
-  about this repository is in the settings files under `docs/agents/`. [skills-lock.json](skills-lock.json)
+  [ADR-0011](docs/adr/0011-shared-skills-install-from-jwh3times-skills.md); see [Shared skills](#shared-skills). [skills-lock.json](skills-lock.json)
   records where each skill came from: for the forked set, the `computedHash` is what was originally
   fetched and `localized: true` flags divergence; for the shared five, re-running the install
   command in ADR-0011 is the update.
@@ -185,9 +184,9 @@ Never edit a generated file — that means anything under **`.claude/skills/`** 
 mirrored `SKILL.md` and each Codex TOML carries a `# GENERATED — do not edit.` banner naming its
 source; every other skill file is copied byte-for-byte and drift-checked by content. The sync
 also **prunes** mirrors whose source is gone (in both generated trees), so deleting a skill from
-`.agents/` removes its `.claude/` copy. The generator, the neutrality lint (`npm run lint:agents`), `sync-main.mjs`, `next-version.mjs`, `check-changelog.mjs` and `check-docs.mjs` are canonical in
-`jwh3times/skills` — fix them there, then copy them here — and they and the generated trees are in `.prettierignore` so formatting cannot drift
-them.
+`.agents/` removes its `.claude/` copy. The generator, the neutrality lint (`npm run lint:agents`) and the other canonical scripts (see
+[Shared skills](#shared-skills)) and the generated trees are in `.prettierignore` so formatting
+cannot drift them.
 The one exception is [.codex/config.toml](.codex/config.toml) — hand-authored Codex
 configuration with no generating source, safe to edit directly. The `AI Config Parity` CI job
 runs `npm run sync:agents:check` and fails if any mirror differs from what is committed.
@@ -198,14 +197,16 @@ runs `npm run sync:agents:check` and fails if any mirror differs from what is co
 `BEGIN:nextjs-agent-rules` / `END:nextjs-agent-rules` — to `AGENTS.md` whenever it detects a
 coding agent in the environment. **This repo opts out** with
 `agentRules: false` in [next.config.ts](next.config.ts) — see
-[ADR-0008](docs/adr/0008-nextjs-agent-rules-opt-out.md). `AGENTS.md` stays entirely
-hand-authored, so no tool writes into it and no unrelated diff picks up a dirty `AGENTS.md`.
+[ADR-0008](docs/adr/0008-nextjs-agent-rules-opt-out.md). Apart from the marked
+`shared:` blocks `scripts/sync-agents.mjs` writes, `AGENTS.md` stays hand-authored, so no unrelated
+diff picks up a dirty `AGENTS.md`.
 Do not remove the flag, and do not commit the block if you see it — restore the flag instead.
 [tests/unit/next-config.test.ts](tests/unit/next-config.test.ts) guards both halves of that.
 
 Note what the opt-out does **not** touch: `npm run sync:agents` and the `AI Config Parity` CI
-job only touch `.agents/`, `.claude/skills/`, and `.codex/agents/`. Neither reads or writes
-`AGENTS.md`, so the block was never a parity failure — only a dirty working tree.
+job cover `.agents/`, `.claude/skills/`, `.codex/agents/` and the marked `shared:` blocks here.
+Neither reads the rest of `AGENTS.md`, so the block was never a parity failure — only a dirty working
+tree.
 
 The block's actual advice is worth keeping, so it lives here by hand instead:
 
@@ -228,6 +229,28 @@ operations when `gh` is unavailable, so remote agents follow the same workflow a
 criteria rather than skipping GitHub work.
 
 ## Agent skills
+
+### Shared skills
+
+<!-- shared:shared-skills -->
+
+`end-session`, `handoff`, `lets-go`, `ship` and `docs-updater` install from `jwh3times/skills`, and
+are never edited here: reinstalling overwrites a local edit. A fix goes upstream, and what they need
+to know about this repository goes in the settings files under `docs/agents/`, which each skill
+proposes on first run. Re-running the install is the update; never run `npx skills update`, which
+leaves `.claude/skills/` linked to its source instead of copied:
+
+```bash
+npx skills add jwh3times/skills -s end-session -s handoff -s lets-go -s ship -s docs-updater -a codex --copy -y
+node scripts/sync-agents.mjs
+```
+
+`scripts/sync-agents.mjs`, `lint-agent-neutrality.mjs`, `check-docs.mjs`, and `sync-main.mjs`,
+`next-version.mjs` and `check-changelog.mjs` where this repository carries them, are canonical in
+`jwh3times/skills` with their tests: fix them there, then copy them here. `sync-agents.mjs` also
+writes the marked blocks in this file: change them in `jwh3times/skills`, not here.
+
+<!-- /shared:shared-skills -->
 
 ### Development flow
 

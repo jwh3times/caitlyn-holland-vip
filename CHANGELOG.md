@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.61] - 2026-10-31
+
+### Changed
+
+- The shared-skills text in `AGENTS.md` now comes from `jwh3times/skills`: `scripts/sync-agents.mjs`
+  writes it between marked lines, and its check fails when it drifts. The shared skills are
+  refreshed to match.
+
 ## [1.12.60] - 2026-10-31
 
 ### Changed
