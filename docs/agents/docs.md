@@ -27,6 +27,8 @@
 - `CONTRIBUTING.md`, `SECURITY.md` — how to contribute, how to report a vulnerability. **When:** the
   development flow, PR template or security process changes.
 - `CODE_OF_CONDUCT.md`, `LICENSE` — `owner-only`.
+- `THIRD_PARTY_NOTICES.md` — the license notices of third-party files kept here. `owner-only`: report
+  the change when a skill's source changes.
 - `CHANGELOG.md` — release notes, Keep a Changelog, one dated section per merge. `ship-owned`.
 - `CONTEXT.md`, `docs/adr/*.md` — the domain glossary and decisions, written by the `grill-with-docs` and
   `domain-modeling` skills. `frozen` for this skill: point at them, and report a contradiction

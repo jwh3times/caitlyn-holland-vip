@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.63] - 2026-11-01
+
+### Added
+
+- `THIRD_PARTY_NOTICES.md` carries the MIT license notice of the installed `mattpocock/skills`
+  skills, which install without it.
+
 ## [1.12.62] - 2026-11-01
 
 ### Changed
