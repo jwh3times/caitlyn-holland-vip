@@ -37,12 +37,11 @@ scripts/check-changelog.mjs
 scripts/check-changelog.test.mjs
 scripts/check-docs.mjs
 scripts/check-docs.test.mjs
-# Installed from jwh3times/skills (ADR-0011); a reinstall must find them byte for byte.
-.agents/skills/end-session/
-.agents/skills/handoff/
-.agents/skills/lets-go/
-.agents/skills/ship/
-.agents/skills/docs-updater/
+scripts/check-skills.mjs
+scripts/check-skills.test.mjs
+# Installed (ADR-0011, ADR-0012); a reinstall must find them byte for byte, and
+# check-skills.mjs fails otherwise.
+.agents/skills/
 
 # Logs
 *.log

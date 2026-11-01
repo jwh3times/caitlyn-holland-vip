@@ -48,7 +48,9 @@ together, in either direction.
 
 ### Testing
 
-There are two test layers: **Vitest + Testing Library** for fast unit/component tests, and **Playwright** for end-to-end browser tests.
+There are two test layers: **Vitest + Testing Library** for fast unit/component tests, and **Playwright** for end-to-end browser tests. `npm test` is the Playwright suite, so `npm run test:unit` is the inner loop. There is no `typecheck` script: use `npx tsc --noEmit`.
+
+The directory separates the runners and the suffix decides whether a file runs at all ([ADR-0009](docs/adr/0009-test-suites-share-tests-root.md)). A `.spec.ts` under `tests/unit/` misses Vitest's `include` and is outside Playwright's `testDir`, so it **silently never runs**. A Vitest-style `.test.ts` under `tests/e2e/` is picked up by Playwright's default `testMatch` and fails against a browser.
 
 #### Unit tests (Vitest)
 
@@ -140,6 +142,7 @@ the production policy.
 - Use [components/ui/button.tsx](components/ui/button.tsx) `CtaLink` for CTA navigation (`tone`: `primary`/`secondary`; `size`: `md`/`lg`) and `Button` for button actions. The variant composer is internal; gradient `Button` variants must be paired with `cta`/`ctaLg` sizes.
 - Use `"use client"` only where client interactivity is needed.
 - Use the semantic CSS-variable classes — never hardcode colors.
+- A throwaway route is not throwaway. Cloudflare Pages deploys `out/` on every push to `main` ([ADR-0001](docs/adr/0001-static-export-cloudflare-pages.md)), so a `/prototype` route merged to `main` is live on the public site, and gating its switcher on `NODE_ENV` hides the bar, not the page. Prefer changing an existing page. A separate page stays on its `prototype/<name>` branch, never merged: promote the winning variant into a real route instead. This repo is npm-only, so a prototype starts with `npm run <name>`.
 - Unit-test coverage is gated at 80% in CI, so new components generally need a matching test under `tests/unit/` (mirroring the source path).
 - Shared profile facts (`name`, `siteUrl`, `description`, `bio`) live in [lib/profile.ts](lib/profile.ts) and feed metadata, the sitemap, and repeated page copy; experience, skills, email, and LinkedIn stay local to their owning sections. [public/manifest.json](public/manifest.json) remains static, with its duplicated profile fields kept aligned by [tests/unit/lib/profile.test.ts](tests/unit/lib/profile.test.ts).
 - Site metadata lives in the [app/layout.tsx](app/layout.tsx) `Metadata` export. The layout also
@@ -155,23 +158,16 @@ is edited once:
 
 - **Shared project guidance** lives in this file, `AGENTS.md`. Claude Code reads it through an
   `@AGENTS.md` import in [CLAUDE.md](CLAUDE.md); other tools read `AGENTS.md` directly.
-- **Skills** are authored under **`.agents/skills/<name>/`** and mirrored to
+- **Skills** are installed under **`.agents/skills/<name>/`** and mirrored to
   `.claude/skills/<name>/` by `npm run sync:agents`. The **whole skill directory** is mirrored —
   `SKILL.md` plus every auxiliary file (`agents/openai.yaml`, `scripts/*.sh`, reference
-  docs) — so all of it is covered by drift detection. Of the 18 skills, 13 originated in
-  [`mattpocock/skills`](https://github.com/mattpocock/skills) but are now forked and owned
-  locally — edited in place rather than tracked upstream — per
-  [ADR-0006](docs/adr/0006-vendored-skill-policy.md). Five —
-  [`ship`](.agents/skills/ship/SKILL.md),
-  [`end-session`](.agents/skills/end-session/SKILL.md),
-  [`handoff`](.agents/skills/handoff/SKILL.md),
-  [`lets-go`](.agents/skills/lets-go/SKILL.md) and
-  [`docs-updater`](.agents/skills/docs-updater/SKILL.md) — install from
-  [`jwh3times/skills`](https://github.com/jwh3times/skills) and are never edited here, per
-  [ADR-0011](docs/adr/0011-shared-skills-install-from-jwh3times-skills.md); see [Shared skills](#shared-skills). [skills-lock.json](skills-lock.json)
-  records where each skill came from: for the forked set, the `computedHash` is what was originally
-  fetched and `localized: true` flags divergence; for the shared five, re-running the install
-  command in ADR-0011 is the update.
+  docs) — so all of it is covered by drift detection. All 28 install and are never edited here:
+  five from [`jwh3times/skills`](https://github.com/jwh3times/skills)
+  ([ADR-0011](docs/adr/0011-shared-skills-install-from-jwh3times-skills.md)), and the rest from one
+  pinned [`mattpocock/skills`](https://github.com/mattpocock/skills) snapshot
+  ([ADR-0012](docs/adr/0012-third-party-skills-install-from-one-pinned-snapshot.md)); see
+  [Shared skills](#shared-skills). [skills-lock.json](skills-lock.json) records each one, and
+  `scripts/check-skills.mjs` holds the installed copies to it.
 - **Agents** go the other way: authored under **`.claude/agents/*.md`** and generated into
   `.codex/agents/*.toml` by the same command. This direction is `.claude`-first because it is
   a format conversion (markdown + YAML frontmatter → TOML), not a copy. None is authored today —
@@ -179,17 +175,18 @@ is edited once:
   added.
 
 Never edit a generated file — that means anything under **`.claude/skills/`** or
-**`.codex/agents/`**. Edit the source and re-run `npm run sync:agents` (it prettier-formats the
-`.agents/` markdown sources, then runs [scripts/sync-agents.mjs](scripts/sync-agents.mjs)). Each
+**`.codex/agents/`**. Re-install or edit the source, then run `npm run sync:agents`
+([scripts/sync-agents.mjs](scripts/sync-agents.mjs)). Each
 mirrored `SKILL.md` and each Codex TOML carries a `# GENERATED — do not edit.` banner naming its
 source; every other skill file is copied byte-for-byte and drift-checked by content. The sync
 also **prunes** mirrors whose source is gone (in both generated trees), so deleting a skill from
 `.agents/` removes its `.claude/` copy. The generator, the neutrality lint (`npm run lint:agents`) and the other canonical scripts (see
-[Shared skills](#shared-skills)) and the generated trees are in `.prettierignore` so formatting
-cannot drift them.
+[Shared skills](#shared-skills)), `.agents/skills/` and the generated trees are in `.prettierignore`
+so formatting cannot drift them.
 The one exception is [.codex/config.toml](.codex/config.toml) — hand-authored Codex
 configuration with no generating source, safe to edit directly. The `AI Config Parity` CI job
-runs `npm run sync:agents:check` and fails if any mirror differs from what is committed.
+runs `npm run sync:agents:check` and `node scripts/check-skills.mjs`, and fails if any mirror differs from what
+is committed or any installed skill from its lock.
 
 ### Next.js agent rules — auto-generation is off
 
@@ -237,40 +234,72 @@ criteria rather than skipping GitHub work.
 `end-session`, `handoff`, `lets-go`, `ship` and `docs-updater` install from `jwh3times/skills`, and
 are never edited here: reinstalling overwrites a local edit. A fix goes upstream, and what they need
 to know about this repository goes in the settings files under `docs/agents/`, which each skill
-proposes on first run. Re-running the install is the update; never run `npx skills update`, which
-leaves `.claude/skills/` linked to its source instead of copied:
+proposes on first run.
+
+The other shared skills come from one `mattpocock/skills` snapshot (v1.3.2, pinned by commit), the
+same in every repository, and are never edited here either: what they need to know goes in this
+file or `docs/agents/`. Moving to a newer snapshot is a change in `jwh3times/skills`. Keep
+`.agents/skills/` out of every formatter: `scripts/check-skills.mjs` fails when an installed copy
+differs from `skills-lock.json`, or the lock from these commands.
+
+Re-running the install is the update; never run `npx skills update`, which leaves `.claude/skills/`
+linked to its source instead of copied:
 
 ```bash
 npx skills add jwh3times/skills -s end-session -s handoff -s lets-go -s ship -s docs-updater -a codex --copy -y
+npx skills add mattpocock/skills#d1478fcb140db0b93c0c8df17bcfd311844749d0 \
+  -s ask-matt -s code-review -s codebase-design -s diagnosing-bugs -s domain-modeling -s grill-me \
+  -s grill-with-docs -s grilling -s implement -s improve-codebase-architecture -s prototype \
+  -s research -s setup-matt-pocock-skills -s tdd -s teach -s to-questionnaire -s to-spec \
+  -s to-tickets -s triage -s wait-what -s wayfinder -s wizard -s writing-for-agents \
+  -a codex --copy -y
 node scripts/sync-agents.mjs
 ```
 
-`scripts/sync-agents.mjs`, `lint-agent-neutrality.mjs`, `check-docs.mjs`, and `sync-main.mjs`,
-`next-version.mjs` and `check-changelog.mjs` where this repository carries them, are canonical in
-`jwh3times/skills` with their tests: fix them there, then copy them here. `sync-agents.mjs` also
-writes the marked blocks in this file: change them in `jwh3times/skills`, not here.
+`scripts/sync-agents.mjs`, `lint-agent-neutrality.mjs`, `check-docs.mjs`, `check-skills.mjs`, and
+`sync-main.mjs`, `next-version.mjs` and `check-changelog.mjs` where this repository carries them, are
+canonical in `jwh3times/skills` with their tests: fix them there, then copy them here.
+`sync-agents.mjs` also writes the marked blocks in this file: change them in `jwh3times/skills`, not
+here.
 
 <!-- /shared:shared-skills -->
 
 ### Development flow
 
-This flow is binding. **Every code change starts from a ready issue**: an open `ready-for-agent`
-issue whose body is a `/to-spec` spec or a `/to-tickets` ticket, or a `bug` issue worked through
-`/diagnosing-bugs`. Confirm it before the first edit to a code path; with none, stop before
-editing and route the user. Reading code, running tests, and answering questions need no issue.
+<!-- shared:development-flow -->
 
-The human starts every phase. At a phase boundary, name the next command, say in one line why,
-and wait. Inside a phase, use `/tdd`, `/code-review`, `/diagnosing-bugs`, `/domain-modeling`,
-`/codebase-design`, `/prototype`, and `/research` yourself wherever they fit. The flow map is the
-[`ask-matt` router](.agents/skills/ask-matt/SKILL.md).
+The flow skills are this repository's binding process for changing code. Read
+`.agents/skills/ship/settings/dev-flow.md` (the routing, exemptions and issue linking) and
+`docs/agents/dev-flow.md` (what this repository adds) before the first edit of a change, and whenever
+no ready issue exists. `/ask-matt` maps the flow itself.
 
-Exempt from the gate: dependency bumps (Dependabot, `chore(deps)`), branches that touch only docs
-and agent config, `/ship`'s release-prep commit, and an explicit user waiver recorded in the PR
-body as `Flow waived by the user: <reason>`.
+- **The gate.** Every code edit starts from a ready issue: an open `ready-for-agent` issue whose body
+  is a `/to-spec` spec or a `/to-tickets` ticket or that carries a `/triage` brief, or a `bug` issue
+  worked through `/diagnosing-bugs`, which needs the number and no spec. With none, stop before the
+  first edit and route the user. Reading code, running tests and answering questions need no issue.
+- **Private work.** A ready issue in the private tracker counts. Its number stays out of the branch,
+  the PR, commits and public issues, and it is closed by hand after the merge.
+- **The human starts every phase.** `/wayfinder`, `/grill-with-docs`, `/to-spec`, `/to-tickets`,
+  `/implement` and `/triage` stay user-invoked. At a phase boundary, name the next command, say in
+  one line why, and wait. Inside a phase, use `/tdd`, `/code-review`, `/diagnosing-bugs`,
+  `/domain-modeling`, `/codebase-design`, `/prototype` and `/research` whenever they fit.
+- **Exempt from the gate:** dependency bumps, changes touching only docs and agent config, release
+  prep, and an explicit user waiver recorded in the PR body as `Flow waived by the user: <reason>`.
+- **Linking.** Branches are `<type>/<issue#>-<slug>`; the PR body opens with `Closes #N` or
+  `Part of #N`.
+- **The flow ends at `/ship`.** `/implement` stops at a commit; `/ship` refreshes the docs, writes the
+  changelog and the PR body, and opens the PR. `/ask-matt` also routes to `/pr`, `/retro` and
+  `/implement-spec`, which are not installed here.
+- **`/handoff` is the shared skill.** It parks the session for another machine or harness, closes it
+  out with `/end-session`, and `/lets-go` resumes it. It does not write the portable file `/ask-matt`
+  describes, so a `/prototype` detour stays in the session or uses a branch.
+- **A wizard is not the record.** A step only a human can take follows the `## Procedure` in
+  `.agents/skills/ship/settings/human-follow-up.md`, whose instructions stand without the script.
+- **Research goes where it is safe to keep.** `/research` findings that would expose private material
+  go to the private companion, where there is one, never to an ignored folder with no repository
+  behind it. Details of an unpublished vulnerability are a draft advisory, never a research file.
 
-Read [docs/agents/dev-flow.md](docs/agents/dev-flow.md) when there is no ready issue (the routes),
-when deciding whether a path is code, and before creating a branch or opening a PR (the
-`<type>/<issue#>-<slug>` branch name and the `Closes #N` / `Part of #N` body line).
+<!-- /shared:development-flow -->
 
 ### Secret-file prevention
 

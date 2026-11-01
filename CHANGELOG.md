@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.62] - 2026-11-01
+
+### Changed
+
+- The forked agent skills give way to one `mattpocock/skills` snapshot pinned by commit, the same in
+  every repository that shares `jwh3times/skills`, adding `/implement`, `/code-review`, `/triage`,
+  `/wayfinder` and the rest, and this repository takes the shared development flow (ADR-0012).
+  `scripts/check-skills.mjs` fails CI when an installed skill differs from `skills-lock.json`, and
+  the rules the fork carried moved to `AGENTS.md` and `docs/agents/`.
+
 ## [1.12.61] - 2026-10-31
 
 ### Changed

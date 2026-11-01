@@ -16,8 +16,8 @@ before editing:
   (markdown + YAML frontmatter → TOML), not a copy.
 - **Skills — under `.agents/`.** Every skill lives at `.agents/skills/<name>/**` and is mirrored
   to `.claude/skills/<name>/**` by `npm run sync:agents`. `ship`, `end-session`, `handoff`,
-  `lets-go` and `docs-updater` are installed from `jwh3times/skills` and never edited here
-  (ADR-0011); the rest are forked and edited in place.
+  `lets-go` and `docs-updater` are installed from `jwh3times/skills` (ADR-0011) and the rest from
+  one pinned `mattpocock/skills` snapshot (ADR-0012). None is edited here.
 
 **Never edit anything under `.claude/skills/` or `.codex/agents/` — both are generated**, and
 `npm run sync:agents` will overwrite your changes. Every file in a skill directory is

@@ -1,3 +1,7 @@
+---
+status: superseded by ADR-0012
+---
+
 # Vendored skills are forked and localized, not tracked upstream
 
 The agent skills under `.agents/skills/` were vendored from [`mattpocock/skills`](https://github.com/mattpocock/skills) and pinned by content hash in `skills-lock.json`. An audit found that many carried assumptions this repo does not satisfy — a backend domain model, a `src/` tree, `pnpm`, `.env` and CI secrets, POSIX file modes, and a review flow that ends at "committed" rather than at an open PR. We treat the vendored set as a **starting point we own** rather than a dependency we track, and edit the sources in place.

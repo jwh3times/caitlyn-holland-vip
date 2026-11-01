@@ -167,7 +167,7 @@ jobs:
         run: npm ci
 
       - name: Test the sync script and the neutrality lint
-        run: node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs scripts/sync-main.test.mjs scripts/next-version.test.mjs scripts/check-changelog.test.mjs scripts/check-docs.test.mjs
+        run: node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs scripts/sync-main.test.mjs scripts/next-version.test.mjs scripts/check-changelog.test.mjs scripts/check-docs.test.mjs scripts/check-skills.test.mjs
 
       - name: Lint agent and skill sources for tool neutrality
         run: npm run lint:agents
@@ -178,8 +178,11 @@ jobs:
 
       - name: Verify generated AI configs are committed
         # .codex/agents and .claude/skills are generated; --check fails on any stale,
-        # missing, or orphaned mirror. Unformatted .agents/ sources fail Format Check.
+        # missing, or orphaned mirror.
         run: npm run sync:agents:check
+
+      - name: Check installed skills match the lock
+        run: node scripts/check-skills.mjs
 
   changelog:
     name: Changelog Version
