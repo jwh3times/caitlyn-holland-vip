@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.65] - 2026-11-02
+
+### Changed
+
+- `end-session` now closes every session with the same report: what it did, the docs it searched and
+  updated, open PRs and security alert counts, and the human steps owed before the next session.
+
+## [1.12.64] - 2026-11-02
+
+### Changed
+
+- Bumped `lucide-react` from 1.62.0 to 1.65.0 and `@types/node` from 26.6.5 to 26.6.6 in the
+  npm-minor-and-patch group (PR #260).
+
 ## [1.12.63] - 2026-11-01
 
 ### Added
