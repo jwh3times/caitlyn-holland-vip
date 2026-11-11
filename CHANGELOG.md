@@ -9,6 +9,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.72] - 2026-11-10
+
+### Changed
+
+- The installed-skills check (`scripts/check-skills.mjs`) reads the version 2 `skills-lock.json`
+  that `skills` CLI 1.8.0 writes, whose hashes no longer depend on line endings, so the shared
+  skills install with the current CLI instead of a pinned 1.7.4 (#271). The lock is now version 2;
+  no skill's content changed.
+
+## [1.12.71] - 2026-11-10
+
+### Changed
+
+- Bumped `serve` from 14.2.6 to 14.2.7 (dependabot, PR #270).
+
+## [1.12.70] - 2026-11-09
+
+### Changed
+
+- Bumped `lucide-react` from 1.67.0 to 1.70.0, `next` and `@next/eslint-plugin-next` from 16.4.4
+  to 16.4.5, `@playwright/test` from 1.64.1 to 1.65.0, `tailwindcss` and `@tailwindcss/webpack`
+  from 4.3.4 to 4.3.5, and `oxlint` from 1.90.0 to 1.92.0 in the npm-minor-and-patch group, with the
+  `tailwindcss` range aligned by hand (PR #269).
+
+## [1.12.69] - 2026-11-09
+
+### Changed
+
+- Bumped `jsdom` from 30.1.3 to 31.0.0 (dependabot, PR #268).
+
+## [1.12.68] - 2026-11-06
+
+### Changed
+
+- Bumped `lucide-react` from 1.66.0 to 1.67.0, `next` and `@next/eslint-plugin-next` from 16.4.3
+  to 16.4.4, `tailwindcss` and `@tailwindcss/webpack` from 4.3.3 to 4.3.4, and `vitest` and
+  `@vitest/coverage-v8` to 5.1.0 in the npm-minor-and-patch group, with the `tailwindcss` and
+  `vitest` ranges aligned by hand (PR #265).
+
+## [1.12.67] - 2026-11-05
+
+### Changed
+
+- Bumped `@vitejs/plugin-react` from 6.1.2 to 6.2.1 (dependabot, PR #264).
+
+## [1.12.66] - 2026-11-03
+
+### Changed
+
+- Bumped `lucide-react` from 1.65.0 to 1.66.0 (dependabot, PR #262).
+
 ## [1.12.65] - 2026-11-02
 
 ### Changed
