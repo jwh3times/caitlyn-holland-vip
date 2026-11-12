@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.74] - 2026-11-12
+
+### Added
+
+- `/what-next`, a shared skill from `jwh3times/skills`, reports what to work on next. It reads the
+  open issues, open PRs and the board, and ranks the work by the board's manual order, per the new
+  `Priority order` setting in `docs/agents/issue-tracker.md`. It names one item and the command
+  that takes it, and changes nothing on GitHub. The development flow's routing points at it when
+  nothing is chosen yet.
+
+## [1.12.73] - 2026-11-12
+
+### Changed
+
+- Bumped `@vitejs/plugin-react` from 6.2.1 to 6.3.0 (dependabot, PR #273).
+
 ## [1.12.72] - 2026-11-10
 
 ### Changed
