@@ -140,3 +140,7 @@ jwh3times 9
 - `Area`: `Site content and sections`, `Design system and theming`, `Build and static export`,
   `Testing and coverage`, `CI and release`, `Dependencies and runtime`, `AI config and skills`,
   `Docs and process`, `Security`, `Defect`.
+
+## Priority order
+
+- `board order`: the board's manual order, top first.

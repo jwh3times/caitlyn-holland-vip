@@ -161,8 +161,8 @@ is edited once:
 - **Skills** are installed under **`.agents/skills/<name>/`** and mirrored to
   `.claude/skills/<name>/` by `npm run sync:agents`. The **whole skill directory** is mirrored —
   `SKILL.md` plus every auxiliary file (`agents/openai.yaml`, `scripts/*.sh`, reference
-  docs) — so all of it is covered by drift detection. All 28 install and are never edited here:
-  five from [`jwh3times/skills`](https://github.com/jwh3times/skills)
+  docs) — so all of it is covered by drift detection. All 29 install and are never edited here:
+  six from [`jwh3times/skills`](https://github.com/jwh3times/skills)
   ([ADR-0011](docs/adr/0011-shared-skills-install-from-jwh3times-skills.md)), and the rest from one
   pinned [`mattpocock/skills`](https://github.com/mattpocock/skills) snapshot
   ([ADR-0012](docs/adr/0012-third-party-skills-install-from-one-pinned-snapshot.md)); see
@@ -231,10 +231,10 @@ criteria rather than skipping GitHub work.
 
 <!-- shared:shared-skills -->
 
-`end-session`, `handoff`, `lets-go`, `ship` and `docs-updater` install from `jwh3times/skills`, and
-are never edited here: reinstalling overwrites a local edit. A fix goes upstream, and what they need
-to know about this repository goes in the settings files under `docs/agents/`, which each skill
-proposes on first run.
+`end-session`, `handoff`, `lets-go`, `ship`, `docs-updater` and `what-next` install from
+`jwh3times/skills`, and are never edited here: reinstalling overwrites a local edit. A fix goes
+upstream, and what they need to know about this repository goes in the settings files under
+`docs/agents/`, which each skill proposes on first run.
 
 The other shared skills come from one `mattpocock/skills` snapshot (v1.3.2, pinned by commit), the
 same in every repository, and are never edited here either: what they need to know goes in this
@@ -246,7 +246,7 @@ Re-running the install is the update; never run `npx skills update`, which leave
 linked to its source instead of copied:
 
 ```bash
-npx skills add jwh3times/skills -s end-session -s handoff -s lets-go -s ship -s docs-updater -a codex --copy -y
+npx skills add jwh3times/skills -s end-session -s handoff -s lets-go -s ship -s docs-updater -s what-next -a codex --copy -y
 npx skills add mattpocock/skills#d1478fcb140db0b93c0c8df17bcfd311844749d0 \
   -s ask-matt -s code-review -s codebase-design -s diagnosing-bugs -s domain-modeling -s grill-me \
   -s grill-with-docs -s grilling -s implement -s improve-codebase-architecture -s prototype \
