@@ -38,10 +38,10 @@
 - `docs/agents/*.md` — conventions and settings the skills read. **When:** a convention or setting
   changes.
 - `.agents/skills/*/**` — installed skills, mirrored to `.claude/skills/`: `end-session`, `handoff`,
-  `lets-go`, `ship` and `docs-updater` from `jwh3times/skills` (ADR-0011), and the `mattpocock/skills`
-  snapshot (ADR-0012). `frozen` here: fixed upstream, and what they need to know goes in `AGENTS.md` or
-  `docs/agents/`. **When:** a skill is added, removed or replaced (`.agents/skills/`,
-  `skills-lock.json`): `CLAUDE.md` and AGENTS.md's skill paragraph.
+  `lets-go`, `ship`, `docs-updater` and `what-next` from `jwh3times/skills` (ADR-0011), and the
+  `mattpocock/skills` snapshot (ADR-0012). `frozen` here: fixed upstream, and what they need to know
+  goes in `AGENTS.md` or `docs/agents/`. **When:** a skill is added, removed or replaced
+  (`.agents/skills/`, `skills-lock.json`): `CLAUDE.md` and AGENTS.md's skill paragraph.
 - `.github/pull_request_template.md` — the PR body's sections. **When:** the development flow's
   linking rule changes.
 - `private/**/*.md` — durable private procedures in the companion; live status belongs in issues.
