@@ -16,7 +16,6 @@
       "Bash(gh auth status)",
       "Bash(gh pr list:*)",
       "Bash(gh pr view:*)",
-      "Bash(bash scripts/next-version.sh)",
       "Bash(gh project item-list *)",
       "Bash(git fetch -q --tags origin)",
       "Bash(cygpath *)",
