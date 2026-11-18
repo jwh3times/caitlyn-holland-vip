@@ -14,13 +14,13 @@ required check on the current head reports green, never on a pending or failing 
 
 `gh pr merge <n> --merge --delete-branch`. Merge commits are the only method the repository offers.
 
-- **Auto-delete on merge is off** (`delete_branch_on_merge: false`), so a merged branch stays on
-  `origin` unless `--delete-branch` or a later delete removes it.
+- **Auto-delete on merge is on** (`delete_branch_on_merge: true`), so GitHub removes the head
+  branch from `origin` when the PR merges; `--delete-branch` also removes the local one.
 - **Deleting a merged branch with `git push origin --delete <branch>` prints
   `remote: - Cannot delete this branch`** (from the "Block delete branches" ruleset) **and still
   succeeds.** Confirm with `git ls-remote --heads origin` rather than trusting the message.
 - **To tell whether a branch is spent, ask GitHub:** `gh pr list --head <branch> --state merged`.
-  Branches merged before 2026-09-18 were squashed and aren't ancestors of `main`, so
+  Some PRs merged before 2026-09-18 were squashed, so their branches aren't ancestors of `main` and
   `git branch --merged` doesn't list them. Cut new work from a fresh `origin/main` branch rather than
   reusing a merged one, and never force-push.
 
