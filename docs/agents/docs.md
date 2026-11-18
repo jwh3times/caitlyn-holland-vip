@@ -35,6 +35,9 @@
   between an accepted ADR and the code instead of editing either.
 - `docs/research/*.md` — dated research behind a live decision, never a status report.
   `amend-only`. **When:** the decision it backs, or the evidence it cites, changes.
+- `docs/agents/merging.md` — from open PR to finished merge, including Dependabot group traps.
+  **When:** the merge method, the branch rulesets or a Dependabot grouping changes, or a merge
+  lesson is learned that no check enforces.
 - `docs/agents/*.md` — conventions and settings the skills read. **When:** a convention or setting
   changes.
 - `.agents/skills/*/**` — installed skills, mirrored to `.claude/skills/`: `end-session`, `handoff`,

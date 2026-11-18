@@ -9,6 +9,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.78] - 2026-11-18
+
+### Changed
+
+- Merge procedure is now written down for every agent in the new `docs/agents/merging.md`: when a
+  merge is authorized, how to delete a merged branch and confirm it is gone, how to tell a spent
+  branch, and the Dependabot group-PR traps (a partner range left behind, a rebasing PR replaced by
+  a new number). `AGENTS.md` and the docs map point to it.
+- `docs/agents/triage-labels.md` records how an issue waiting on an upstream release is labelled and
+  re-triaged, and `docs/agents/human-follow-up.md` adds the dated wiki capture after each wiki push.
+
+## [1.12.77] - 2026-11-16
+
+### Changed
+
+- Bumped `lucide-react` from 1.71.0 to 1.72.0, `@testing-library/user-event` from 14.6.9 to
+  14.6.10, `jsdom` from 31.0.0 to 31.0.1, and `prettier` from 3.9.10 to 3.10.1 in the
+  npm-minor-and-patch group (dependabot, PR #277).
+
+## [1.12.76] - 2026-11-13
+
+### Changed
+
+- Bumped `lucide-react` from 1.70.0 to 1.71.0, `next` and `@next/eslint-plugin-next` from 16.4.5
+  to 16.4.6, `@testing-library/user-event` from 14.6.8 to 14.6.9, and `oxlint` from 1.92.0 to
+  1.93.0 in the npm-minor-and-patch group (dependabot, PR #276).
+
 ## [1.12.75] - 2026-11-12
 
 ### Changed
