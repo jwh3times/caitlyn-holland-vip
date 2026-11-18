@@ -93,7 +93,8 @@ entry in [.github/dependabot.yml](.github/dependabot.yml) maintains their update
 - **Required checks** — the `No Push to Main` ruleset requires eight: the six `ci.yml` jobs above,
   `CodeQL`, and `Dependency Review`. `main` is protected; never push to it directly.
 - **Merge method** — PRs merge as merge commits; squash and rebase merging are disabled on the
-  repository. This is enforced by repository settings, not by anything in this repo.
+  repository. This is enforced by repository settings, not by anything in this repo. When to merge,
+  deleting the branch, and Dependabot's group-PR traps: [docs/agents/merging.md](docs/agents/merging.md).
 
 ## Architecture
 
