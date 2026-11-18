@@ -16,7 +16,22 @@
       "Bash(gh auth status)",
       "Bash(gh pr list:*)",
       "Bash(gh pr view:*)",
-      "Bash(bash scripts/next-version.sh)"
+      "Bash(bash scripts/next-version.sh)",
+      "Bash(gh project item-list *)",
+      "Bash(git fetch -q --tags origin)",
+      "Bash(cygpath *)",
+      "Bash(gh label list *)",
+      "Bash(gh project field-list *)",
+      "Bash(git fetch -q origin)",
+      "Bash(gh project view *)",
+      "Bash(git fetch -q --prune origin)",
+      "Bash(npm view *)",
+      "Bash(npm ls *)",
+      "mcp__context7__query-docs",
+      "mcp__context7__resolve-library-id",
+      "mcp__claude_ai_Context7__query-docs",
+      "mcp__claude_ai_Context7__resolve-library-id",
+      "mcp__cloudflare-api__docs"
     ]
   }
 }
