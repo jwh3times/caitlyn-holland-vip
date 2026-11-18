@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 No unreleased changes.
 
+## [1.12.79] - 2026-11-18
+
+### Changed
+
+- The project's Claude Code permission allowlist in `.claude/settings.json` gains 15 read-only rules
+  drawn from recent sessions: project-board and label reads (`gh project item-list`, `field-list`,
+  `view`; `gh label list`), `cygpath`, `npm view` and `npm ls`, three exact `git fetch -q` forms,
+  and the Context7 and Cloudflare documentation lookup tools. Nothing that writes, or that could run
+  arbitrary code, was added. The dead `Bash(bash scripts/next-version.sh)` rule, which named a script
+  that no longer exists, is removed.
+
 ## [1.12.78] - 2026-11-18
 
 ### Changed
