@@ -12,8 +12,9 @@ adds.
 
 - **Dependency bumps** are Dependabot's PRs, and hand-made bumps committed as `chore(deps): …` or, for
   an advisory patch, `fix(deps): …`.
-- **Release prep** is the `docs: update docs and changelog for v<x.y.z>` commit `/ship` makes, which
-  moves the `package.json` floor and writes `CHANGELOG.md`.
+- **Release prep** is the `docs: update docs and changelog fragment` commit `/ship` makes, which
+  writes the branch's `changelog.d/` fragment and, for a new major or minor line, moves the
+  `package.json` floor. The `CHANGELOG.md` sections and tags come later, from `version.yml`.
 
 ## Research
 

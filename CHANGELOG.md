@@ -4,10 +4,20 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Branches never edit this file: each writes its entries to `changelog.d/`, and
+`.github/workflows/version.yml` stamps them into the section for the version its
+merge mints.
 
 ## [Unreleased]
 
 No unreleased changes.
+
+## [1.12.80] - 2026-11-18
+
+### Changed
+
+- Bumped `lucide-react` from 1.72.0 to 1.73.0, `@playwright/test` from 1.65.0 to 1.65.1, and
+  `serve` from 14.2.7 to 14.2.8 in the npm-minor-and-patch group (dependabot, PR #278).
 
 ## [1.12.79] - 2026-11-18
 

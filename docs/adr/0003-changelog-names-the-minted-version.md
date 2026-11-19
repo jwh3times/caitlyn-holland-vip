@@ -1,3 +1,7 @@
+---
+status: superseded by ADR-0013
+---
+
 # The changelog names the version the merge will mint
 
 Every merge to `main` is auto-tagged by `.github/workflows/version.yml`, so a branch's changelog section is written for the version its own merge will create — computed by `scripts/next-version.sh` — rather than accumulated under `[Unreleased]`. An `[Unreleased]` section is wrong the moment it lands, because by then the release it describes already has a number.

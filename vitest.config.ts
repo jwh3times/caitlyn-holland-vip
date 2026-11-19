@@ -51,6 +51,8 @@ export default defineConfig({
         "scripts/next-version.test.mjs",
         "scripts/check-changelog.mjs",
         "scripts/check-changelog.test.mjs",
+        "scripts/stamp-changelog.mjs",
+        "scripts/stamp-changelog.test.mjs",
         "scripts/check-docs.mjs",
         "scripts/check-docs.test.mjs",
         "scripts/check-skills.mjs",

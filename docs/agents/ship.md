@@ -12,7 +12,7 @@ All from the repository root; together they cover the required checks that run l
 - `npm run lint:agents` (**AI Config Parity**)
 - `node scripts/check-docs.mjs` (**AI Config Parity**)
 - `node scripts/check-skills.mjs` (**AI Config Parity**)
-- only when `scripts/` changed: `node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs scripts/sync-main.test.mjs scripts/next-version.test.mjs scripts/check-changelog.test.mjs scripts/check-docs.test.mjs scripts/check-skills.test.mjs`
+- only when `scripts/` changed: `node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs scripts/sync-main.test.mjs scripts/next-version.test.mjs scripts/check-changelog.test.mjs scripts/stamp-changelog.test.mjs scripts/check-docs.test.mjs scripts/check-skills.test.mjs`
   (**AI Config Parity**)
 - only when `app/`, `components/`, `lib/`, `public/`, `scripts/`, `tests/unit/`,
   `vitest.config.ts`, `vitest.setup.ts`, `next.config.ts`, `.nvmrc`, `.gitignore`, `package.json` or

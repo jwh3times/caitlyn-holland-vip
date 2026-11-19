@@ -102,7 +102,7 @@ edge scripts conflict with them. Stronger script policy should be revisited for 
 together. The policy retains base-URI, object, form, and framing restrictions; inline styles
 remain allowed for theme transitions.
 
-CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validates format, coverage, build/lint, the accepted compatibility CSP in Chromium, e2e, and AI-tool config parity on every PR, plus (PR-only) that [`CHANGELOG.md`](CHANGELOG.md) names the version the merge will mint. CodeQL scans JavaScript/TypeScript and Actions through GitHub's default setup, which is why there is no `codeql.yml` in the repo. A separate [post-deploy smoke workflow](.github/workflows/smoke.yml) validates the live homepage and a missing-page response, significant security-header values on both (including the accepted compatibility policy), and HTTP 200 responses from sitemap and robots. Its dependent browser job installs dependencies, builds the route inventory, and checks the hosted policy and error recovery in Chromium. It runs daily and manually, and on pushes to `main` after the official Cloudflare Pages check succeeds for that commit. This monitors a completed deployment; it does not gate deployment.
+CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validates format, coverage, build/lint, the accepted compatibility CSP in Chromium, e2e, and AI-tool config parity on every PR, plus (PR-only) that the branch's `changelog.d/` fragments parse and it changes no released [`CHANGELOG.md`](CHANGELOG.md) section. CodeQL scans JavaScript/TypeScript and Actions through GitHub's default setup, which is why there is no `codeql.yml` in the repo. A separate [post-deploy smoke workflow](.github/workflows/smoke.yml) validates the live homepage and a missing-page response, significant security-header values on both (including the accepted compatibility policy), and HTTP 200 responses from sitemap and robots. Its dependent browser job installs dependencies, builds the route inventory, and checks the hosted policy and error recovery in Chromium. It runs daily and manually, and on pushes to `main` after the official Cloudflare Pages check succeeds for that commit. This monitors a completed deployment; it does not gate deployment.
 
 The deployed-site checker can also be run directly with `node scripts/smoke.mjs`; it uses only
 Node built-ins and requires no dependency install. When changing header policy or deployment
@@ -112,7 +112,9 @@ monitoring, keep the acceptance rules and fixtures in
 Every merge to `main` is also tagged and published as a GitHub Release by
 [`version.yml`](.github/workflows/version.yml) using `v<major>.<minor>.<build>`
 SemVer tags. Build values auto-increment per major/minor line, and a new line
-starts at whatever build the `package.json` floor names.
+starts at whatever build the `package.json` floor names. Each branch writes its
+changelog entries to a `changelog.d/` fragment, which the workflow stamps into
+[`CHANGELOG.md`](CHANGELOG.md) under the version its merge mints.
 
 ## Contributing
 

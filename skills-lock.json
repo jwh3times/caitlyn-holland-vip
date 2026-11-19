@@ -35,9 +35,10 @@
     },
     "docs-updater": {
       "source": "jwh3times/skills",
+      "commit": "bc62f3cbe5b4c57f9244a3fba8b264efd3bca408",
       "sourceType": "github",
       "skillPath": "skills/docs-updater/SKILL.md",
-      "computedHash": "fc87a1e9321da95313ef2955ec9745dafdfa5db4e4ba48f7a68eeb4f04dad85d",
+      "computedHash": "204dd4d1d07d1d7888068480eb9744f5f9a16e40c0fb1da81cbc868930b28016",
       "installMode": "copy"
     },
     "domain-modeling": {
@@ -50,9 +51,10 @@
     },
     "end-session": {
       "source": "jwh3times/skills",
+      "commit": "bc62f3cbe5b4c57f9244a3fba8b264efd3bca408",
       "sourceType": "github",
       "skillPath": "skills/end-session/SKILL.md",
-      "computedHash": "ad84822884deef221005873f9b44071d904bcd4608ed6694deb51e77c938618e",
+      "computedHash": "e0932c16290a996ee325b8154682bceabf684b469b96bd89dff61f3a5a6560d6",
       "installMode": "copy"
     },
     "grill-me": {
@@ -81,6 +83,7 @@
     },
     "handoff": {
       "source": "jwh3times/skills",
+      "commit": "bc62f3cbe5b4c57f9244a3fba8b264efd3bca408",
       "sourceType": "github",
       "skillPath": "skills/handoff/SKILL.md",
       "computedHash": "9918f1f0885e39e27e047535f1bb661d42c27910978c1281ef71290b525b2028",
@@ -104,6 +107,7 @@
     },
     "lets-go": {
       "source": "jwh3times/skills",
+      "commit": "bc62f3cbe5b4c57f9244a3fba8b264efd3bca408",
       "sourceType": "github",
       "skillPath": "skills/lets-go/SKILL.md",
       "computedHash": "5b0f2ead2e7be42c66cba87f075a925c1c538f0a8cae6876b8aab5e3fb66aa05",
@@ -135,9 +139,10 @@
     },
     "ship": {
       "source": "jwh3times/skills",
+      "commit": "bc62f3cbe5b4c57f9244a3fba8b264efd3bca408",
       "sourceType": "github",
       "skillPath": "skills/ship/SKILL.md",
-      "computedHash": "b8d1838998982f420e26b7e3322f1a025cb882e5623d1ed8479e0452b0e19da8",
+      "computedHash": "e6942183c238fe6319e5e1d2532b580b7c2b1270c1c4023d55e56a8f1f573d16",
       "installMode": "copy"
     },
     "tdd": {
@@ -206,6 +211,7 @@
     },
     "what-next": {
       "source": "jwh3times/skills",
+      "commit": "bc62f3cbe5b4c57f9244a3fba8b264efd3bca408",
       "sourceType": "github",
       "skillPath": "skills/what-next/SKILL.md",
       "computedHash": "1a0a35d36cf5757f39624a2d2dd0160d28b48535cc7ae8ddab8a3d21e04928b6",
