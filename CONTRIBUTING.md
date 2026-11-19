@@ -40,12 +40,13 @@ Follow the [Getting started](./README.md#getting-started) section of the README
    and `Dependency Review`. The `Cloudflare Pages` check reports the deployment
    build but does not block the merge.
 
-   The `Changelog Version` check requires [`CHANGELOG.md`](CHANGELOG.md) to have
-   a `## [x.y.z]` section for the version your merge will mint — every merge to
-   `main` is auto-tagged, so an `[Unreleased]` heading alone will not pass. Run
-   `node scripts/next-version.mjs` to see that version, or say "ship it" to
-   Claude Code and the `ship` skill writes the entry for you. Dependabot PRs are
-   exempt.
+   Don't edit [`CHANGELOG.md`](CHANGELOG.md). Write your entries to your own
+   `changelog.d/<branch-slug>.md` fragment (see
+   [`changelog.d/README.md`](changelog.d/README.md)), or say "ship it" to Claude
+   Code and the `ship` skill writes it for you. After the merge, `version.yml`
+   stamps it into the section for the version the merge mints. The
+   `Changelog Version` check fails when a fragment is malformed or a branch edits
+   a released section, an `[Unreleased]` entry or a fragment already on `main`.
 
 ## Standards
 

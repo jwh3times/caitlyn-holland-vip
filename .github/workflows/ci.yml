@@ -167,7 +167,7 @@ jobs:
         run: npm ci
 
       - name: Test the sync script and the neutrality lint
-        run: node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs scripts/sync-main.test.mjs scripts/next-version.test.mjs scripts/check-changelog.test.mjs scripts/check-docs.test.mjs scripts/check-skills.test.mjs
+        run: node --test scripts/sync-agents.test.mjs scripts/lint-agent-neutrality.test.mjs scripts/sync-main.test.mjs scripts/next-version.test.mjs scripts/check-changelog.test.mjs scripts/stamp-changelog.test.mjs scripts/check-docs.test.mjs scripts/check-skills.test.mjs
 
       - name: Lint agent and skill sources for tool neutrality
         run: npm run lint:agents
@@ -185,30 +185,21 @@ jobs:
         run: node scripts/check-skills.mjs
 
   changelog:
+    # The name predates stamp-on-tag (ADR-0013) and stays: the `No Push to Main` ruleset requires
+    # this check by name, so renaming it would block every PR until the ruleset changed.
     name: Changelog Version
     runs-on: ubuntu-latest
-    # PRs only: on push to main the "next" version has no entry yet, which would
-    # false-fail. Branch protection gates the PR, so a PR-only check is sufficient.
+    # PRs only: a branch's entries are its changelog.d/ fragment, which version.yml stamps after
+    # the merge. The guard checks the fragments parse and that the branch edits no released
+    # section, no `## [Unreleased]` entry and no fragment already on main. A Dependabot PR touches
+    # none of them and passes; version.yml gives its merge a section from its PR title.
     if: github.event_name == 'pull_request'
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0 # full history + tags, needed by next-version.mjs
+          fetch-depth: 0 # origin/main, the base the branch's changelog changes are compared with
 
-      - name: Verify CHANGELOG names the target version
-        env:
-          # The PR *author*, deliberately not github.actor. github.actor is whoever
-          # triggered the run, so clicking "Update branch" or re-running a dependabot
-          # PR made it a human and silently revoked the exemption below.
-          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
-        run: |
-          # Dependabot does not write changelog entries; the ship skill backfills
-          # them on the next human ship. Exempt bot PRs so they are not blocked.
-          if [ "$PR_AUTHOR" = "dependabot[bot]" ]; then
-            echo "Dependabot PR — changelog guard exempt."
-            exit 0
-          fi
-
-          node scripts/check-changelog.mjs
+      - name: Verify the changelog fragments and that no released section changed
+        run: node scripts/check-changelog.mjs

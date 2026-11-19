@@ -29,7 +29,9 @@
 - `CODE_OF_CONDUCT.md`, `LICENSE` — `owner-only`.
 - `THIRD_PARTY_NOTICES.md` — the license notices of third-party files kept here. `owner-only`: report
   the change when a skill's source changes.
-- `CHANGELOG.md` — release notes, Keep a Changelog, one dated section per merge. `ship-owned`.
+- `CHANGELOG.md` — release notes, Keep a Changelog, one dated section per merge, written by
+  `version.yml` from the merge's fragments. `frozen` for this skill: branches never edit it.
+- `changelog.d/*.md` — one fragment per branch, its changelog entries. `ship-owned`.
 - `CONTEXT.md`, `docs/adr/*.md` — the domain glossary and decisions, written by the `grill-with-docs` and
   `domain-modeling` skills. `frozen` for this skill: point at them, and report a contradiction
   between an accepted ADR and the code instead of editing either.

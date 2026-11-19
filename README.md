@@ -112,7 +112,9 @@ monitoring, keep the acceptance rules and fixtures in
 Every merge to `main` is also tagged and published as a GitHub Release by
 [`version.yml`](.github/workflows/version.yml) using `v<major>.<minor>.<build>`
 SemVer tags. Build values auto-increment per major/minor line, and a new line
-starts at whatever build the `package.json` floor names.
+starts at whatever build the `package.json` floor names. Each branch writes its
+changelog entries to a `changelog.d/` fragment, which the workflow stamps into
+[`CHANGELOG.md`](CHANGELOG.md) under the version its merge mints.
 
 ## Contributing
 

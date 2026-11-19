@@ -26,8 +26,8 @@ Delete it only for exempt dependency or docs-only work. See docs/agents/dev-flow
 - [ ] `npm run coverage` passes (≥ 80% gate)
 - [ ] `npm test` (Playwright e2e) passes
 - [ ] `npm run sync:agents:check` and `npm run lint:agents` pass (for skill or agent edits)
-- [ ] [`CHANGELOG.md`](../CHANGELOG.md) has a `## [x.y.z]` section for the version this merge will mint —
-      run `node scripts/next-version.mjs` for the number, or say "ship it" to Claude Code (dependabot PRs are exempt)
+- [ ] The changelog entries are in this branch's own `changelog.d/<branch-slug>.md` fragment, not in
+      [`CHANGELOG.md`](../CHANGELOG.md) — or say "ship it" to Claude Code, which writes it
 - [ ] Verified in both light and dark mode (for UI changes)
 - [ ] Checked responsive / mobile layout (for UI changes)
 
