@@ -235,8 +235,10 @@ second. Entries this branch added to `Unreleased` are rewritten the same way.
 - **`stamp-on-tag`** — write the entries to `changelog.d/<branch-slug>.md`, the branch name with
   each `/` replaced by `-`: only `### <Category>` headings and their bullets, with no version or
   date heading. Never edit `CHANGELOG.md`: the tag workflow writes its sections, and
-  `Changelog check` rejects a branch that adds one or edits `Unreleased`. When the branch already
-  did, stop and ask before undoing it. Never edit or delete another merge's fragment: the stamp
+  `Changelog check` rejects a branch that adds one or edits `Unreleased`. The one section it
+  accepts is a backfill for a version already tagged with none, which only the move to this scheme
+  writes; keep such a section. When the branch already made any other edit, stop and ask before
+  undoing it. Never edit or delete another merge's fragment: the stamp
   releases that merge's own copy, so the check rejects it. A fragment from an earlier `ship` is
   rewritten in place:
   find it with `git diff --name-only origin/main...HEAD -- changelog.d/`.
