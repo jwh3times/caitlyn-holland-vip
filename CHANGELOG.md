@@ -12,6 +12,12 @@ merge mints.
 
 No unreleased changes.
 
+## [1.12.82] - 2026-11-19
+
+### Changed
+
+- chore: take the latest shared skills (#286)
+
 ## [1.12.81] - 2026-11-19
 
 ### Changed
