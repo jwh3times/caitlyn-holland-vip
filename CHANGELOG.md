@@ -12,6 +12,12 @@ merge mints.
 
 No unreleased changes.
 
+## [1.12.83] - 2026-11-20
+
+### Changed
+
+- chore(deps): bump the npm-minor-and-patch group across 1 directory with 3 updates (#287)
+
 ## [1.12.82] - 2026-11-19
 
 ### Changed
