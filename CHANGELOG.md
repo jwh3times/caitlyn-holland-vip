@@ -12,6 +12,12 @@ merge mints.
 
 No unreleased changes.
 
+## [1.12.85] - 2026-11-21
+
+### Changed
+
+- Take the latest shared skills and scripts from jwh3times/skills (#289)
+
 ## [1.12.84] - 2026-11-21
 
 ### Changed
