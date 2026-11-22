@@ -15,9 +15,9 @@ before editing:
   This direction stays `.claude`-first because it is a format conversion
   (markdown + YAML frontmatter → TOML), not a copy.
 - **Skills — under `.agents/`.** Every skill lives at `.agents/skills/<name>/**` and is mirrored
-  to `.claude/skills/<name>/**` by `npm run sync:agents`. `ship`, `end-session`, `handoff`,
-  `lets-go`, `docs-updater` and `what-next` are installed from `jwh3times/skills` (ADR-0011) and
-  the rest from one pinned `mattpocock/skills` snapshot (ADR-0012). None is edited here.
+  to `.claude/skills/<name>/**` by `npm run sync:agents`. The ones the `shared-skills` block in
+  `AGENTS.md` lists are installed from `jwh3times/skills` (ADR-0011) and the rest from one pinned
+  `mattpocock/skills` snapshot (ADR-0012). None is edited here.
 
 **Never edit anything under `.claude/skills/` or `.codex/agents/` — both are generated**, and
 `npm run sync:agents` will overwrite your changes. Every file in a skill directory is
