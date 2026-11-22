@@ -40,6 +40,9 @@
 - `docs/agents/merging.md` — from open PR to finished merge, including Dependabot group traps.
   **When:** the merge method, the branch rulesets or a Dependabot grouping changes, or a merge
   lesson is learned that no check enforces.
+- `docs/agents/dependabot.md` — what reviewing a Dependabot PR takes here, read by the
+  `dependabot` skill. **When:** a Dependabot group, the toolchain pin, a CI job, a manifest test in
+  `tests/unit/`, or a fix it names changes.
 - `docs/agents/*.md` — conventions and settings the skills read. **When:** a convention or setting
   changes.
 - `.agents/skills/*/**` — installed skills, mirrored to `.claude/skills/`: `end-session`, `handoff`,
