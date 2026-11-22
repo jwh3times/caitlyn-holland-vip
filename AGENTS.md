@@ -162,8 +162,9 @@ is edited once:
 - **Skills** are installed under **`.agents/skills/<name>/`** and mirrored to
   `.claude/skills/<name>/` by `npm run sync:agents`. The **whole skill directory** is mirrored —
   `SKILL.md` plus every auxiliary file (`agents/openai.yaml`, `scripts/*.sh`, reference
-  docs) — so all of it is covered by drift detection. All 29 install and are never edited here:
-  six from [`jwh3times/skills`](https://github.com/jwh3times/skills)
+  docs) — so all of it is covered by drift detection. All of them install and are never edited
+  here: the ones [Shared skills](#shared-skills) lists from
+  [`jwh3times/skills`](https://github.com/jwh3times/skills)
   ([ADR-0011](docs/adr/0011-shared-skills-install-from-jwh3times-skills.md)), and the rest from one
   pinned [`mattpocock/skills`](https://github.com/mattpocock/skills) snapshot
   ([ADR-0012](docs/adr/0012-third-party-skills-install-from-one-pinned-snapshot.md)); see
