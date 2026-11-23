@@ -41,9 +41,7 @@
           {
             "type": "command",
             "command": "node",
-            "args": [
-              "${CLAUDE_PROJECT_DIR}/scripts/guard.mjs"
-            ],
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/guard.mjs"],
             "timeout": 10
           }
         ]
@@ -56,10 +54,7 @@
           {
             "type": "command",
             "command": "node",
-            "args": [
-              "${CLAUDE_PROJECT_DIR}/scripts/guard.mjs",
-              "--post"
-            ],
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/guard.mjs", "--post"],
             "timeout": 10
           }
         ]

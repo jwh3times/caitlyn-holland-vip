@@ -57,6 +57,8 @@ export default defineConfig({
         "scripts/check-docs.test.mjs",
         "scripts/check-skills.mjs",
         "scripts/check-skills.test.mjs",
+        "scripts/guard.mjs",
+        "scripts/guard.test.mjs",
       ],
       // Baseline coverage gate. CI fails (and merges are blocked) below this.
       thresholds: {
