@@ -41,6 +41,8 @@ scripts/check-docs.mjs
 scripts/check-docs.test.mjs
 scripts/check-skills.mjs
 scripts/check-skills.test.mjs
+scripts/guard.mjs
+scripts/guard.test.mjs
 # Installed (ADR-0011, ADR-0012); a reinstall must find them byte for byte, and
 # check-skills.mjs fails otherwise.
 .agents/skills/
