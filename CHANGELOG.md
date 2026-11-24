@@ -12,6 +12,12 @@ merge mints.
 
 No unreleased changes.
 
+## [1.12.98] - 2026-11-23
+
+### Changed
+
+- docs: add the test-proof settings and the Due board field (#306)
+
 ## [1.12.97] - 2026-11-23
 
 ### Changed
