@@ -12,6 +12,12 @@ merge mints.
 
 No unreleased changes.
 
+## [1.12.101] - 2026-11-24
+
+### Changed
+
+- chore: bump the `actions-minor-and-patch` group across 1 directory with 2 updates (#297)
+
 ## [1.12.100] - 2026-11-24
 
 ### Changed
