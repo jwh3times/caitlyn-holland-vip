@@ -43,7 +43,7 @@ Follow the [Getting started](./README.md#getting-started) section of the README
    Don't edit [`CHANGELOG.md`](CHANGELOG.md). Write your entries to your own
    `changelog.d/<branch-slug>.md` fragment (see
    [`changelog.d/README.md`](changelog.d/README.md)), or say "ship it" to Claude
-   Code and the `ship` skill writes it for you. After the merge, `version.yml`
+   Code and the `open-pr` skill writes it for you. After the merge, `version.yml`
    stamps it into the section for the version the merge mints. The
    `Changelog Version` check fails when a fragment is malformed or a branch edits
    a released section, an `[Unreleased]` entry or a fragment already on `main`.
