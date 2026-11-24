@@ -12,6 +12,70 @@ merge mints.
 
 No unreleased changes.
 
+## [1.12.102] - 2026-11-24
+
+### Changed
+
+- chore(deps-dev): bump `@testing-library/jest-dom` from `7.0.1` to `8.0.0` in the testing-library group (#298)
+
+## [1.12.101] - 2026-11-24
+
+### Changed
+
+- chore: bump the `actions-minor-and-patch` group across 1 directory with 2 updates (#297)
+
+## [1.12.100] - 2026-11-24
+
+### Changed
+
+- Take the latest shared skills and scripts from `jwh3times/skills` (#308)
+
+## [1.12.99] - 2026-11-23
+
+### Changed
+
+- Take the latest shared skills and scripts from `jwh3times/skills` (#307)
+
+## [1.12.98] - 2026-11-23
+
+### Changed
+
+- docs: add the test-proof settings and the Due board field (#306)
+
+## [1.12.97] - 2026-11-23
+
+### Changed
+
+- Take the latest shared skills and scripts from `jwh3times/skills` (#305)
+
+## [1.12.96] - 2026-11-23
+
+### Changed
+
+- Take the latest shared skills and scripts from `jwh3times/skills` (#304)
+
+## [1.12.95] - 2026-11-23
+
+### Added
+
+- `docs/agents/guard.md` lists the commands and paths the shared `scripts/guard.mjs` guard stops in
+  this repository on top of its shared rules: `npx skills update`, force-staging or submoduling the
+  private companion, force-staging an ignored env file, printing the 1Password service-account
+  token, and protected local paths (`private/`, env files, local Claude settings,
+  `node_modules/`). The Doc map names it. No site behavior changes.
+
+## [1.12.94] - 2026-11-23
+
+### Changed
+
+- Take the latest shared skills and scripts from `jwh3times/skills` (#301)
+
+## [1.12.93] - 2026-11-23
+
+### Changed
+
+- Take the latest shared skills and scripts from `jwh3times/skills` (#300)
+
 ## [1.12.92] - 2026-11-22
 
 ### Changed
