@@ -140,6 +140,8 @@ jwh3times 9
 - `Area`: `Site content and sections`, `Design system and theming`, `Build and static export`,
   `Testing and coverage`, `CI and release`, `Dependencies and runtime`, `AI config and skills`,
   `Docs and process`, `Security`, `Defect`.
+- `Due` (date): set only when the action has a real deadline (an expiry, a renewal, an offer's end,
+  a date someone else set), never an aspirational one; empty otherwise.
 
 ## Priority order
 
