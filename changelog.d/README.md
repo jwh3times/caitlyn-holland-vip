@@ -1,7 +1,7 @@
 # Changelog fragments
 
 Each branch writes its changelog entries here, in one file named for the branch with each `/`
-replaced by `-` (`feat/42-dark-mode` → `feat-42-dark-mode.md`). `/ship` writes it; never edit
+replaced by `-` (`feat/42-dark-mode` → `feat-42-dark-mode.md`). `/open-pr` writes it; never edit
 `CHANGELOG.md` on a branch.
 
 A fragment holds only Keep a Changelog category headings and their bullets, with no version or

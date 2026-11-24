@@ -1,6 +1,6 @@
 # Development flow
 
-The flow itself is `.agents/skills/ship/settings/dev-flow.md`, and `AGENTS.md` summarizes it. This file holds what this repository
+The flow itself is `.agents/skills/open-pr/settings/dev-flow.md`, and `AGENTS.md` summarizes it. This file holds what this repository
 adds.
 
 ## Docs and agent config
@@ -12,7 +12,7 @@ adds.
 
 - **Dependency bumps** are Dependabot's PRs, and hand-made bumps committed as `chore(deps): …` or, for
   an advisory patch, `fix(deps): …`.
-- **Release prep** is the `docs: update docs and changelog fragment` commit `/ship` makes, which
+- **Release prep** is the `docs: update docs and changelog fragment` commit `/open-pr` makes, which
   writes the branch's `changelog.d/` fragment and, for a new major or minor line, moves the
   `package.json` floor. The `CHANGELOG.md` sections and tags come later, from `version.yml`.
 

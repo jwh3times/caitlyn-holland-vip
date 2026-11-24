@@ -5,7 +5,7 @@ From an open pull request to a finished merge. What CI runs and what the ruleset
 
 ## When to merge
 
-`ship` stops when the PR opens. The owner hands the merge over explicitly ("merge the PR", "merge
+`open-pr` stops when the PR opens. The owner hands the merge over explicitly ("merge the PR", "merge
 when all checks are green", "merge and complete all follow ups"), and that authorization covers the
 PRs named in that turn only: never infer it from an earlier PR in the session. Merge only once every
 required check on the current head reports green, never on a pending or failing one.
