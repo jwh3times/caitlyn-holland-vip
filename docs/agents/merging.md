@@ -10,6 +10,22 @@ when all checks are green", "merge and complete all follow ups"), and that autho
 PRs named in that turn only: never infer it from an earlier PR in the session. Merge only once every
 required check on the current head reports green, never on a pending or failing one.
 
+## Known stale checks
+
+- **The `Cloudflare Pages` check can stay `in_progress`, titled "Building", after its deployment
+  finished.** A preview normally reports within about a minute; on #298 the check sat for 25+
+  minutes after `gh pr update-branch`, with every other check done, though Cloudflare had deployed
+  that head. `land.mjs` reports it `pending`, not `stuck`, because it has no Actions run. Read the
+  deployment's stages read-only (the check's "View logs" link carries the account and deployment
+  ids; the Cloudflare dashboard or API shows the stages). A last stage of `deploy` with `success`
+  for the PR's head commit means the check is stale: it is not required, so report it and ask the
+  owner whether to merge. Never re-run or retrigger a deployment. A deployment that failed or is
+  still building is a real pending or red.
+- **A stale check on a `main` commit would fail `Live-site Smoke`.** A push run of `smoke.yml` polls
+  that commit's Pages check for about ten minutes, then fails with
+  `Timed out waiting for Cloudflare Pages deployment`. Confirm the deployment the same way; a manual
+  run checks the live site without waiting.
+
 ## Merging
 
 `gh pr merge <n> --merge --delete-branch`. Merge commits are the only method the repository offers.
