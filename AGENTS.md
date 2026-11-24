@@ -216,14 +216,14 @@ The block's actual advice is worth keeping, so it lives here by hand instead:
 
 The `docs-updater` skill keeps the docs in line with the code, following the documents and
 triggers in [docs/agents/docs.md](docs/agents/docs.md). Docs are refreshed when you **ship a
-branch**: the `ship` skill runs `docs-updater` (scoped to the branch diff) as part of opening a PR
+branch**: the `open-pr` skill runs `docs-updater` (scoped to the branch diff) as part of opening a PR
 — alongside evaluating whether the changes warrant a major, minor, or standard build-number
 release, adjusting the package-version floor when needed, writing the branch's changelog entries to
 its own `changelog.d/` fragment (never to [CHANGELOG.md](CHANGELOG.md), which `version.yml` stamps
 after the merge), filing the branch's human follow-ups, running the fast checks listed in
-[docs/agents/ship.md](docs/agents/ship.md), and pushing. `end-session` runs it too, on the
+[docs/agents/open-pr.md](docs/agents/open-pr.md), and pushing. `end-session` runs it too, on the
 session's work. Say "ship it" when a branch is ready for review. The `Changelog Version` CI job
-then verifies the fragment and that no released section changed. `ship` uses GitHub MCP
+then verifies the fragment and that no released section changed. `open-pr` uses GitHub MCP
 operations when `gh` is unavailable, so remote agents follow the same workflow and completion
 criteria rather than skipping GitHub work.
 
@@ -332,11 +332,11 @@ outer repository's history. The reasoning is [ADR-0010](docs/adr/0010-private-wo
 
 ### Ending a session
 
-`/end-session` is the close-out counterpart to `/ship`: it flushes what a session learned into
+`/end-session` is the close-out counterpart to `/open-pr`: it flushes what a session learned into
 the per-project memory files, the private companion repository at `private/`, and GitHub issues, then
 tidies the local workspace — files and artifacts, and, once the checkout is clean, the branches
 themselves: returning to an up-to-date `main` (a `--ff-only` pull) and deleting local branches
-already merged there, leaving pushed-but-unmerged branches alone. It records and tidies only: ordinary repository commits and PRs still go through `ship`.
+already merged there, leaving pushed-but-unmerged branches alone. It records and tidies only: ordinary repository commits and PRs still go through `open-pr`.
 Publishing required human follow-up instructions to the separate private wiki is its explicit
 commit/push exception, alongside the local `main` fast-forward. Source:
 [.agents/skills/end-session/SKILL.md](.agents/skills/end-session/SKILL.md). It is
