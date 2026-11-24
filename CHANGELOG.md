@@ -12,6 +12,12 @@ merge mints.
 
 No unreleased changes.
 
+## [1.12.102] - 2026-11-24
+
+### Changed
+
+- chore(deps-dev): bump `@testing-library/jest-dom` from `7.0.1` to `8.0.0` in the testing-library group (#298)
+
 ## [1.12.101] - 2026-11-24
 
 ### Changed
