@@ -16,7 +16,8 @@ project.
 
 The private companion's wiki, index page `human-todo` linked from `Home`. Push without asking
 once the diff is reviewed and the secret scan in `docs/agents/secret-prevention.md` passes: the
-standing authorization covers it. After pushing a wiki change, take the dated wiki capture the
-recovery procedure describes in the same session: it is agent work on a machine where the backup
-folder is mounted, not a human follow-up. Files on disk in a synced folder aren't proof they reached
+standing authorization covers it. After pushing a wiki change, take the dated wiki capture in the
+same session, following "Capture a wiki backup" in the private companion's `RECOVERY.md` (the
+public `docs/agents/private-workspace.md` has no capture step): it is agent work on a machine where
+the backup folder is mounted, not a human follow-up. Files on disk in a synced folder aren't proof they reached
 the cloud; say so.
