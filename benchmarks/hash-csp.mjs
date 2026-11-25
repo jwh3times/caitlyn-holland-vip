@@ -6,6 +6,7 @@ import { extname, join, resolve } from "node:path";
 import { chromium, firefox, webkit, expect } from "@playwright/test";
 import { JSDOM } from "jsdom";
 import { checkErrorBoundary } from "./csp-error-boundary.mjs";
+import { fetchWithRetry } from "../scripts/fetch-with-retry.mjs";
 import { validateExportHeaders } from "../scripts/validate-export-headers.mjs";
 
 // Evaluation only: production headers are never modified.
@@ -74,7 +75,7 @@ if (remoteURL) {
     // never trust the response's allowlist as the source of expected hashes.
     hashes.clear();
     for (const { route } of inventory) {
-      const response = await fetch(`${remoteURL}${route}`);
+      const response = await fetchWithRetry(`${remoteURL}${route}`);
       assert.equal(response.status, 200, `Cannot inventory hosted document ${route}`);
       const dom = new JSDOM(await response.text());
       for (const script of dom.window.document.querySelectorAll("script:not([src])")) {
@@ -93,7 +94,7 @@ if (remoteURL) {
     "/_next/static/missing-csp-fixture.js",
     "/nested/missing-csp-fixture.html",
   ]) {
-    const response = await fetch(new URL(path, remoteURL));
+    const response = await fetchWithRetry(new URL(path, remoteURL));
     assert.equal(response.status, 404, `Missing path ${path}`);
     assert.equal(
       response.headers.get("content-security-policy"),
@@ -168,7 +169,7 @@ try {
           const response = await page.goto(`${baseURL}${route}`);
           assert.equal(response.headers()["content-security-policy"], policy);
           if (remoteURL) {
-            const hostedResponse = await fetch(`${baseURL}${route}`);
+            const hostedResponse = await fetchWithRetry(`${baseURL}${route}`);
             assert.equal(hostedResponse.headers.get("content-security-policy"), policy);
             const html = new JSDOM(await hostedResponse.text());
             for (const script of html.window.document.querySelectorAll("script:not([src])")) {
