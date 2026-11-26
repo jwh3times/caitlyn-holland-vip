@@ -61,11 +61,6 @@ required check on the current head reports green, never on a pending or failing 
 
 ## Dependency pull requests
 
-- **A grouped bump can leave a partner range behind.** Dependabot raised `@tailwindcss/webpack` (and
-  once `@vitest/coverage-v8`) in `package.json` but not `tailwindcss` (`vitest`), and
-  `tests/unit/tailwind-config.test.ts` requires the Tailwind ranges to match. Before merging, diff
-  `package.json` and push a one-line alignment commit to the PR branch: the lockfile already resolves
-  the new version, so only the range strings change.
 - **A conflicting group PR showing "Dependabot is rebasing" may be closed and replaced** by a new PR
   with a different number and more updates. Re-list open PRs rather than waiting on the old number.
 - A Dependabot PR writes no fragment and passes `Changelog Version`; `version.yml` gives its merge a

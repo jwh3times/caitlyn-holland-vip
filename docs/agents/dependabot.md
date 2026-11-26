@@ -55,7 +55,8 @@ bundles npm 11, which CI and Cloudflare Pages use, and both lines write the same
 - `.oxlintrc.json`: the rule set, and `jsPlugins` loading `@next/eslint-plugin-next` for
   `nextjs-js/no-location-assign-relative-destination`.
 - `tests/unit/tailwind-config.test.ts` and `tests/unit/toolchain-config.test.ts`: unit tests that
-  assert on `package.json`, so a dependency change alone can fail `Coverage`.
+  assert on `package.json` and, for Tailwind, `package-lock.json`, so a dependency change alone can
+  fail `Coverage`.
 - `public/_headers` and `scripts/validate-export-headers.mjs`, which `npm run build` runs after
   `next build`; `benchmarks/hash-csp.mjs` (`npm run benchmark:csp`), which drives Playwright's
   browsers and `jsdom`.
@@ -77,9 +78,12 @@ bundles npm 11, which CI and Cloudflare Pages use, and both lines write the same
   `<that major>.x`, so an `@types/node` major on its own fails `Coverage`, and it is takeable only
   with a decision to move the runtime.
 - `@tailwindcss/webpack` depends on `tailwindcss` at its own exact version (`package-lock.json`),
-  and `tests/unit/tailwind-config.test.ts` requires their `package.json` ranges to be equal.
+  and `tests/unit/tailwind-config.test.ts` requires the lockfile to resolve both to one version
+  with no second, nested `tailwindcss`. Their `package.json` ranges may differ: a grouped bump
+  that raises only the loader's range passes while the lockfile resolves both to its version.
   `.github/dependabot.yml` has no major group for them, so a Tailwind major arrives as two PRs,
-  each red alone.
+  each red alone: either one by itself resolves the two to different majors and nests a second
+  `tailwindcss`.
 - `@vitest/coverage-v8` hard-peers on `vitest` at its exact version, and `@vitejs/plugin-react` on
   `vite` `^8.0.0` (`package-lock.json`).
 - `next` hard-peers on `react` and `react-dom` `^18.2.0 || ^19.0.0`, as `next-themes`,
@@ -91,15 +95,6 @@ bundles npm 11, which CI and Cloudflare Pages use, and both lines write the same
 
 ## Playbook
 
-- **Tailwind or Vitest range left behind** (the known fix, from `merging.md` and the verdict on
-  #265; it worked on #265 and #269). A grouped bump raises `@tailwindcss/webpack` in
-  `package.json` but not `tailwindcss` (once, `@vitest/coverage-v8` but not `vitest`), and
-  `Coverage` fails in `tests/unit/tailwind-config.test.ts` with
-  `AssertionError: expected '^4.3.4' to be '^4.3.3'`. The fix, on the PR branch: set the lagging
-  range to its partner's in `package.json` and in the root `packages[""]` entry of
-  `package-lock.json`, which already resolves the new version, so only the range strings change.
-  Commit it as `chore(deps): align tailwindcss range with the group bump`, and confirm with
-  `npm ci` and `npm run coverage`.
 - **`@types/node` major:** NEEDS EFFORT until the user decides to move the runtime. Taking it means
   `.nvmrc`, `devEngines.runtime.version` and `@types/node` in one change, then every gate,
   including Cloudflare Pages building on the new Node.
