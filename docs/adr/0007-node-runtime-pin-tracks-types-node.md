@@ -30,3 +30,15 @@ major.
 - A future `@types/node` major from Dependabot is only mergeable alongside an `.nvmrc` bump. Reviewing one of those PRs means checking both.
 - Contributors and remote agents must activate the pinned Node/npm line before any npm command.
   Ordinary setup uses `npm ci`; `npm install` is reserved for intentional dependency changes.
+
+## Update (2026-11-25)
+
+Node 26 entered LTS ("Lithium") at v26.13.0 on 2026-10-28, so the first consequence above no
+longer applies: the toolchain now runs on an LTS line. As predicted, the graduation needed no pin
+change.
+
+Every Node 26 release bundles npm 11 (the LTS line, v26.13.x, ships 11.20.0); only Node 27
+pre-releases bundle npm 12. The tightening condition and lockfile re-verification above are
+unchanged, but in practice tightening `devEngines` to `12.x` now waits on `.nvmrc` moving to a Node
+major whose bundled npm is 12.x, tracked in
+[issue #215](https://github.com/jwh3times/caitlyn-holland-vip/issues/215).
