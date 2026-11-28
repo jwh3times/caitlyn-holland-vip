@@ -3,6 +3,7 @@ name: docs-updater
 description: Bring the repository's documentation in line with the code — find where the docs and the code disagree, and fix the docs (or, in check mode, only report it). Use after a feature, fix, or architectural change; when the user asks to update or audit the docs; and from open-pr and end-session, which run it scoped to a branch's diff.
 metadata:
   settings: docs workspace issue-tracker human-follow-up
+  helpers: end-session/board.mjs
 ---
 
 # Docs updater
